@@ -91,6 +91,16 @@ Generated Zod schemas from the OpenAPI spec (e.g. `HealthCheckResponse`). Used b
 
 Generated React Query hooks and fetch client from the OpenAPI spec (e.g. `useHealthCheck`, `healthCheck`).
 
+### `artifacts/vdacq` (`@workspace/vdacq`)
+
+React + Vite landing page for Van Dyke Acquisitions (vdacq.com). Frontend-only single-page site with premium finance-industry design.
+
+- Entry: `src/App.tsx` — single-file React component with all sections (Nav, Hero, ConvictionBand, Manifesto, DualMandate, Platform, TrackRecord, Portfolio, WhyVDA, Team, Contact, Footer, Modal)
+- Styling: Custom CSS in `src/index.css` with CSS variables (no Tailwind) — uses `--forest`, `--gold2`, `--cream` tokens
+- Fonts: Libre Baskerville (serif headings) + Inter (sans body) via Google Fonts in `index.html`
+- Features: Scroll reveal animations (IntersectionObserver), modal for portfolio access, smooth scroll navigation, responsive design
+- No backend/API dependencies
+
 ### `scripts` (`@workspace/scripts`)
 
 Utility scripts package. Each script is a `.ts` file in `src/` with a corresponding npm script in `package.json`. Run scripts via `pnpm --filter @workspace/scripts run <script>`. Scripts can import any workspace package (e.g., `@workspace/db`) by adding it as a dependency in `scripts/package.json`.
