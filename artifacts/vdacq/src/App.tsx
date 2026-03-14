@@ -942,7 +942,7 @@ function Team() {
     },
     { init: "JB", name: "John Brady", role: "Chief Operating Officer", badge: "Operations" },
     { init: "DB", name: "David Bates", role: "President & CFO", badge: "Finance" },
-    { init: "PM", name: "Paul Massingale", role: "Chief Operating Officer", badge: "Operations" },
+    { init: "PM", name: "Paul Massingale", role: "Chief Growth Officer", badge: "Growth" },
     { init: "SJ", name: "Steve Jorgensen", role: "SVP, Portfolio Operations", badge: "Portfolio" },
     { init: "MM", name: "Michael Maldonado", role: "SVP, Innovation", badge: "Innovation" },
     { init: "SG", name: "Sara Green", role: "SVP, Family & Foundation", badge: "Family Office" },
