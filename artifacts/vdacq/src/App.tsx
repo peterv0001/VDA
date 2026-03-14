@@ -899,73 +899,33 @@ function WhyVDA() {
 
 function Team() {
   const members = [
-    {
-      init: "KR",
-      name: "K. Reinhardt",
-      role: "VP, Operations",
-      badge: "Lean \u00B7 Manufacturing",
-    },
-    {
-      init: "SM",
-      name: "S. Moreno",
-      role: "Head of Brand & Growth",
-      badge: "DTC \u00B7 Retail",
-    },
-    {
-      init: "DP",
-      name: "D. Phan",
-      role: "Director of Technology",
-      badge: "ERP \u00B7 Data",
-    },
-    {
-      init: "JW",
-      name: "J. Walsh",
-      role: "Portfolio Controller",
-      badge: "Finance \u00B7 Compliance",
-    },
-    {
-      init: "RK",
-      name: "R. Klein",
-      role: "Head of Innovation",
-      badge: "R&D \u00B7 Formulation",
-    },
-    {
-      init: "TN",
-      name: "T. Nakamura",
-      role: "Marketplace & Digital",
-      badge: "E-Com \u00B7 Amazon",
-    },
+    { init: "JB", name: "John Brady", role: "Executive Chairman", badge: "Principal" },
+    { init: "DB", name: "David Bates", role: "President & CFO", badge: "Finance" },
+    { init: "PM", name: "Paul Massingale", role: "Chief Operating Officer", badge: "Operations" },
+    { init: "SJ", name: "Steve Jorgensen", role: "SVP, Portfolio Operations", badge: "Portfolio" },
+    { init: "MM", name: "Michael Maldonado", role: "SVP, Innovation", badge: "Innovation" },
+    { init: "SG", name: "Sara Green", role: "SVP, Family & Foundation", badge: "Family Office" },
+    { init: "JC", name: "Jason Collyer", role: "VP, IT & Development", badge: "Technology" },
+    { init: "JK", name: "Josh Kirkman", role: "VP, Group Revenue", badge: "Revenue" },
   ];
   return (
     <section className="team" id="team">
       <div className="s-in">
         <div className="rv">
-          <div className="eyebrow">Team</div>
-          <div className="s-h">
-            The operating team behind
-            <br />
-            20+ CPG acquisitions.
-          </div>
+          <div className="eyebrow">Leadership</div>
+          <div className="s-h">The operators behind the office.</div>
           <p className="s-sub">
-            Our team has held direct P&L responsibility in CPG businesses. We
-            don't advise — we operate. Every member of the VDA Operating Group
-            has been inside the businesses we acquire, not outside them.
+            A senior team spanning acquisitions, operations, technology, revenue, and portfolio
+            management — unified by a decade of shared experience in consumer goods.
           </p>
         </div>
         <div className="team-grid rv">
           <div className="tmc founder">
-            <div className="founder-init">CVD</div>
+            <div className="founder-init">PG</div>
             <div>
-              <div className="founder-name">Cameron Van Dyke</div>
-              <div className="founder-role">
-                Founder & Managing Principal
-              </div>
-              <div className="founder-note">
-                10+ years of CPG acquisition, turnaround, and operational
-                leadership. Former operator of a 8,000 cans/min beverage
-                manufacturing business. Deploys permanent family office capital
-                with full operating accountability.
-              </div>
+              <div className="founder-name">Peter Griscom</div>
+              <div className="founder-role">Founder</div>
+              <div className="founder-note">Founded Van Dyke Acquisitions in 2014</div>
             </div>
           </div>
           {members.map((m) => (
