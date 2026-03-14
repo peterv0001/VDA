@@ -899,6 +899,13 @@ function WhyVDA() {
 
 function Team() {
   const members = [
+    {
+      init: "PG",
+      name: "Peter Griscom",
+      role: "Founder",
+      badge: "Founded Van Dyke Acquisitions in 2014",
+      founder: true,
+    },
     { init: "JB", name: "John Brady", role: "Executive Chairman", badge: "Principal" },
     { init: "DB", name: "David Bates", role: "President & CFO", badge: "Finance" },
     { init: "PM", name: "Paul Massingale", role: "Chief Operating Officer", badge: "Operations" },
@@ -908,6 +915,8 @@ function Team() {
     { init: "JC", name: "Jason Collyer", role: "VP, IT & Development", badge: "Technology" },
     { init: "JK", name: "Josh Kirkman", role: "VP, Group Revenue", badge: "Revenue" },
   ];
+  const founder = members[0];
+  const rest = members.slice(1);
   return (
     <section className="team" id="team">
       <div className="s-in">
@@ -921,14 +930,14 @@ function Team() {
         </div>
         <div className="team-grid rv">
           <div className="tmc founder">
-            <div className="founder-init">PG</div>
+            <div className="founder-init">{founder.init}</div>
             <div>
-              <div className="founder-name">Peter Griscom</div>
-              <div className="founder-role">Founder</div>
-              <div className="founder-note">Founded Van Dyke Acquisitions in 2014</div>
+              <div className="founder-name">{founder.name}</div>
+              <div className="founder-role">{founder.role}</div>
+              <div className="founder-note">{founder.badge}</div>
             </div>
           </div>
-          {members.map((m) => (
+          {rest.map((m) => (
             <div key={m.init} className="tmc">
               <div className="tmc-init">{m.init}</div>
               <div className="tmc-name">{m.name}</div>
