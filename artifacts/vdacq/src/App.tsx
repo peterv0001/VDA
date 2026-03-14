@@ -936,11 +936,11 @@ function Team() {
     {
       init: "PG",
       name: "Peter Griscom",
-      role: "Founder",
+      role: "Founder, Principal & Executive Chairman",
       badge: "Founded Van Dyke Acquisitions in 2014",
       founder: true,
     },
-    { init: "JB", name: "John Brady", role: "Executive Chairman", badge: "Principal" },
+    { init: "JB", name: "John Brady", role: "Chief Operating Officer", badge: "Operations" },
     { init: "DB", name: "David Bates", role: "President & CFO", badge: "Finance" },
     { init: "PM", name: "Paul Massingale", role: "Chief Operating Officer", badge: "Operations" },
     { init: "SJ", name: "Steve Jorgensen", role: "SVP, Portfolio Operations", badge: "Portfolio" },
