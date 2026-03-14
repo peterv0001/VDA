@@ -416,7 +416,15 @@ body { font-family: 'Inter', sans-serif; background: var(--cream); color: var(--
   font-weight: 700; width: 100%; transition: all .2s;
 }
 .modal-submit:hover { background: var(--gold2); color: var(--forest); }
+.modal-submit:disabled { opacity: .5; cursor: not-allowed; }
 .modal-note { font-size: 11px; color: var(--muted); margin-top: 7px; text-align: center; }
+
+.form-success { text-align: center; padding: 40px 20px; }
+.form-success-icon { font-size: 48px; color: var(--signal-grn); margin-bottom: 16px; }
+.form-success p { font-size: 15px; color: var(--muted2); line-height: 1.6; }
+.contact .form-success p { color: var(--cream2); }
+.form-error { font-size: 12px; color: #c44; margin: 0; }
+.cf-submit:disabled { opacity: .5; cursor: not-allowed; }
 
 .rv { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease; }
 .rv.vis { opacity: 1; transform: none; }

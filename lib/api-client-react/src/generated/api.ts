@@ -5,18 +5,27 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import type {
+  MutationFunction,
   QueryFunction,
   QueryKey,
+  UseMutationOptions,
+  UseMutationResult,
   UseQueryOptions,
   UseQueryResult,
 } from "@tanstack/react-query";
 
-import type { HealthStatus } from "./api.schemas";
+import type {
+  CreateAccessRequestBody,
+  CreateInquiryBody,
+  ErrorResponse,
+  HealthStatus,
+  SubmissionResult,
+} from "./api.schemas";
 
 import { customFetch } from "../custom-fetch";
-import type { ErrorType } from "../custom-fetch";
+import type { ErrorType, BodyType } from "../custom-fetch";
 
 type AwaitedInput<T> = PromiseLike<T> | T;
 
@@ -99,3 +108,177 @@ export function useHealthCheck<
 
   return { ...query, queryKey: queryOptions.queryKey };
 }
+
+/**
+ * Stores a new contact inquiry from the website contact form
+ * @summary Submit a contact inquiry
+ */
+export const getCreateInquiryUrl = () => {
+  return `/api/inquiries`;
+};
+
+export const createInquiry = async (
+  createInquiryBody: CreateInquiryBody,
+  options?: RequestInit,
+): Promise<SubmissionResult> => {
+  return customFetch<SubmissionResult>(getCreateInquiryUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(createInquiryBody),
+  });
+};
+
+export const getCreateInquiryMutationOptions = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createInquiry>>,
+    TError,
+    { data: BodyType<CreateInquiryBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createInquiry>>,
+  TError,
+  { data: BodyType<CreateInquiryBody> },
+  TContext
+> => {
+  const mutationKey = ["createInquiry"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createInquiry>>,
+    { data: BodyType<CreateInquiryBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return createInquiry(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateInquiryMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createInquiry>>
+>;
+export type CreateInquiryMutationBody = BodyType<CreateInquiryBody>;
+export type CreateInquiryMutationError = ErrorType<ErrorResponse>;
+
+/**
+ * @summary Submit a contact inquiry
+ */
+export const useCreateInquiry = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createInquiry>>,
+    TError,
+    { data: BodyType<CreateInquiryBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createInquiry>>,
+  TError,
+  { data: BodyType<CreateInquiryBody> },
+  TContext
+> => {
+  return useMutation(getCreateInquiryMutationOptions(options));
+};
+
+/**
+ * Stores a new portfolio access request from the website modal
+ * @summary Submit a portfolio access request
+ */
+export const getCreateAccessRequestUrl = () => {
+  return `/api/access-requests`;
+};
+
+export const createAccessRequest = async (
+  createAccessRequestBody: CreateAccessRequestBody,
+  options?: RequestInit,
+): Promise<SubmissionResult> => {
+  return customFetch<SubmissionResult>(getCreateAccessRequestUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(createAccessRequestBody),
+  });
+};
+
+export const getCreateAccessRequestMutationOptions = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createAccessRequest>>,
+    TError,
+    { data: BodyType<CreateAccessRequestBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createAccessRequest>>,
+  TError,
+  { data: BodyType<CreateAccessRequestBody> },
+  TContext
+> => {
+  const mutationKey = ["createAccessRequest"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createAccessRequest>>,
+    { data: BodyType<CreateAccessRequestBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return createAccessRequest(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateAccessRequestMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createAccessRequest>>
+>;
+export type CreateAccessRequestMutationBody = BodyType<CreateAccessRequestBody>;
+export type CreateAccessRequestMutationError = ErrorType<ErrorResponse>;
+
+/**
+ * @summary Submit a portfolio access request
+ */
+export const useCreateAccessRequest = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createAccessRequest>>,
+    TError,
+    { data: BodyType<CreateAccessRequestBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createAccessRequest>>,
+  TError,
+  { data: BodyType<CreateAccessRequestBody> },
+  TContext
+> => {
+  return useMutation(getCreateAccessRequestMutationOptions(options));
+};

@@ -10,6 +10,10 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: inquiries
+    description: Contact inquiry operations
+  - name: access-requests
+    description: Portfolio access request operations
 paths:
   /healthz:
     get:
@@ -24,6 +28,56 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /inquiries:
+    post:
+      operationId: createInquiry
+      tags: [inquiries]
+      summary: Submit a contact inquiry
+      description: Stores a new contact inquiry from the website contact form
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateInquiryBody"
+      responses:
+        "201":
+          description: Inquiry created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubmissionResult"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /access-requests:
+    post:
+      operationId: createAccessRequest
+      tags: [access-requests]
+      summary: Submit a portfolio access request
+      description: Stores a new portfolio access request from the website modal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateAccessRequestBody"
+      responses:
+        "201":
+          description: Access request created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubmissionResult"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 components:
   schemas:
     HealthStatus:
@@ -33,4 +87,70 @@ components:
           type: string
       required:
         - status
-
+    CreateInquiryBody:
+      type: object
+      properties:
+        fullName:
+          type: string
+          minLength: 1
+        organization:
+          type: string
+          minLength: 1
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        category:
+          type: string
+          minLength: 1
+        description:
+          type: string
+      required:
+        - fullName
+        - organization
+        - email
+        - category
+    CreateAccessRequestBody:
+      type: object
+      properties:
+        fullName:
+          type: string
+          minLength: 1
+        organization:
+          type: string
+          minLength: 1
+        email:
+          type: string
+          format: email
+        titleRole:
+          type: string
+        reason:
+          type: string
+          minLength: 1
+      required:
+        - fullName
+        - organization
+        - email
+        - reason
+    SubmissionResult:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+      required:
+        - success
+        - message
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        details:
+          type: array
+          items:
+            type: string
+      required:
+        - error

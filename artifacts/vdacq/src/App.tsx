@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, type FormEvent } from "react";
+import { useCreateAccessRequest, useCreateInquiry } from "@workspace/api-client-react";
 
 function scrollTo(id: string) {
   const el = document.getElementById(id);
@@ -24,6 +25,15 @@ function useReveal() {
 }
 
 function Modal({ onClose }: { onClose: () => void }) {
+  const [fullName, setFullName] = useState("");
+  const [organization, setOrganization] = useState("");
+  const [email, setEmail] = useState("");
+  const [titleRole, setTitleRole] = useState("");
+  const [reason, setReason] = useState("");
+  const [validationError, setValidationError] = useState("");
+
+  const mutation = useCreateAccessRequest();
+
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -35,6 +45,19 @@ function Modal({ onClose }: { onClose: () => void }) {
       document.body.style.overflow = "";
     };
   }, [onClose]);
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    setValidationError("");
+    if (!fullName.trim() || !email.trim() || !organization.trim() || !reason) {
+      setValidationError("Please fill in all required fields.");
+      return;
+    }
+    mutation.mutate(
+      { data: { fullName: fullName.trim(), organization: organization.trim(), email: email.trim(), titleRole: titleRole.trim() || undefined, reason } },
+      { onSuccess: () => { setTimeout(onClose, 2000); } }
+    );
+  };
 
   return (
     <div
@@ -57,29 +80,40 @@ function Modal({ onClose }: { onClose: () => void }) {
           verified principals, advisors, and institutional counterparties.
           Submit your information and we will respond within one business day.
         </p>
-        <form className="modal-form" onSubmit={(e) => e.preventDefault()}>
-          <label className="sr-only" htmlFor="modal-name">Full Name</label>
-          <input className="modal-input" id="modal-name" placeholder="Full Name" type="text" />
-          <label className="sr-only" htmlFor="modal-org">Organization</label>
-          <input className="modal-input" id="modal-org" placeholder="Organization / Fund / Firm" type="text" />
-          <label className="sr-only" htmlFor="modal-email">Professional Email</label>
-          <input className="modal-input" id="modal-email" placeholder="Professional Email Address" type="email" />
-          <label className="sr-only" htmlFor="modal-title">Title / Role</label>
-          <input className="modal-input" id="modal-title" placeholder="Title / Role" type="text" />
-          <label className="sr-only" htmlFor="modal-reason">Reason for Access</label>
-          <select className="modal-input" id="modal-reason" defaultValue="">
-            <option value="" disabled>
-              Reason for Access
-            </option>
-            <option>M&A Advisory / Deal Sourcing</option>
-            <option>Founder Evaluating a Sale</option>
-            <option>Creditor / Banker / Trustee</option>
-            <option>PE / Family Office Co-Investment</option>
-            <option>Strategic / Corporate Development</option>
-            <option>Other</option>
-          </select>
-          <button type="submit" className="modal-submit">Submit Access Request</button>
-        </form>
+        {mutation.isSuccess ? (
+          <div className="form-success">
+            <div className="form-success-icon">&#x2713;</div>
+            <p>Your access request has been received. We will review and respond within one business day.</p>
+          </div>
+        ) : (
+          <form className="modal-form" onSubmit={handleSubmit}>
+            <label className="sr-only" htmlFor="modal-name">Full Name</label>
+            <input className="modal-input" id="modal-name" placeholder="Full Name *" type="text" value={fullName} onChange={(e) => setFullName(e.target.value)} required />
+            <label className="sr-only" htmlFor="modal-org">Organization</label>
+            <input className="modal-input" id="modal-org" placeholder="Organization / Fund / Firm *" type="text" value={organization} onChange={(e) => setOrganization(e.target.value)} required />
+            <label className="sr-only" htmlFor="modal-email">Professional Email</label>
+            <input className="modal-input" id="modal-email" placeholder="Professional Email Address *" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            <label className="sr-only" htmlFor="modal-title">Title / Role</label>
+            <input className="modal-input" id="modal-title" placeholder="Title / Role" type="text" value={titleRole} onChange={(e) => setTitleRole(e.target.value)} />
+            <label className="sr-only" htmlFor="modal-reason">Reason for Access</label>
+            <select className="modal-input" id="modal-reason" value={reason} onChange={(e) => setReason(e.target.value)} required>
+              <option value="" disabled>
+                Reason for Access *
+              </option>
+              <option>M&A Advisory / Deal Sourcing</option>
+              <option>Founder Evaluating a Sale</option>
+              <option>Creditor / Banker / Trustee</option>
+              <option>PE / Family Office Co-Investment</option>
+              <option>Strategic / Corporate Development</option>
+              <option>Other</option>
+            </select>
+            {validationError && <p className="form-error">{validationError}</p>}
+            {mutation.isError && <p className="form-error">Something went wrong. Please try again.</p>}
+            <button type="submit" className="modal-submit" disabled={mutation.isPending}>
+              {mutation.isPending ? "Submitting..." : "Submit Access Request"}
+            </button>
+          </form>
+        )}
         <p className="modal-note">
           All submissions are reviewed personally. Confidentiality guaranteed.
         </p>
@@ -952,6 +986,35 @@ function Team() {
 }
 
 function Contact() {
+  const [fullName, setFullName] = useState("");
+  const [organization, setOrganization] = useState("");
+  const [contactEmail, setContactEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [category, setCategory] = useState("");
+  const [description, setDescription] = useState("");
+  const [validationError, setValidationError] = useState("");
+
+  const mutation = useCreateInquiry();
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    setValidationError("");
+    if (!fullName.trim() || !contactEmail.trim() || !organization.trim() || !category) {
+      setValidationError("Please fill in all required fields.");
+      return;
+    }
+    mutation.mutate({
+      data: {
+        fullName: fullName.trim(),
+        organization: organization.trim(),
+        email: contactEmail.trim(),
+        phone: phone.trim() || undefined,
+        category,
+        description: description.trim() || undefined,
+      },
+    });
+  };
+
   return (
     <section className="contact" id="contact">
       <div className="s-in">
@@ -1003,66 +1066,70 @@ function Contact() {
               Or email directly &rarr; deals@vdacq.com
             </a>
           </div>
-          <form className="cf" onSubmit={(e) => e.preventDefault()}>
-            <div className="cf-row">
-              <div className="cf-field">
-                <label className="cf-label">Full Name</label>
-                <input className="cf-input" placeholder="Your full name" />
+          {mutation.isSuccess ? (
+            <div className="cf">
+              <div className="form-success">
+                <div className="form-success-icon">&#x2713;</div>
+                <p>Your inquiry has been received. We'll be in touch within one business day.</p>
+              </div>
+            </div>
+          ) : (
+            <form className="cf" onSubmit={handleSubmit}>
+              <div className="cf-row">
+                <div className="cf-field">
+                  <label className="cf-label">Full Name *</label>
+                  <input className="cf-input" placeholder="Your full name" value={fullName} onChange={(e) => setFullName(e.target.value)} required />
+                </div>
+                <div className="cf-field">
+                  <label className="cf-label">Organization *</label>
+                  <input className="cf-input" placeholder="Firm, fund, or company" value={organization} onChange={(e) => setOrganization(e.target.value)} required />
+                </div>
+              </div>
+              <div className="cf-row">
+                <div className="cf-field">
+                  <label className="cf-label">Email *</label>
+                  <input className="cf-input" type="email" placeholder="Professional email" value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} required />
+                </div>
+                <div className="cf-field">
+                  <label className="cf-label">Phone</label>
+                  <input className="cf-input" type="tel" placeholder="Direct line (optional)" value={phone} onChange={(e) => setPhone(e.target.value)} />
+                </div>
               </div>
               <div className="cf-field">
-                <label className="cf-label">Organization</label>
-                <input
-                  className="cf-input"
-                  placeholder="Firm, fund, or company"
+                <label className="cf-label">Nature of Situation *</label>
+                <select className="cf-input" value={category} onChange={(e) => setCategory(e.target.value)} required>
+                  <option value="" disabled>
+                    Select category
+                  </option>
+                  <option>Sell-Side M&A / Distressed CPG Asset</option>
+                  <option>Founder Exploring a Sale</option>
+                  <option>Growth-Stage CPG Brand Seeking a Partner</option>
+                  <option>Creditor / Trustee / Receiver Situation</option>
+                  <option>Co-Investment / Co-Underwriting Opportunity</option>
+                  <option>Operating Consulting Inquiry</option>
+                  <option>Other / General</option>
+                </select>
+              </div>
+              <div className="cf-field">
+                <label className="cf-label">Brief Description</label>
+                <textarea
+                  className="cf-input cf-textarea"
+                  placeholder="Briefly describe the opportunity, situation, or reason for reaching out..."
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
                 />
               </div>
-            </div>
-            <div className="cf-row">
-              <div className="cf-field">
-                <label className="cf-label">Email</label>
-                <input
-                  className="cf-input"
-                  type="email"
-                  placeholder="Professional email"
-                />
-              </div>
-              <div className="cf-field">
-                <label className="cf-label">Phone</label>
-                <input
-                  className="cf-input"
-                  type="tel"
-                  placeholder="Direct line (optional)"
-                />
-              </div>
-            </div>
-            <div className="cf-field">
-              <label className="cf-label">Nature of Situation</label>
-              <select className="cf-input" defaultValue="">
-                <option value="" disabled>
-                  Select category
-                </option>
-                <option>Sell-Side M&A / Distressed CPG Asset</option>
-                <option>Founder Exploring a Sale</option>
-                <option>Growth-Stage CPG Brand Seeking a Partner</option>
-                <option>Creditor / Trustee / Receiver Situation</option>
-                <option>Co-Investment / Co-Underwriting Opportunity</option>
-                <option>Operating Consulting Inquiry</option>
-                <option>Other / General</option>
-              </select>
-            </div>
-            <div className="cf-field">
-              <label className="cf-label">Brief Description</label>
-              <textarea
-                className="cf-input cf-textarea"
-                placeholder="Briefly describe the opportunity, situation, or reason for reaching out..."
-              />
-            </div>
-            <button type="submit" className="cf-submit">Submit Inquiry</button>
-            <p className="cf-alt">
-              Prefer a direct line?{" "}
-              <a href="mailto:deals@vdacq.com">deals@vdacq.com</a>
-            </p>
-          </form>
+              {validationError && <p className="form-error">{validationError}</p>}
+              {mutation.isError && <p className="form-error">Something went wrong. Please try again.</p>}
+              <button type="submit" className="cf-submit" disabled={mutation.isPending}>
+                {mutation.isPending ? "Submitting..." : "Submit Inquiry"}
+              </button>
+              <p className="cf-alt">
+                Prefer a direct line?{" "}
+                <a href="mailto:deals@vdacq.com">deals@vdacq.com</a>
+              </p>
+            </form>
+          )}
         </div>
       </div>
     </section>

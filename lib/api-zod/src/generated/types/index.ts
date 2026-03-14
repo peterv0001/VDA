@@ -6,4 +6,8 @@
  * OpenAPI spec version: 0.1.0
  */
 
+export * from "./createAccessRequestBody";
+export * from "./createInquiryBody";
+export * from "./errorResponse";
 export * from "./healthStatus";
+export * from "./submissionResult";

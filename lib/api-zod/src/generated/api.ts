@@ -14,3 +14,30 @@ import * as zod from "zod";
 export const HealthCheckResponse = zod.object({
   status: zod.string(),
 });
+
+/**
+ * Stores a new contact inquiry from the website contact form
+ * @summary Submit a contact inquiry
+ */
+
+export const CreateInquiryBody = zod.object({
+  fullName: zod.string().min(1),
+  organization: zod.string().min(1),
+  email: zod.string().email(),
+  phone: zod.string().optional(),
+  category: zod.string().min(1),
+  description: zod.string().optional(),
+});
+
+/**
+ * Stores a new portfolio access request from the website modal
+ * @summary Submit a portfolio access request
+ */
+
+export const CreateAccessRequestBody = zod.object({
+  fullName: zod.string().min(1),
+  organization: zod.string().min(1),
+  email: zod.string().email(),
+  titleRole: zod.string().optional(),
+  reason: zod.string().min(1),
+});

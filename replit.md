@@ -99,7 +99,9 @@ React + Vite landing page for Van Dyke Acquisitions (vdacq.com). Frontend-only s
 - Styling: Custom CSS in `src/index.css` with CSS variables (no Tailwind) — uses `--forest`, `--gold2`, `--cream` tokens
 - Fonts: Libre Baskerville (serif headings) + Inter (sans body) via Google Fonts in `index.html`
 - Features: Scroll reveal animations (IntersectionObserver), modal for portfolio access, smooth scroll navigation, responsive design
-- No backend/API dependencies
+- Forms: Contact inquiry and portfolio access request forms submit to the API server via Vite proxy (`/api` → `localhost:8080`)
+- Uses `@workspace/api-client-react` generated React Query hooks (`useCreateInquiry`, `useCreateAccessRequest`)
+- DB tables: `contact_inquiries`, `portfolio_access_requests` (via `@workspace/db`)
 
 ### `scripts` (`@workspace/scripts`)
 

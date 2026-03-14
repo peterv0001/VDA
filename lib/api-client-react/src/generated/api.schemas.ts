@@ -8,3 +8,36 @@
 export interface HealthStatus {
   status: string;
 }
+
+export interface CreateInquiryBody {
+  /** @minLength 1 */
+  fullName: string;
+  /** @minLength 1 */
+  organization: string;
+  email: string;
+  phone?: string;
+  /** @minLength 1 */
+  category: string;
+  description?: string;
+}
+
+export interface CreateAccessRequestBody {
+  /** @minLength 1 */
+  fullName: string;
+  /** @minLength 1 */
+  organization: string;
+  email: string;
+  titleRole?: string;
+  /** @minLength 1 */
+  reason: string;
+}
+
+export interface SubmissionResult {
+  success: boolean;
+  message: string;
+}
+
+export interface ErrorResponse {
+  error: string;
+  details?: string[];
+}
