@@ -764,21 +764,21 @@ function Portfolio({ onModalOpen }: { onModalOpen: () => void }) {
   const open = [
     {
       cat: "Functional Nutrition \u00B7 Weight Management",
-      name: "APEX Weight",
+      name: "TikTok Weight Loss Leader",
       type: "h",
       status: "Growth-Stage \u00B7 Active",
       desc: "GLP-1 companion stack platform. Addresses metabolic health, appetite regulation, and body composition for the post-GLP-1 consumer segment.",
     },
     {
       cat: "Longevity \u00B7 Cellular Health",
-      name: "VIVA Longevity",
+      name: "Longevity Clinics",
       type: "h",
       status: "Growth-Stage \u00B7 Active",
       desc: "Science-backed longevity formulation platform anchored in NMN, NAD+ precursors, and mitochondrial health science.",
     },
     {
       cat: "Microbiome \u00B7 Gut-Brain Axis",
-      name: "FLORA Pro",
+      name: "Gut Health Leader in China",
       type: "h",
       status: "Growth-Stage \u00B7 Active",
       desc: "Precision probiotic and prebiotic platform positioned at the intersection of clinical gut health science and clean-label CPG.",
