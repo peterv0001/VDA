@@ -945,7 +945,7 @@ function Team() {
     { init: "PM", name: "Paul Massingale", role: "Chief Growth Officer", badge: "Growth" },
     { init: "SJ", name: "Steve Jorgensen", role: "SVP, Portfolio Operations", badge: "Portfolio" },
     { init: "MM", name: "Michael Maldonado", role: "SVP, Innovation", badge: "Innovation" },
-    { init: "SG", name: "Sara Green", role: "SVP, Family & Foundation", badge: "Family Office" },
+    { init: "MK", name: "Margaret Keene", role: "SVP, Family & Foundation", badge: "Family Office" },
     { init: "JC", name: "Jason Collyer", role: "VP, IT & Development", badge: "Technology" },
     { init: "JK", name: "Josh Kirkman", role: "VP, Group Revenue", badge: "Revenue" },
   ];
