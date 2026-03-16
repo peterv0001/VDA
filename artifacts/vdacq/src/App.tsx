@@ -1065,6 +1065,9 @@ function Contact() {
             <a href="mailto:deals@vdacq.com" className="contact-book-link">
               Or email directly &rarr; deals@vdacq.com
             </a>
+            <a href="tel:+12174861588" className="contact-book-link">
+              Or call directly &rarr; (217) 486-1588
+            </a>
           </div>
           {mutation.isSuccess ? (
             <div className="cf">
@@ -1126,6 +1129,8 @@ function Contact() {
               </button>
               <p className="cf-alt">
                 Prefer a direct line?{" "}
+                <a href="tel:+12174861588">(217) 486-1588</a>
+                {" "}or{" "}
                 <a href="mailto:deals@vdacq.com">deals@vdacq.com</a>
               </p>
             </form>
