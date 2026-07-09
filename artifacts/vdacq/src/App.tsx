@@ -8,6 +8,7 @@ import PlatformPage from "./pages/Platform";
 import TrackRecordPage from "./pages/TrackRecord";
 import TeamPage from "./pages/Team";
 import ContactPage from "./pages/Contact";
+import { usePageMeta } from "./lib/usePageMeta";
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 
@@ -20,6 +21,10 @@ function ScrollToTop() {
 }
 
 function NotFound() {
+  usePageMeta(
+    "Page Not Found",
+    "The page you are looking for does not exist. Van Dyke Acquisitions — permanent capital, control acquisitions, CPG exclusive.",
+  );
   return (
     <>
       <div className="page-head" />

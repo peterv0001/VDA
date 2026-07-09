@@ -1,5 +1,6 @@
 import { Link, useLocation } from "wouter";
 import { useReveal } from "../lib/useReveal";
+import { usePageMeta } from "../lib/usePageMeta";
 
 function Hero({ onModalOpen }: { onModalOpen: () => void }) {
   const [, navigate] = useLocation();
@@ -342,6 +343,10 @@ function Teasers() {
 }
 
 export default function Home({ onModalOpen }: { onModalOpen: () => void }) {
+  usePageMeta(
+    "Van Dyke Acquisitions",
+    "Van Dyke Acquisitions is a family office deploying permanent capital in control positions across the consumer packaged goods industry. Established 2014.",
+  );
   useReveal();
   return (
     <>

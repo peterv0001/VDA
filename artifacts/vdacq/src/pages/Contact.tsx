@@ -1,8 +1,13 @@
 import { useState, type FormEvent } from "react";
 import { useCreateInquiry } from "@workspace/api-client-react";
 import { useReveal } from "../lib/useReveal";
+import { usePageMeta } from "../lib/usePageMeta";
 
 export default function ContactPage() {
+  usePageMeta(
+    "Contact",
+    "Get in touch with Van Dyke Acquisitions — acquisition opportunities, lending inquiries, and partnership discussions in the CPG space.",
+  );
   useReveal();
   const [fullName, setFullName] = useState("");
   const [organization, setOrganization] = useState("");

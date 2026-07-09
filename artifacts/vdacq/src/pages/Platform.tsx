@@ -1,5 +1,6 @@
 import { useLocation } from "wouter";
 import { useReveal } from "../lib/useReveal";
+import { usePageMeta } from "../lib/usePageMeta";
 
 function PlatformSection() {
   const caps = [
@@ -244,6 +245,10 @@ function WhyVDA() {
 }
 
 export default function PlatformPage() {
+  usePageMeta(
+    "Platform",
+    "An operating platform built for control ownership in CPG: portfolio operations, brand growth, innovation, technology, and specialty lending capabilities.",
+  );
   useReveal();
   return (
     <>

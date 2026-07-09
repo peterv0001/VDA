@@ -1,6 +1,11 @@
 import { useReveal } from "../lib/useReveal";
+import { usePageMeta } from "../lib/usePageMeta";
 
 export default function TeamPage() {
+  usePageMeta(
+    "Team",
+    "Meet the operators and investors behind Van Dyke Acquisitions — a leadership team built for hands-on control ownership in CPG.",
+  );
   useReveal();
   const members = [
     {
