@@ -1,6 +1,5 @@
 import { useEffect } from "react";
-
-const SITE_NAME = "Van Dyke Acquisitions";
+import { SITE_NAME, buildFullTitle } from "./pageMeta";
 
 function setMeta(attr: "name" | "property", key: string, content: string) {
   let el = document.head.querySelector<HTMLMetaElement>(
@@ -16,10 +15,7 @@ function setMeta(attr: "name" | "property", key: string, content: string) {
 
 export function usePageMeta(title: string, description: string) {
   useEffect(() => {
-    const fullTitle =
-      title === SITE_NAME
-        ? "Van Dyke Acquisitions — CPG Family Office · Control Investor"
-        : `${title} — ${SITE_NAME}`;
+    const fullTitle = buildFullTitle(title);
     document.title = fullTitle;
     setMeta("name", "description", description);
     setMeta("property", "og:title", fullTitle);

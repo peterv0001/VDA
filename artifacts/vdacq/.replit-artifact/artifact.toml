@@ -27,5 +27,37 @@ publicDir = "artifacts/vdacq/dist/public"
 serve = "static"
 
 [[services.production.rewrites]]
+from = "/platform"
+to = "/platform/index.html"
+
+[[services.production.rewrites]]
+from = "/platform/"
+to = "/platform/index.html"
+
+[[services.production.rewrites]]
+from = "/track-record"
+to = "/track-record/index.html"
+
+[[services.production.rewrites]]
+from = "/track-record/"
+to = "/track-record/index.html"
+
+[[services.production.rewrites]]
+from = "/team"
+to = "/team/index.html"
+
+[[services.production.rewrites]]
+from = "/team/"
+to = "/team/index.html"
+
+[[services.production.rewrites]]
+from = "/contact"
+to = "/contact/index.html"
+
+[[services.production.rewrites]]
+from = "/contact/"
+to = "/contact/index.html"
+
+[[services.production.rewrites]]
 from = "/*"
 to = "/index.html"

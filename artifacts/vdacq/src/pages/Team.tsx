@@ -1,11 +1,9 @@
 import { useReveal } from "../lib/useReveal";
 import { usePageMeta } from "../lib/usePageMeta";
+import { PAGE_META } from "../lib/pageMeta";
 
 export default function TeamPage() {
-  usePageMeta(
-    "Team",
-    "Meet the operators and investors behind Van Dyke Acquisitions — a leadership team built for hands-on control ownership in CPG.",
-  );
+  usePageMeta(PAGE_META["/team"].title, PAGE_META["/team"].description);
   useReveal();
   const members = [
     {

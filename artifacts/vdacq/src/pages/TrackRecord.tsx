@@ -1,5 +1,6 @@
 import { useReveal } from "../lib/useReveal";
 import { usePageMeta } from "../lib/usePageMeta";
+import { PAGE_META } from "../lib/pageMeta";
 
 function TrackRecordSection({ onModalOpen }: { onModalOpen: () => void }) {
   const cards = [
@@ -251,10 +252,7 @@ function Portfolio({ onModalOpen }: { onModalOpen: () => void }) {
 }
 
 export default function TrackRecordPage({ onModalOpen }: { onModalOpen: () => void }) {
-  usePageMeta(
-    "Track Record",
-    "A decade of control acquisitions and exits across the consumer packaged goods industry — Van Dyke Acquisitions' portfolio and investment history since 2014.",
-  );
+  usePageMeta(PAGE_META["/track-record"].title, PAGE_META["/track-record"].description);
   useReveal();
   return (
     <>

@@ -1,2 +1,3 @@
 - [TS project references](ts-project-references.md) — "no exported member" from @workspace/* libs usually means stale dist d.ts; run `pnpm exec tsc -b lib/<pkg>` before debugging.
 - [Playwright e2e on NixOS](e2e-playwright-setup.md) — use Nix chromium via executablePath, not playwright-downloaded browsers; run `pnpm test:e2e` with both dev workflows up.
+- [SPA prerendering](vdacq-prerender.md) — routes prerendered at build time; new routes need the shared meta record + production rewrites; vite preview does NOT mimic production static serving.

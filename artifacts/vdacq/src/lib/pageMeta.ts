@@ -1,0 +1,41 @@
+export const SITE_NAME = "Van Dyke Acquisitions";
+
+export const DEFAULT_FULL_TITLE =
+  "Van Dyke Acquisitions — CPG Family Office · Control Investor";
+
+export function buildFullTitle(title: string): string {
+  return title === SITE_NAME ? DEFAULT_FULL_TITLE : `${title} — ${SITE_NAME}`;
+}
+
+export interface PageMeta {
+  title: string;
+  description: string;
+}
+
+export const PAGE_META: Record<string, PageMeta> = {
+  "/": {
+    title: SITE_NAME,
+    description:
+      "Van Dyke Acquisitions is a family office deploying permanent capital in control positions across the consumer packaged goods industry. Established 2014.",
+  },
+  "/platform": {
+    title: "Platform",
+    description:
+      "An operating platform built for control ownership in CPG: portfolio operations, brand growth, innovation, technology, and specialty lending capabilities.",
+  },
+  "/track-record": {
+    title: "Track Record",
+    description:
+      "A decade of control acquisitions and exits across the consumer packaged goods industry — Van Dyke Acquisitions' portfolio and investment history since 2014.",
+  },
+  "/team": {
+    title: "Team",
+    description:
+      "Meet the operators and investors behind Van Dyke Acquisitions — a leadership team built for hands-on control ownership in CPG.",
+  },
+  "/contact": {
+    title: "Contact",
+    description:
+      "Get in touch with Van Dyke Acquisitions — acquisition opportunities, lending inquiries, and partnership discussions in the CPG space.",
+  },
+};

@@ -39,12 +39,12 @@ function NotFound() {
   );
 }
 
-export default function App() {
+export default function App({ ssrPath }: { ssrPath?: string }) {
   const [modalOpen, setModalOpen] = useState(false);
   const openModal = () => setModalOpen(true);
 
   return (
-    <Router base={base}>
+    <Router base={base} ssrPath={ssrPath}>
       <ScrollToTop />
       <Nav />
       <Switch>
