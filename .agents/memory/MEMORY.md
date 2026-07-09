@@ -1,0 +1,1 @@
+- [TS project references](ts-project-references.md) — "no exported member" from @workspace/* libs usually means stale dist d.ts; run `pnpm exec tsc -b lib/<pkg>` before debugging.
