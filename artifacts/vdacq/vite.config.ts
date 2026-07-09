@@ -25,11 +25,21 @@ if (!basePath) {
   );
 }
 
+const normalizedBase = basePath.endsWith("/") ? basePath : `${basePath}/`;
+const siteDomain = process.env.REPLIT_DOMAINS?.split(",")[0];
+const ogImageUrl = `${siteDomain ? `https://${siteDomain}` : ""}${normalizedBase}og-image.jpg`;
+
 export default defineConfig({
   base: basePath,
   plugins: [
     react(),
     runtimeErrorOverlay(),
+    {
+      name: "inject-og-image-url",
+      transformIndexHtml(html) {
+        return html.replaceAll("__OG_IMAGE_URL__", ogImageUrl);
+      },
+    },
     ...(process.env.NODE_ENV !== "production" &&
     process.env.REPL_ID !== undefined
       ? [

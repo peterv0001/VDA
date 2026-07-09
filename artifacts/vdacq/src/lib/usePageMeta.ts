@@ -27,8 +27,18 @@ export function usePageMeta(title: string, description: string) {
     setMeta("property", "og:type", "website");
     setMeta("property", "og:site_name", SITE_NAME);
     setMeta("property", "og:url", window.location.href);
-    setMeta("name", "twitter:card", "summary");
+    const ogImageUrl = `${window.location.origin}${import.meta.env.BASE_URL}og-image.jpg`;
+    setMeta("property", "og:image", ogImageUrl);
+    setMeta("property", "og:image:width", "1200");
+    setMeta("property", "og:image:height", "630");
+    setMeta(
+      "property",
+      "og:image:alt",
+      "Van Dyke Acquisitions — We own. We operate.",
+    );
+    setMeta("name", "twitter:card", "summary_large_image");
     setMeta("name", "twitter:title", fullTitle);
     setMeta("name", "twitter:description", description);
+    setMeta("name", "twitter:image", ogImageUrl);
   }, [title, description]);
 }
