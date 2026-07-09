@@ -103,6 +103,16 @@ React + Vite landing page for Van Dyke Acquisitions (vdacq.com). Frontend-only s
 - Uses `@workspace/api-client-react` generated React Query hooks (`useCreateInquiry`, `useCreateAccessRequest`)
 - DB tables: `contact_inquiries`, `portfolio_access_requests` (via `@workspace/db`)
 
+#### Social share images (og:image) & custom domains
+
+The absolute URL for the social share image (`og:image` / `twitter:image`) is baked into `index.html` at build time by the `inject-og-image-url` plugin in `artifacts/vdacq/vite.config.ts`. The site origin is resolved in this order:
+
+1. **`SITE_URL` env var** (takes precedence) — set this to the site's public origin, e.g. `https://www.example.com`, whenever the site is published under a **custom domain**. A bare domain like `www.example.com` is also accepted (https is assumed). Invalid values fail the build with a clear error.
+2. **`REPLIT_DOMAINS`** — automatic fallback for standard Replit deployments.
+3. **Neither set** — production builds fail loudly rather than emitting a broken absolute URL (dev server is unaffected).
+
+If you attach a custom domain, add `SITE_URL` as a deployment environment variable and republish so link previews point at the right host.
+
 ### `scripts` (`@workspace/scripts`)
 
 Utility scripts package. Each script is a `.ts` file in `src/` with a corresponding npm script in `package.json`. Run scripts via `pnpm --filter @workspace/scripts run <script>`. Scripts can import any workspace package (e.g., `@workspace/db`) by adding it as a dependency in `scripts/package.json`.
