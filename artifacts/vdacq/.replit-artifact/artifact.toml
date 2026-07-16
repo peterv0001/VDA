@@ -51,6 +51,14 @@ from = "/team/"
 to = "/team/index.html"
 
 [[services.production.rewrites]]
+from = "/funding"
+to = "/funding/index.html"
+
+[[services.production.rewrites]]
+from = "/funding/"
+to = "/funding/index.html"
+
+[[services.production.rewrites]]
 from = "/contact"
 to = "/contact/index.html"
 

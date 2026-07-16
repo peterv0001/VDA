@@ -33,6 +33,11 @@ export const PAGE_META: Record<string, PageMeta> = {
     description:
       "Meet the operators and investors behind Van Dyke Acquisitions — a leadership team built for hands-on control ownership in CPG.",
   },
+  "/funding": {
+    title: "Get Funding",
+    description:
+      "Growth and operational funding for CPG brands — access growth capital through Cohort Capital or operational financing through Lead Shield Funding.",
+  },
   "/contact": {
     title: "Contact",
     description:

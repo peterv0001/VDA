@@ -7,7 +7,7 @@ async function expectHome(page: Page) {
 }
 
 test.describe("Navigation", () => {
-  test("navigates all five pages through the nav bar", async ({ page }) => {
+  test("navigates all six pages through the nav bar", async ({ page }) => {
     await page.goto("/");
     await expectHome(page);
 
@@ -22,6 +22,16 @@ test.describe("Navigation", () => {
     await page.locator(".nav-links").getByText("Team", { exact: true }).click();
     await expect(page).toHaveURL(/\/team$/);
     await expect(page.getByText("The operators behind the office.")).toBeVisible();
+
+    await page.locator(".nav-links").getByText("Get Funding", { exact: true }).click();
+    await expect(page).toHaveURL(/\/funding$/);
+    await expect(page.getByText("Get Growth Funding", { exact: true })).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: /Get Growth Funding/ }),
+    ).toHaveAttribute("href", "https://cohortfunding.com");
+    await expect(
+      page.getByRole("link", { name: /Get Operational Funding/ }),
+    ).toHaveAttribute("href", "https://leadershieldfunding.com");
 
     await page.locator(".nav-links").getByText("Contact", { exact: true }).click();
     await expect(page).toHaveURL(/\/contact$/);
