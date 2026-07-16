@@ -508,6 +508,13 @@ body { font-family: 'Inter', sans-serif; background: var(--cream); color: var(--
 .fcard-cta:hover { background: var(--gold3); }
 .funding-note { margin-top: 28px; font-size: 11px; color: rgba(244,239,228,.25); text-align: center; letter-spacing: .06em; }
 
+.fund-band { background: var(--cream2); padding: 84px 60px; border-top: 1px solid rgba(13,31,19,.08); }
+.fund-band-inner { display: grid; grid-template-columns: 1.6fr 1fr; gap: 48px; align-items: center; }
+.fund-band-p { font-size: 14px; line-height: 1.85; color: var(--muted2); max-width: 560px; }
+.fund-band-p strong { color: var(--forest2); font-weight: 600; }
+.fund-band-cta { display: flex; justify-content: flex-end; }
+.fund-band-btn { text-decoration: none; display: inline-block; }
+
 .rv { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease; }
 .rv.vis { opacity: 1; transform: none; }
 
@@ -539,6 +546,9 @@ body { font-family: 'Inter', sans-serif; background: var(--cream); color: var(--
   .mobile-menu { display: flex; }
   section, .manifesto, .dual, .platform, .track, .ctrl, .portfolio,
   .why, .team, .contact, .teasers, .funding { padding: 64px 24px; }
+  .fund-band { padding: 64px 24px; }
+  .fund-band-inner { grid-template-columns: 1fr; gap: 28px; }
+  .fund-band-cta { justify-content: flex-start; }
   .funding-grid { grid-template-columns: 1fr; }
   .teaser-grid { grid-template-columns: 1fr 1fr; }
   .page-head { height: 72px; }

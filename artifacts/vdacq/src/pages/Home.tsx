@@ -294,6 +294,35 @@ function DualMandate() {
   );
 }
 
+function FundingBand() {
+  return (
+    <section className="fund-band">
+      <div className="s-in">
+        <div className="fund-band-inner rv">
+          <div>
+            <div className="eyebrow">Need Capital?</div>
+            <div className="s-h" style={{ marginBottom: 14 }}>
+              Funding for brands we don't acquire.
+            </div>
+            <p className="fund-band-p">
+              Not every situation calls for a change of ownership. Through our
+              partner platforms — <strong>Cohort Capital</strong> for growth
+              financing and <strong>Lead Shield Funding</strong> for
+              operational capital — we connect CPG operators with the right
+              capital for their stage.
+            </p>
+          </div>
+          <div className="fund-band-cta">
+            <Link href="/funding" className="btn-gold fund-band-btn">
+              Explore Funding Options &rarr;
+            </Link>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function Teasers() {
   const items: [string, string, string, string][] = [
     [
@@ -352,6 +381,7 @@ export default function Home({ onModalOpen }: { onModalOpen: () => void }) {
       <ConvictionBand />
       <Manifesto />
       <DualMandate />
+      <FundingBand />
       <Teasers />
     </>
   );
