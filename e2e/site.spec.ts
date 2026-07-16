@@ -69,6 +69,25 @@ test.describe("Navigation", () => {
   });
 });
 
+test.describe("Homepage funding banner", () => {
+  test("renders the Need Capital band and its link navigates to /funding", async ({ page }) => {
+    await page.goto("/");
+    await expectHome(page);
+
+    const band = page.locator(".fund-band");
+    await band.scrollIntoViewIfNeeded();
+    await expect(band).toBeVisible();
+    await expect(band.getByText("Need Capital?")).toBeVisible();
+    await expect(band.getByText("Funding for brands we don't acquire.")).toBeVisible();
+
+    const cta = band.getByRole("link", { name: /Explore Funding Options/ });
+    await expect(cta).toBeVisible();
+    await cta.click();
+    await expect(page).toHaveURL(/\/funding$/);
+    await expect(page.getByText("Get Growth Funding", { exact: true })).toBeVisible();
+  });
+});
+
 test.describe("Contact form", () => {
   test("shows a validation error when required fields are missing", async ({ page }) => {
     await page.goto("/contact");
