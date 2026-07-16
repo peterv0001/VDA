@@ -69,6 +69,59 @@ test.describe("Navigation", () => {
   });
 });
 
+test.describe("Mobile navigation", () => {
+  test.use({ viewport: { width: 375, height: 812 } });
+
+  test("navigates via the hamburger menu at a phone viewport without horizontal overflow", async ({ page }) => {
+    await page.goto("/");
+    await expectHome(page);
+
+    // No horizontal scrolling on the homepage
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    );
+    expect(overflow).toBeLessThanOrEqual(0);
+
+    // Desktop nav links hidden, burger visible
+    await expect(page.locator(".nav-links")).toBeHidden();
+    const burger = page.getByRole("button", { name: "Open menu" });
+    await expect(burger).toBeVisible();
+
+    // Burger tap target is at least 44px
+    const box = await burger.boundingBox();
+    expect(box!.width).toBeGreaterThanOrEqual(44);
+    expect(box!.height).toBeGreaterThanOrEqual(44);
+
+    // Open the menu and navigate to Platform
+    await burger.click();
+    const menu = page.locator("#mobile-menu");
+    await expect(menu).toBeVisible();
+    await menu.locator(".mobile-menu-link", { hasText: "Platform" }).click();
+    await expect(page).toHaveURL(/\/platform$/);
+    await expect(page.locator(".eyebrow").first()).toContainText("Operating Platform");
+
+    // Menu closes after navigating
+    await expect(menu).toBeHidden();
+
+    // Navigate to Contact through the menu and check the page fits
+    await page.getByRole("button", { name: "Open menu" }).click();
+    await menu.locator(".mobile-menu-link", { hasText: "Contact" }).click();
+    await expect(page).toHaveURL(/\/contact$/);
+    await expect(page.getByText("Introduce a situation.")).toBeVisible();
+    const overflowContact = await page.evaluate(
+      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    );
+    expect(overflowContact).toBeLessThanOrEqual(0);
+
+    // Form inputs are at least 16px font size (prevents iOS zoom-on-focus)
+    const fontSize = await page
+      .locator("form.cf input.cf-input")
+      .first()
+      .evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
+    expect(fontSize).toBeGreaterThanOrEqual(16);
+  });
+});
+
 test.describe("Homepage funding banner", () => {
   test("renders the Need Capital band and its link navigates to /funding", async ({ page }) => {
     await page.goto("/");

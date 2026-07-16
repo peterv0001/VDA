@@ -536,8 +536,9 @@ body { font-family: 'Inter', sans-serif; background: var(--cream); color: var(--
 .teaser-link { font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--muted2); margin-top: 18px; font-weight: 600; transition: color .25s; }
 
 @media (max-width: 900px) {
-  .nav { padding: 16px 24px; }
-  .nav.scrolled { padding: 12px 24px; }
+  .nav { padding: 16px 20px; }
+  .nav.scrolled { padding: 12px 20px; }
+  .nav-burger { width: 44px; height: 44px; }
   .nav.menu-open { background: none; backdrop-filter: none; border-bottom: none; }
   .nav.menu-open .nav-brand { position: relative; z-index: 320; }
   .nav-links { display: none; }
@@ -571,13 +572,64 @@ body { font-family: 'Inter', sans-serif; background: var(--cream); color: var(--
   .port-grid { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 600px) {
+  section, .manifesto, .dual, .platform, .track, .ctrl, .portfolio,
+  .why, .team, .contact, .teasers, .funding, .fund-band { padding: 56px 20px; }
+  .nav-wordmark { font-size: 16px; }
+  .nav-sub { font-size: 7.5px; letter-spacing: .2em; }
+  .hero-content { padding: 110px 20px 64px; }
+  .hero h1 { font-size: clamp(32px, 9.5vw, 42px); }
+  .hero-kicker { flex-wrap: wrap; row-gap: 8px; }
+  .hero-body { font-size: 14px; line-height: 1.8; margin-bottom: 32px; }
+  .hero-btns { flex-direction: column; align-items: stretch; }
+  .btn-gold, .btn-outline { padding: 16px 24px; text-align: center; }
+  .s-h { font-size: clamp(24px, 7.4vw, 32px); }
+  .proof-bar { grid-template-columns: 1fr 1fr; }
+  .pb-item { padding: 16px; border-bottom: 1px solid rgba(168,123,46,.08); }
+  .pb-item:nth-child(2n) { border-right: none; }
+  .pb-item:last-child { grid-column: span 2; border-bottom: none; }
+  .cb-item { flex: 1 0 100%; padding: 18px 20px; }
+  .cb-item:last-child, .cb-item { border-right: none; border-bottom: 1px solid rgba(8,15,10,.12); }
+  .conv-inner .cb-item:last-child { border-bottom: none; }
+  .mfst-pull { font-size: 17px; padding-left: 16px; }
+  .vc-pillars { grid-template-columns: 1fr; }
+  .dcard { padding: 32px 22px; }
+  .dcard-h { font-size: 20px; }
   .tr-grid { grid-template-columns: 1fr; }
+  .tcard { padding: 28px 22px; }
   .teaser-grid { grid-template-columns: 1fr; }
   .plat-caps { grid-template-columns: 1fr; }
+  .plat-grid { gap: 32px; }
+  .playbook-bar { flex-direction: column; align-items: flex-start; gap: 14px; padding: 24px 22px; }
+  .playbook-bar-icon { writing-mode: horizontal-tb; }
+  .playbook-bar-text { font-size: 15px; }
+  .ctrl-box { padding: 28px 22px; }
+  .ctrl-stats { grid-template-columns: 1fr; }
   .why-grid { grid-template-columns: 1fr; }
+  .why-bottom { padding: 24px 22px; }
+  .why-bottom-text { font-size: 16px; }
+  .why-cta { align-self: stretch; text-align: center; padding: 16px 24px; white-space: normal; }
   .team-grid { grid-template-columns: 1fr; }
-  .tmc.founder { grid-column: span 1; flex-direction: column; }
+  .tmc.founder { grid-column: span 1; flex-direction: column; align-items: flex-start; gap: 16px; padding: 28px 22px; }
   .port-grid { grid-template-columns: 1fr; }
   .port-header { flex-direction: column; align-items: flex-start; gap: 8px; }
-  .proof-bar { grid-template-columns: 1fr 1fr; }
+  .port-cta-row { justify-content: stretch; }
+  .btn-outline-dark { width: 100%; padding: 16px 24px; }
+  .contact-grid { gap: 48px; }
+  .cf-row { grid-template-columns: 1fr; }
+  .cf-input, .modal-input { font-size: 16px; padding: 13px 14px; }
+  .contact-book-link { display: flex; justify-content: center; width: 100%; padding: 15px 16px; margin-top: 14px; }
+  .contact-book-link:first-of-type { margin-top: 28px; }
+  .cf-alt { font-size: 13px; line-height: 2; }
+  .fcard { padding: 32px 22px; }
+  .fcard-h { font-size: 21px; }
+  .fcard-cta { padding: 16px 24px; }
+  .fund-band-btn { width: 100%; text-align: center; padding: 16px 24px; }
+  .modal { width: calc(100% - 32px); padding: 40px 24px 32px; max-height: calc(100dvh - 32px); overflow-y: auto; }
+  .modal-title { font-size: 20px; }
+  .modal-close { top: 10px; right: 10px; width: 44px; height: 44px; }
+  .modal-submit, .cf-submit { padding: 16px; }
+  .footer { padding: 32px 20px; flex-direction: column; align-items: flex-start; gap: 18px; }
+  .footer-links { flex-wrap: wrap; gap: 4px 12px; }
+  .footer-links a, .footer-access-btn { padding: 10px 4px; display: inline-block; }
+  .track-note, .funding-note { line-height: 1.7; }
 }
