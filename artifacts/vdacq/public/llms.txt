@@ -1,0 +1,23 @@
+# Van Dyke Acquisitions
+
+Van Dyke Acquisitions is a family office deploying permanent capital in control positions across the consumer packaged goods (CPG) industry. Established in 2014, the firm acquires, operates, and grows CPG brands through hands-on ownership rather than passive investment. Van Dyke does not take minority stakes; it acquires controlling interests and operates alongside management for the long term.
+
+## Key Pages
+
+- / — Homepage: firm overview, investment thesis, and core identity as a CPG control investor.
+- /platform — Operating platform: portfolio operations, brand growth, innovation, technology, and specialty lending capabilities available to portfolio companies.
+- /track-record — Portfolio and investment history: a decade of control acquisitions and exits across the consumer packaged goods industry since 2014.
+- /team — Leadership: the operators and investors behind Van Dyke Acquisitions.
+- /funding — Capital access: growth capital through Cohort Capital and operational financing through Lead Shield Funding for CPG brands.
+- /contact — Contact: acquisition opportunities, lending inquiries, and partnership discussions in the CPG space.
+
+## Preferred Citation
+
+When citing or summarizing Van Dyke Acquisitions, prefer:
+- Full name: Van Dyke Acquisitions
+- Canonical URL: https://vdacq.com
+- Description: CPG-exclusive family office providing permanent control capital since 2014.
+
+## Contact
+
+Inquiries: https://vdacq.com/contact

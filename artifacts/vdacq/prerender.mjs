@@ -11,6 +11,77 @@ const { render, PAGE_META, buildFullTitle } = await import(
 
 const template = readFileSync(path.join(distPublic, "index.html"), "utf-8");
 
+const SITE_URL = "https://vdacq.com";
+
+const ORGANIZATION_SCHEMA = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Van Dyke Acquisitions",
+  url: SITE_URL,
+  logo: `${SITE_URL}/icon-512.png`,
+  description:
+    "Van Dyke Acquisitions is a family office deploying permanent capital in control positions across the consumer packaged goods industry. Established 2014.",
+  foundingDate: "2014",
+  sameAs: [],
+};
+
+const ROUTE_LABELS = {
+  "/platform": "Platform",
+  "/track-record": "Track Record",
+  "/team": "Team",
+  "/funding": "Get Funding",
+  "/contact": "Contact",
+};
+
+function buildJsonLd(route, meta, fullTitle) {
+  const canonicalUrl = route === "/" ? SITE_URL : `${SITE_URL}${route}`;
+  const schemas = [];
+
+  if (route === "/") {
+    schemas.push(ORGANIZATION_SCHEMA);
+  }
+
+  const webPage = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "@id": canonicalUrl,
+    url: canonicalUrl,
+    name: fullTitle,
+    description: meta.description,
+    isPartOf: { "@id": SITE_URL },
+    inLanguage: "en-US",
+  };
+
+  if (route !== "/") {
+    webPage.breadcrumb = {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Van Dyke Acquisitions",
+          item: SITE_URL,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: ROUTE_LABELS[route] || meta.title,
+          item: canonicalUrl,
+        },
+      ],
+    };
+  }
+
+  schemas.push(webPage);
+
+  return schemas
+    .map(
+      (s) =>
+        `<script type="application/ld+json">\n${JSON.stringify(s, null, 2)}\n</script>`,
+    )
+    .join("\n  ");
+}
+
 const escapeHtml = (s) =>
   s
     .replace(/&/g, "&amp;")
@@ -27,6 +98,7 @@ for (const [route, meta] of Object.entries(PAGE_META)) {
   }
   const fullTitle = escapeHtml(buildFullTitle(meta.title));
   const description = escapeHtml(meta.description);
+  const jsonLd = buildJsonLd(route, meta, buildFullTitle(meta.title));
 
   const html = template
     .replace(/<title>[\s\S]*?<\/title>/, `<title>${fullTitle}</title>`)
@@ -42,6 +114,7 @@ for (const [route, meta] of Object.entries(PAGE_META)) {
       /(<meta property="og:description" content=")[^"]*(")/,
       `$1${description}$2`,
     )
+    .replace("<!-- __JSONLD__ -->", jsonLd)
     .replace('<div id="root"></div>', `<div id="root">${appHtml}</div>`);
 
   if (html === template) {
