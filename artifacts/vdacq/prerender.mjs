@@ -101,6 +101,7 @@ for (const [route, meta] of Object.entries(PAGE_META)) {
   const fullTitle = escapeHtml(buildFullTitle(meta.title));
   const description = escapeHtml(meta.description);
   const jsonLd = buildJsonLd(route, meta, buildFullTitle(meta.title));
+  const canonicalUrl = escapeHtml(route === "/" ? SITE_URL : `${SITE_URL}${route}`);
 
   const html = template
     .replace(/<title>[\s\S]*?<\/title>/, `<title>${fullTitle}</title>`)
@@ -114,6 +115,22 @@ for (const [route, meta] of Object.entries(PAGE_META)) {
     )
     .replace(
       /(<meta property="og:description" content=")[^"]*(")/,
+      `$1${description}$2`,
+    )
+    .replace(
+      /(<meta property="og:url" content=")[^"]*(")/,
+      `$1${canonicalUrl}$2`,
+    )
+    .replace(
+      /(<link rel="canonical" href=")[^"]*(")/,
+      `$1${canonicalUrl}$2`,
+    )
+    .replace(
+      /(<meta name="twitter:title" content=")[^"]*(")/,
+      `$1${fullTitle}$2`,
+    )
+    .replace(
+      /(<meta name="twitter:description" content=")[^"]*(")/,
       `$1${description}$2`,
     )
     .replace("<!-- __JSONLD__ -->", jsonLd)

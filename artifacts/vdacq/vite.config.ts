@@ -47,17 +47,19 @@ function resolveSiteOrigin(isBuild: boolean): string {
 
   const replitDomain = process.env.REPLIT_DOMAINS?.split(",")[0]?.trim();
 
-  if (replitDomain) {
-    return `https://${replitDomain}`;
-  }
-
   if (isBuild) {
     throw new Error(
-      "Cannot determine the site's public URL for social share images (og:image). " +
-        "Set the SITE_URL environment variable (e.g. https://www.example.com) — it takes " +
-        "precedence over REPLIT_DOMAINS and is required when neither is available, " +
-        "such as when publishing under a custom domain.",
+      "SITE_URL is required for production builds. " +
+        "Set SITE_URL to the site's stable public origin (e.g. https://www.example.com) " +
+        "so that og:image, og:url, and canonical tags are not baked with an ephemeral preview hostname. " +
+        (replitDomain
+          ? `Found REPLIT_DOMAINS fallback (${replitDomain}) but it is not stable enough for a shippable build.`
+          : "Neither SITE_URL nor REPLIT_DOMAINS is available."),
     );
+  }
+
+  if (replitDomain) {
+    return `https://${replitDomain}`;
   }
 
   return "";
@@ -75,7 +77,10 @@ export default defineConfig(async ({ command }) => {
       {
         name: "inject-og-image-url",
         transformIndexHtml(html) {
-          return html.replaceAll("__OG_IMAGE_URL__", ogImageUrl);
+          const homepageCanonical = `${siteOrigin}${normalizedBase}`;
+          return html
+            .replaceAll("__OG_IMAGE_URL__", ogImageUrl)
+            .replaceAll("__CANONICAL_URL__", homepageCanonical);
         },
       },
       ...(process.env.NODE_ENV !== "production" &&
