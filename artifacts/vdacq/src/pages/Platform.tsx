@@ -1,4 +1,4 @@
-import { useLocation } from "wouter";
+import { Link } from "wouter";
 import { useReveal } from "../lib/useReveal";
 import { usePageMeta } from "../lib/usePageMeta";
 import { PAGE_META } from "../lib/pageMeta";
@@ -40,7 +40,7 @@ function PlatformSection() {
     <section className="platform" id="platform">
       <div className="s-in">
         <div className="eyebrow rv">Operating Platform</div>
-        <div className="s-h rv">The VDA Operating Group.</div>
+        <h1 className="s-h rv">The VDA Operating Group.</h1>
         <div className="plat-grid rv">
           <div>
             <div className="plat-name">
@@ -102,11 +102,11 @@ function ControlConviction() {
       <div className="s-in">
         <div className="rv">
           <div className="eyebrow">Why Control</div>
-          <div className="s-h">
+          <h2 className="s-h">
             Control is not a structure.
             <br />
             It is a standard of accountability.
-          </div>
+          </h2>
           <p className="s-sub">
             We take majority or full-control positions in every acquisition. It
             is the only structure that allows us to move with the speed and
@@ -186,7 +186,6 @@ function ControlConviction() {
 }
 
 function WhyVDA() {
-  const [, navigate] = useLocation();
   const cards = [
     [
       "I",
@@ -214,11 +213,11 @@ function WhyVDA() {
       <div className="s-in">
         <div className="rv">
           <div className="eyebrow light">Why Van Dyke</div>
-          <div className="s-h" style={{ color: "var(--cream)" }}>
+          <h2 className="s-h" style={{ color: "var(--cream)" }}>
             The four reasons serious counterparties
             <br />
             call us before anyone else.
-          </div>
+          </h2>
         </div>
         <div className="why-grid rv">
           {cards.map(([n, t, d]) => (
@@ -236,9 +235,9 @@ function WhyVDA() {
             hesitation, and hold without a deadline:{" "}
             <em>that is precisely what we were built for.</em>"
           </div>
-          <button className="why-cta" onClick={() => navigate("/contact")}>
+          <Link href="/contact" className="why-cta">
             Start a Conversation &rarr;
-          </button>
+          </Link>
         </div>
       </div>
     </section>

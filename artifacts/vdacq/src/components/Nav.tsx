@@ -13,7 +13,7 @@ const links: [string, string][] = [
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [location, navigate] = useLocation();
+  const [location] = useLocation();
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handler);
@@ -49,9 +49,9 @@ export function Nav() {
           </Link>
         ))}
       </div>
-      <button className="nav-cta" onClick={() => navigate("/contact")}>
+      <Link href="/contact" className="nav-cta">
         Introduce a Situation
-      </button>
+      </Link>
       <button
         className={`nav-burger${menuOpen ? " open" : ""}`}
         aria-label={menuOpen ? "Close menu" : "Open menu"}
@@ -81,12 +81,9 @@ export function Nav() {
             </Link>
           ))}
         </div>
-        <button
-          className="mobile-menu-cta"
-          onClick={() => navigate("/contact")}
-        >
+        <Link href="/contact" className="mobile-menu-cta">
           Introduce a Situation
-        </button>
+        </Link>
       </div>
     </nav>
   );

@@ -73,11 +73,11 @@ function TrackRecordSection({ onModalOpen }: { onModalOpen: () => void }) {
       <div className="s-in">
         <div className="rv">
           <div className="eyebrow light">Track Record</div>
-          <div className="s-h" style={{ color: "var(--cream)" }}>
+          <h1 className="s-h" style={{ color: "var(--cream)" }}>
             20+ control acquisitions.
             <br />
             Proven across the full CPG spectrum.
-          </div>
+          </h1>
           <p className="s-sub" style={{ color: "rgba(244,239,228,.4)" }}>
             Representative situations from a 10-year operating history. Full
             portfolio details available to qualified counterparties upon
@@ -195,7 +195,7 @@ function Portfolio({ onModalOpen }: { onModalOpen: () => void }) {
         <div className="port-header rv">
           <div>
             <div className="eyebrow">Portfolio</div>
-            <div className="s-h">Current Holdings</div>
+            <h2 className="s-h">Current Holdings</h2>
           </div>
           <div className="port-access">
             Full profiles require verified access

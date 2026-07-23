@@ -31,7 +31,7 @@ export default function TeamPage() {
         <div className="s-in">
           <div className="rv">
             <div className="eyebrow">Leadership</div>
-            <div className="s-h">The operators behind the office.</div>
+            <h1 className="s-h">The operators behind the office.</h1>
             <p className="s-sub">
               A senior team spanning acquisitions, operations, technology, revenue, and portfolio
               management — unified by a decade of shared experience in consumer goods.

@@ -44,9 +44,9 @@ export default function ContactPage() {
           <div className="contact-grid rv">
             <div>
               <div className="eyebrow light">Start a Conversation</div>
-              <div className="s-h" style={{ color: "var(--cream)" }}>
+              <h1 className="s-h" style={{ color: "var(--cream)" }}>
                 Introduce a situation.
-              </div>
+              </h1>
               <ul className="contact-reasons">
                 {[
                   [

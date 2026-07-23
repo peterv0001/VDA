@@ -41,11 +41,11 @@ export default function FundingPage() {
         <div className="s-in">
           <div className="rv">
             <div className="eyebrow light">Get Funding</div>
-            <div className="s-h" style={{ color: "var(--cream)" }}>
+            <h1 className="s-h" style={{ color: "var(--cream)" }}>
               Capital for every stage
               <br />
               of the journey.
-            </div>
+            </h1>
             <p className="s-sub" style={{ color: "rgba(244,239,228,.4)" }}>
               Whether you're scaling a brand or bridging an operational gap, our
               partner platforms deploy the right capital for your situation.

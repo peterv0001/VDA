@@ -1,10 +1,9 @@
-import { Link, useLocation } from "wouter";
+import { Link } from "wouter";
 import { useReveal } from "../lib/useReveal";
 import { usePageMeta } from "../lib/usePageMeta";
 import { PAGE_META } from "../lib/pageMeta";
 
 function Hero({ onModalOpen }: { onModalOpen: () => void }) {
-  const [, navigate] = useLocation();
   return (
     <div className="hero">
       <div className="hero-tex" />
@@ -45,9 +44,9 @@ function Hero({ onModalOpen }: { onModalOpen: () => void }) {
           </strong>
         </p>
         <div className="hero-btns">
-          <button className="btn-gold" onClick={() => navigate("/contact")}>
+          <Link href="/contact" className="btn-gold">
             Introduce a Situation
-          </button>
+          </Link>
           <button className="btn-outline" onClick={onModalOpen}>
             Request Portfolio Access
           </button>
@@ -100,7 +99,7 @@ function Manifesto() {
         <div className="mfst-grid rv">
           <div>
             <div className="eyebrow">Our Conviction</div>
-            <div className="s-h">More than a capital provider.</div>
+            <h2 className="s-h">More than a capital provider.</h2>
             <div className="mfst-pull">
               "The firms that will define the next decade of CPG value creation
               are those with operating capabilities embedded at the ownership
@@ -193,11 +192,11 @@ function DualMandate() {
       <div className="s-in">
         <div className="dual-intro rv">
           <div className="eyebrow light">Investment Mandate</div>
-          <div className="s-h" style={{ color: "var(--cream)" }}>
+          <h2 className="s-h" style={{ color: "var(--cream)" }}>
             Two types of situation.
             <br />
             One standard of rigor.
-          </div>
+          </h2>
           <p className="dual-intro-body">
             We have expanded beyond our original distressed mandate — not
             because we have softened our standards, but because the operating
@@ -301,9 +300,9 @@ function FundingBand() {
         <div className="fund-band-inner rv">
           <div>
             <div className="eyebrow">Need Capital?</div>
-            <div className="s-h" style={{ marginBottom: 14 }}>
+            <h2 className="s-h" style={{ marginBottom: 14 }}>
               Funding for brands we don't acquire.
-            </div>
+            </h2>
             <p className="fund-band-p">
               Not every situation calls for a change of ownership. Through our
               partner platforms — <strong>Cohort Capital</strong> for growth
@@ -355,7 +354,7 @@ function Teasers() {
       <div className="s-in">
         <div className="rv">
           <div className="eyebrow">Explore Van Dyke</div>
-          <div className="s-h">Go deeper.</div>
+          <h2 className="s-h">Go deeper.</h2>
         </div>
         <div className="teaser-grid rv">
           {items.map(([href, eye, title, desc]) => (
