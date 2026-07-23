@@ -11,7 +11,7 @@ const { render, PAGE_META, buildFullTitle } = await import(
 
 const template = readFileSync(path.join(distPublic, "index.html"), "utf-8");
 
-const SITE_URL = "https://vdacq.com";
+const SITE_URL = "https://www.vdacq.com";
 
 const ORGANIZATION_SCHEMA = {
   "@context": "https://schema.org",

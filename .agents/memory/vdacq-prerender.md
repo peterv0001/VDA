@@ -12,3 +12,5 @@ The vdacq site prerenders all routes to static HTML at build time (client build 
 - `vite preview` SPA fallback serves the root `index.html` for extensionless paths and ignores `dist/public/<route>/index.html`; that is NOT how production behaves. Production static serving uses artifact `services.production.rewrites` (evaluated in order, specific routes before the `/*` catch-all) to map each route to its prerendered file.
 - Adding a new route requires updating the shared meta record AND the production rewrites (via the artifact TOML replace flow, not direct edits).
 - Everything browser-only must stay inside effects; components were already SSR-safe.
+- The canonical origin is `https://www.vdacq.com` (the Replit deployment's verified domain). The apex `vdacq.com` is a registrar-side redirect that only forwards the root path, so canonical/og URLs, sitemap, robots, and llms.txt must all use www. SITE_URL (env var + prerender script) is set to www accordingly.
+- Local builds need `SITE_URL`, `PORT`, and `BASE_PATH=/` env vars set or vite.config.ts fails fast.

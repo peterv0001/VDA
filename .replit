@@ -51,4 +51,4 @@ channel = "stable-25_05"
 [userenv]
 
 [userenv.shared]
-SITE_URL = "https://vdacq.com"
+SITE_URL = "https://www.vdacq.com"
