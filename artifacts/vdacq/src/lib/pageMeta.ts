@@ -43,4 +43,9 @@ export const PAGE_META: Record<string, PageMeta> = {
     description:
       "Get in touch with Van Dyke Acquisitions — acquisition opportunities, lending inquiries, and partnership discussions in the CPG space.",
   },
+  "/404": {
+    title: "Page Not Found",
+    description:
+      "The page you are looking for does not exist. Van Dyke Acquisitions — permanent capital, control acquisitions, CPG exclusive.",
+  },
 };

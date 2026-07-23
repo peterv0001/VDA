@@ -90,7 +90,9 @@ const escapeHtml = (s) =>
     .replace(/"/g, "&quot;");
 
 for (const [route, meta] of Object.entries(PAGE_META)) {
-  const appHtml = render(route);
+  // The /404 entry is rendered as a dedicated 404.html, not as a directory index
+  const renderPath = route === "/404" ? "/___not_found___" : route;
+  const appHtml = render(renderPath);
   if (!appHtml || appHtml.length < 500) {
     throw new Error(
       `Prerender for ${route} produced suspiciously little HTML (${appHtml.length} chars)`,
@@ -121,10 +123,14 @@ for (const [route, meta] of Object.entries(PAGE_META)) {
     throw new Error(`Prerender injection failed for ${route}`);
   }
 
-  const outFile =
-    route === "/"
-      ? path.join(distPublic, "index.html")
-      : path.join(distPublic, route.replace(/^\//, ""), "index.html");
+  let outFile;
+  if (route === "/") {
+    outFile = path.join(distPublic, "index.html");
+  } else if (route === "/404") {
+    outFile = path.join(distPublic, "404.html");
+  } else {
+    outFile = path.join(distPublic, route.replace(/^\//, ""), "index.html");
+  }
   mkdirSync(path.dirname(outFile), { recursive: true });
   writeFileSync(outFile, html);
   console.log(`prerendered ${route} -> ${path.relative(__dirname, outFile)}`);

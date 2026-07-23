@@ -68,4 +68,4 @@ to = "/contact/index.html"
 
 [[services.production.rewrites]]
 from = "/*"
-to = "/index.html"
+to = "/404.html"
