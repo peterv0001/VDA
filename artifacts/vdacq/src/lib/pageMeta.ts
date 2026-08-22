@@ -38,6 +38,11 @@ export const PAGE_META: Record<string, PageMeta> = {
     description:
       "Growth and operational funding for CPG brands — access growth capital through Cohort Capital or operational financing through Lead Shield Funding.",
   },
+  "/velocity-os": {
+    title: "Velocity OS Operations Help",
+    description:
+      "Velocity OS helps owners and operators create clearer accountability, measurable execution, operating leverage, and disciplined growth.",
+  },
   "/contact": {
     title: "Contact",
     description:

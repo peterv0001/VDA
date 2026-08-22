@@ -7,7 +7,7 @@ async function expectHome(page: Page) {
 }
 
 test.describe("Navigation", () => {
-  test("navigates all six pages through the nav bar", async ({ page }) => {
+  test("navigates all seven pages through the nav bar", async ({ page }) => {
     await page.goto("/");
     await expectHome(page);
 
@@ -32,6 +32,10 @@ test.describe("Navigation", () => {
     await expect(
       page.getByRole("link", { name: /Get Operational Funding/ }),
     ).toHaveAttribute("href", "https://leadershieldfunding.com");
+
+    await page.locator(".nav-links").getByText("Operations Help", { exact: true }).click();
+    await expect(page).toHaveURL(/\/velocity-os$/);
+    await expect(page.getByRole("heading", { name: /Execution is not an accident/ })).toBeVisible();
 
     await page.locator(".nav-links").getByText("Contact", { exact: true }).click();
     await expect(page).toHaveURL(/\/contact$/);
@@ -103,15 +107,15 @@ test.describe("Mobile navigation", () => {
     // Menu closes after navigating
     await expect(menu).toBeHidden();
 
-    // Navigate to Contact through the menu and check the page fits
+    // Navigate to Operations Help through the menu and check the page fits
     await page.getByRole("button", { name: "Open menu" }).click();
-    await menu.locator(".mobile-menu-link", { hasText: "Contact" }).click();
-    await expect(page).toHaveURL(/\/contact$/);
-    await expect(page.getByText("Introduce a situation.")).toBeVisible();
-    const overflowContact = await page.evaluate(
+    await menu.locator(".mobile-menu-link", { hasText: "Operations Help" }).click();
+    await expect(page).toHaveURL(/\/velocity-os$/);
+    await expect(page.getByRole("heading", { name: /Execution is not an accident/ })).toBeVisible();
+    const overflowVelocity = await page.evaluate(
       () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
     );
-    expect(overflowContact).toBeLessThanOrEqual(0);
+    expect(overflowVelocity).toBeLessThanOrEqual(0);
 
     // Form inputs are at least 16px font size (prevents iOS zoom-on-focus)
     const fontSize = await page
@@ -119,6 +123,105 @@ test.describe("Mobile navigation", () => {
       .first()
       .evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
     expect(fontSize).toBeGreaterThanOrEqual(16);
+  });
+});
+
+test.describe("Velocity OS operations intake", () => {
+  test("opens directly and shows a clear validation error", async ({ page }) => {
+    await page.goto("/velocity-os");
+
+    await expect(
+      page.getByRole("heading", { name: /Execution is not an accident/ }),
+    ).toBeVisible();
+    await page.getByRole("button", { name: "Submit Request" }).click();
+    await expect(page.getByRole("alert")).toHaveText(
+      "Please fill in all required fields.",
+    );
+  });
+
+  test("submits a dedicated intake and confirms review expectations", async ({ page }) => {
+    const id = uniq();
+    await page.goto("/velocity-os");
+
+    await page.getByLabel("Full Name *").fill(`Velocity E2E ${id}`);
+    await page.getByLabel("Title / Role *").fill("Chief Operating Officer");
+    await page.getByLabel("Work Email *").fill(`velocity-${id}@example.com`);
+    await page.getByLabel("Phone (optional)").fill("555-010-4242");
+    await page.getByLabel("Company Name *").fill("E2E Operating Company");
+    await page
+      .getByLabel("Company Website (optional)")
+      .fill("https://example.com");
+    await page
+      .getByLabel("Company Context *")
+      .fill("A growing consumer company with a distributed operating team.");
+    await page
+      .getByLabel("Primary Challenge *")
+      .fill("Accountability is unclear and execution depends on the founder.");
+    await page
+      .getByLabel("Desired Outcome *")
+      .fill("Create repeatable execution with clear ownership and leading indicators.");
+    await page.getByLabel("Urgency *").selectOption("this-quarter");
+
+    const [response] = await Promise.all([
+      page.waitForResponse(
+        (r) =>
+          r.url().includes("/api/velocity-os-intakes") &&
+          r.request().method() === "POST",
+      ),
+      page.getByRole("button", { name: "Submit Request" }).click(),
+    ]);
+    expect(response.status()).toBe(201);
+
+    await expect(
+      page.getByRole("heading", { name: "Your request is under review." }),
+    ).toBeVisible();
+    await expect(
+      page.getByText(/follow up about a Velocity OS call or waitlist placement/),
+    ).toBeVisible();
+  });
+
+  test("normalizes valid data and rejects invalid direct API submissions", async ({
+    request,
+  }) => {
+    const validPayload = {
+      fullName: "Velocity API Test",
+      workEmail: "velocity-api@example.com",
+      titleRole: "Operator",
+      companyName: "E2E Operations Co",
+      companyContext: "A company with a growing operating team and real complexity.",
+      primaryChallenge:
+        "Leadership decisions are delayed and ownership is inconsistent.",
+      desiredOutcome:
+        "Create a reliable operating rhythm with clearer accountability.",
+      urgency: "this-quarter",
+    };
+
+    const whitespaceResponse = await request.post("/api/velocity-os-intakes", {
+      data: { ...validPayload, fullName: "   " },
+    });
+    expect(whitespaceResponse.status()).toBe(400);
+
+    const websiteResponse = await request.post("/api/velocity-os-intakes", {
+      data: { ...validPayload, companyWebsite: "not a website" },
+    });
+    expect(websiteResponse.status()).toBe(400);
+
+    const nonWebUriResponse = await request.post("/api/velocity-os-intakes", {
+      data: {
+        ...validPayload,
+        companyWebsite: "mailto:operator@example.com",
+      },
+    });
+    expect(nonWebUriResponse.status()).toBe(400);
+
+    const normalizedResponse = await request.post("/api/velocity-os-intakes", {
+      data: {
+        ...validPayload,
+        workEmail: " velocity-normalized@example.com ",
+        companyWebsite: " https://example.com ",
+      },
+    });
+    expect(normalizedResponse.status()).toBe(201);
   });
 });
 

@@ -32,6 +32,59 @@ export interface CreateAccessRequestBody {
   reason: string;
 }
 
+export type VelocityOsIntakeInputUrgency =
+  (typeof VelocityOsIntakeInputUrgency)[keyof typeof VelocityOsIntakeInputUrgency];
+
+export const VelocityOsIntakeInputUrgency = {
+  immediate: "immediate",
+  "this-quarter": "this-quarter",
+  "next-six-months": "next-six-months",
+  exploring: "exploring",
+} as const;
+
+export interface VelocityOsIntakeInput {
+  /**
+   * @minLength 1
+   * @maxLength 120
+   */
+  fullName: string;
+  /** @maxLength 254 */
+  workEmail: string;
+  /** @maxLength 40 */
+  phone?: string;
+  /**
+   * @minLength 1
+   * @maxLength 120
+   */
+  titleRole: string;
+  /**
+   * @minLength 1
+   * @maxLength 160
+   */
+  companyName: string;
+  /**
+   * @maxLength 300
+   * @pattern ^[hH][tT][tT][pP][sS]?://
+   */
+  companyWebsite?: string;
+  /**
+   * @minLength 20
+   * @maxLength 2000
+   */
+  companyContext: string;
+  /**
+   * @minLength 20
+   * @maxLength 2000
+   */
+  primaryChallenge: string;
+  /**
+   * @minLength 20
+   * @maxLength 2000
+   */
+  desiredOutcome: string;
+  urgency: VelocityOsIntakeInputUrgency;
+}
+
 export interface SubmissionResult {
   success: boolean;
   message: string;

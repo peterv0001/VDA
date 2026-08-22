@@ -22,6 +22,7 @@ import type {
   ErrorResponse,
   HealthStatus,
   SubmissionResult,
+  VelocityOsIntakeInput,
 } from "./api.schemas";
 
 import { customFetch } from "../custom-fetch";
@@ -281,4 +282,92 @@ export const useCreateAccessRequest = <
   TContext
 > => {
   return useMutation(getCreateAccessRequestMutationOptions(options));
+};
+
+/**
+ * Stores a dedicated request for help implementing an operating system
+ * @summary Submit a Velocity OS operations intake
+ */
+export const getCreateVelocityOsIntakeUrl = () => {
+  return `/api/velocity-os-intakes`;
+};
+
+export const createVelocityOsIntake = async (
+  velocityOsIntakeInput: VelocityOsIntakeInput,
+  options?: RequestInit,
+): Promise<SubmissionResult> => {
+  return customFetch<SubmissionResult>(getCreateVelocityOsIntakeUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(velocityOsIntakeInput),
+  });
+};
+
+export const getCreateVelocityOsIntakeMutationOptions = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createVelocityOsIntake>>,
+    TError,
+    { data: BodyType<VelocityOsIntakeInput> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createVelocityOsIntake>>,
+  TError,
+  { data: BodyType<VelocityOsIntakeInput> },
+  TContext
+> => {
+  const mutationKey = ["createVelocityOsIntake"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createVelocityOsIntake>>,
+    { data: BodyType<VelocityOsIntakeInput> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return createVelocityOsIntake(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateVelocityOsIntakeMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createVelocityOsIntake>>
+>;
+export type CreateVelocityOsIntakeMutationBody =
+  BodyType<VelocityOsIntakeInput>;
+export type CreateVelocityOsIntakeMutationError = ErrorType<ErrorResponse>;
+
+/**
+ * @summary Submit a Velocity OS operations intake
+ */
+export const useCreateVelocityOsIntake = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createVelocityOsIntake>>,
+    TError,
+    { data: BodyType<VelocityOsIntakeInput> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createVelocityOsIntake>>,
+  TError,
+  { data: BodyType<VelocityOsIntakeInput> },
+  TContext
+> => {
+  return useMutation(getCreateVelocityOsIntakeMutationOptions(options));
 };

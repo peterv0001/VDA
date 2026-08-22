@@ -9,6 +9,7 @@ import TrackRecordPage from "./pages/TrackRecord";
 import TeamPage from "./pages/Team";
 import ContactPage from "./pages/Contact";
 import FundingPage from "./pages/Funding";
+import VelocityOSPage from "./pages/VelocityOS";
 import { usePageMeta } from "./lib/usePageMeta";
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
@@ -63,6 +64,9 @@ export default function App({ ssrPath }: { ssrPath?: string }) {
         </Route>
         <Route path="/funding">
           <FundingPage />
+        </Route>
+        <Route path="/velocity-os">
+          <VelocityOSPage />
         </Route>
         <Route path="/contact">
           <ContactPage />

@@ -41,3 +41,66 @@ export const CreateAccessRequestBody = zod.object({
   titleRole: zod.string().optional(),
   reason: zod.string().min(1),
 });
+
+/**
+ * Stores a dedicated request for help implementing an operating system
+ * @summary Submit a Velocity OS operations intake
+ */
+export const createVelocityOsIntakeBodyFullNameMax = 120;
+
+export const createVelocityOsIntakeBodyWorkEmailMax = 254;
+
+export const createVelocityOsIntakeBodyPhoneMax = 40;
+
+export const createVelocityOsIntakeBodyTitleRoleMax = 120;
+
+export const createVelocityOsIntakeBodyCompanyNameMax = 160;
+
+export const createVelocityOsIntakeBodyCompanyWebsiteMax = 300;
+
+export const createVelocityOsIntakeBodyCompanyWebsiteRegExp = new RegExp(
+  "^[hH][tT][tT][pP][sS]?:\/",
+);
+export const createVelocityOsIntakeBodyCompanyContextMin = 20;
+export const createVelocityOsIntakeBodyCompanyContextMax = 2000;
+
+export const createVelocityOsIntakeBodyPrimaryChallengeMin = 20;
+export const createVelocityOsIntakeBodyPrimaryChallengeMax = 2000;
+
+export const createVelocityOsIntakeBodyDesiredOutcomeMin = 20;
+export const createVelocityOsIntakeBodyDesiredOutcomeMax = 2000;
+
+export const CreateVelocityOsIntakeBody = zod.object({
+  fullName: zod.string().min(1).max(createVelocityOsIntakeBodyFullNameMax),
+  workEmail: zod.string().email().max(createVelocityOsIntakeBodyWorkEmailMax),
+  phone: zod.string().max(createVelocityOsIntakeBodyPhoneMax).optional(),
+  titleRole: zod.string().min(1).max(createVelocityOsIntakeBodyTitleRoleMax),
+  companyName: zod
+    .string()
+    .min(1)
+    .max(createVelocityOsIntakeBodyCompanyNameMax),
+  companyWebsite: zod
+    .string()
+    .url()
+    .max(createVelocityOsIntakeBodyCompanyWebsiteMax)
+    .regex(createVelocityOsIntakeBodyCompanyWebsiteRegExp)
+    .optional(),
+  companyContext: zod
+    .string()
+    .min(createVelocityOsIntakeBodyCompanyContextMin)
+    .max(createVelocityOsIntakeBodyCompanyContextMax),
+  primaryChallenge: zod
+    .string()
+    .min(createVelocityOsIntakeBodyPrimaryChallengeMin)
+    .max(createVelocityOsIntakeBodyPrimaryChallengeMax),
+  desiredOutcome: zod
+    .string()
+    .min(createVelocityOsIntakeBodyDesiredOutcomeMin)
+    .max(createVelocityOsIntakeBodyDesiredOutcomeMax),
+  urgency: zod.enum([
+    "immediate",
+    "this-quarter",
+    "next-six-months",
+    "exploring",
+  ]),
+});

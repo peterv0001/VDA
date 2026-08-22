@@ -484,6 +484,43 @@ body { font-family: 'Inter', sans-serif; background: var(--cream); color: var(--
 .form-error { font-size: 12px; color: #c44; margin: 0; }
 .cf-submit:disabled { opacity: .5; cursor: not-allowed; }
 
+.vos-hero { background: var(--cream); padding: 96px 60px; min-height: 60vh; display: flex; align-items: center; }
+.vos-hero .s-h .accent { font-style: italic; font-weight: 400; color: var(--gold2); display: block; }
+.vos-sub { font-size: 16px; line-height: 1.9; color: var(--muted2); font-weight: 300; max-width: 680px; margin-top: 24px; }
+.vos-hero-cta { margin-top: 40px; }
+
+.vos-outcomes { background: var(--cream2); padding: 96px 60px; }
+.vos-outcomes-head { max-width: 780px; }
+.vos-outcome-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: rgba(13,31,19,.12); margin-top: 48px; }
+.vos-outcome-card { background: var(--cream2); padding: 34px 32px; }
+.vos-outcome-card h3 { font-family: 'Libre Baskerville', serif; font-size: 18px; line-height: 1.3; color: var(--forest); margin-bottom: 10px; }
+.vos-outcome-card p { font-size: 13px; line-height: 1.8; color: var(--muted2); }
+.vos-engagement { display: grid; grid-template-columns: .65fr 1.6fr; gap: 32px; align-items: start; margin-top: 40px; padding: 30px 32px; border-left: 2px solid var(--gold2); background: rgba(168,123,46,.06); }
+.vos-engagement span { font-size: 9px; letter-spacing: .2em; line-height: 1.7; text-transform: uppercase; color: var(--gold2); font-weight: 600; }
+.vos-engagement p { font-size: 14px; line-height: 1.8; color: var(--forest2); }
+
+.vos-pillars { background: var(--forest); padding: 96px 60px; }
+.vos-h2 { font-family: 'Libre Baskerville', serif; font-size: clamp(28px, 3.2vw, 44px); font-weight: 700; line-height: 1.18; color: var(--cream); margin-bottom: 52px; }
+.vos-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2px; background: rgba(168,123,46,.15); }
+.vos-card { background: rgba(13,31,19,.5); padding: 40px 32px; }
+.vos-card-num { font-family: 'Libre Baskerville', serif; font-size: 20px; font-weight: 700; color: var(--gold3); margin-bottom: 16px; }
+.vos-card-t { font-size: 15px; font-weight: 600; color: var(--cream); margin-bottom: 12px; }
+.vos-card-d { font-size: 13px; line-height: 1.75; color: rgba(244,239,228,.5); font-weight: 300; }
+
+.vos-intake { background: var(--forest2); padding: 96px 60px; }
+.vos-intake-inner { display: grid; grid-template-columns: 1fr 1.3fr; gap: 80px; align-items: start; }
+.vos-intake-info .vos-h2 { margin-bottom: 24px; }
+.vos-intake-p { font-size: 14px; line-height: 1.8; color: rgba(244,239,228,.5); font-weight: 300; }
+.vos-form-container { background: rgba(13,31,19,.4); padding: 48px; border: 1px solid rgba(168,123,46,.15); }
+.vos-form-container .form-success h3 { font-family: 'Libre Baskerville', serif; font-size: 22px; color: var(--cream); margin-bottom: 12px; }
+.vos-form-container .form-error { color: #ff9d91; line-height: 1.6; }
+
+@media (max-width: 900px) {
+  .vos-hero, .vos-outcomes, .vos-pillars, .vos-intake { padding: 64px 24px; }
+  .vos-intake-inner { grid-template-columns: 1fr; gap: 48px; }
+  .vos-form-container { padding: 32px 24px; }
+}
+
 .funding { background: var(--forest); padding: 96px 60px; min-height: 60vh; }
 .funding-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-top: 52px; background: rgba(168,123,46,.07); }
 .fcard { background: rgba(13,31,19,.55); padding: 44px 36px; display: flex; flex-direction: column; position: relative; overflow: hidden; }
@@ -572,6 +609,13 @@ body { font-family: 'Inter', sans-serif; background: var(--cream); color: var(--
   .port-grid { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 600px) {
+  .vos-hero, .vos-outcomes, .vos-pillars, .vos-intake { padding: 56px 20px; }
+  .vos-outcome-grid { grid-template-columns: 1fr; }
+  .vos-outcome-card { padding: 28px 22px; }
+  .vos-engagement { grid-template-columns: 1fr; gap: 12px; padding: 24px 22px; }
+  .vos-grid { grid-template-columns: 1fr; }
+  .vos-card { padding: 32px 22px; }
+  .vos-form-container { padding: 28px 20px; }
   section, .manifesto, .dual, .platform, .track, .ctrl, .portfolio,
   .why, .team, .contact, .teasers, .funding, .fund-band { padding: 56px 20px; }
   .nav-wordmark { font-size: 16px; }

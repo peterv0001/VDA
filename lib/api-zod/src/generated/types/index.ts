@@ -11,3 +11,5 @@ export * from "./createInquiryBody";
 export * from "./errorResponse";
 export * from "./healthStatus";
 export * from "./submissionResult";
+export * from "./velocityOsIntakeInput";
+export * from "./velocityOsIntakeInputUrgency";

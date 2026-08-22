@@ -14,6 +14,8 @@ tags:
     description: Contact inquiry operations
   - name: access-requests
     description: Portfolio access request operations
+  - name: velocity-os-intakes
+    description: Velocity OS operations intake requests
 paths:
   /healthz:
     get:
@@ -90,6 +92,37 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+  /velocity-os-intakes:
+    post:
+      operationId: createVelocityOsIntake
+      tags: [velocity-os-intakes]
+      summary: Submit a Velocity OS operations intake
+      description: Stores a dedicated request for help implementing an operating system
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VelocityOsIntakeInput"
+      responses:
+        "201":
+          description: Velocity OS intake created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubmissionResult"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 components:
   schemas:
     HealthStatus:
@@ -145,6 +178,61 @@ components:
         - organization
         - email
         - reason
+    VelocityOsIntakeInput:
+      type: object
+      properties:
+        fullName:
+          type: string
+          minLength: 1
+          maxLength: 120
+        workEmail:
+          type: string
+          format: email
+          maxLength: 254
+        phone:
+          type: string
+          maxLength: 40
+        titleRole:
+          type: string
+          minLength: 1
+          maxLength: 120
+        companyName:
+          type: string
+          minLength: 1
+          maxLength: 160
+        companyWebsite:
+          type: string
+          format: uri
+          pattern: "^[hH][tT][tT][pP][sS]?://"
+          maxLength: 300
+        companyContext:
+          type: string
+          minLength: 20
+          maxLength: 2000
+        primaryChallenge:
+          type: string
+          minLength: 20
+          maxLength: 2000
+        desiredOutcome:
+          type: string
+          minLength: 20
+          maxLength: 2000
+        urgency:
+          type: string
+          enum:
+            - immediate
+            - this-quarter
+            - next-six-months
+            - exploring
+      required:
+        - fullName
+        - workEmail
+        - titleRole
+        - companyName
+        - companyContext
+        - primaryChallenge
+        - desiredOutcome
+        - urgency
     SubmissionResult:
       type: object
       properties:

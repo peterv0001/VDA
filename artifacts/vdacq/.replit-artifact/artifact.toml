@@ -59,6 +59,14 @@ from = "/funding/"
 to = "/funding/index.html"
 
 [[services.production.rewrites]]
+from = "/velocity-os"
+to = "/velocity-os/index.html"
+
+[[services.production.rewrites]]
+from = "/velocity-os/"
+to = "/velocity-os/index.html"
+
+[[services.production.rewrites]]
 from = "/contact"
 to = "/contact/index.html"
 
