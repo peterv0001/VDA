@@ -1,0 +1,30 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "HH8WenKN2llgnpTVHnBT9"
+uri = "file://.local/outputs/Van-Dyke-Acquisitions-Pitch-Deck.pdf"
+type = "pdf"
+title = "Van Dyke Acquisitions Pitch Deck (PDF)"
+description = "Shareable PDF export of the 10-slide Van Dyke Acquisitions deck."
+logical_id = "ff811258-e9a8-4504-b10d-27d73b1c8bc6"
+content_hash = "sha256:46c1f010a33d29d5589b0bdcb2662d796dba70f4389a531b54fcb615df2e3955"
+size = 3419978
+mtime_ms = 1787411748190
+storage_uri = "gcs://replit-rams-assets-riker/rams/assets/repl:24a2055f-9f43-4274-a9a2-7b5a5d2b6869/ff811258-e9a8-4504-b10d-27d73b1c8bc6/f1030e2b-927a-4a78-b82e-1f98b06d5b8c"
+storage_version_token = "1787411755180276"
+content_type = "application/pdf"
+
+[[outputs]]
+id = "Qn78yt_B0yjtzN8wUDkkE"
+uri = "file://.local/outputs/Van-Dyke-Acquisitions-Pitch-Deck.pptx"
+type = "slides"
+title = "Van Dyke Acquisitions Pitch Deck (PPTX)"
+description = "Editable PowerPoint export of the 10-slide Van Dyke Acquisitions deck."
+logical_id = "db0c3f48-6119-4c8b-b044-bff99f03f8d0"
+content_hash = "sha256:d2f94da2121bc1f08e94f081ef56914f71274db72718f75c5d6ab52455a00715"
+size = 8954760
+mtime_ms = 1787411754502
+storage_uri = "gcs://replit-rams-assets-riker/rams/assets/repl:24a2055f-9f43-4274-a9a2-7b5a5d2b6869/db0c3f48-6119-4c8b-b044-bff99f03f8d0/55b5c59e-09d9-48f1-91e0-4112cda75d58"
+storage_version_token = "1787411755857597"
+content_type = "application/vnd.openxmlformats-officedocument.presentationml.presentation"

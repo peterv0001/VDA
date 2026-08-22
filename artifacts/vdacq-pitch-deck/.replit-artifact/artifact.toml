@@ -1,0 +1,28 @@
+kind = "slides"
+previewPath = "/vdacq-pitch-deck/"
+title = "Van Dyke Acquisitions — Pitch Deck"
+description = "A polished, export-ready pitch deck for Van Dyke Acquisitions, presenting its permanent-capital control investment mandate, CPG operating platform, representative outcomes, leadership team, and introduction path."
+version = "1.0.0"
+id = "artifacts/vdacq-pitch-deck"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/vdacq-pitch-deck/" ]
+localPort = 18858
+
+[services.development]
+run = "pnpm --filter @workspace/vdacq-pitch-deck run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/vdacq-pitch-deck", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/vdacq-pitch-deck/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "18858"
+BASE_PATH = "/vdacq-pitch-deck/"

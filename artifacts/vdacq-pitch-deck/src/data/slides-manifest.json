@@ -1,0 +1,82 @@
+[
+  {
+    "id": "be3e17f9-961f-460d-8cf2-bd7e1430583f",
+    "position": 1,
+    "filepath": "src/pages/slides/Cover.tsx",
+    "title": "Van Dyke Acquisitions",
+    "description": "Cover slide",
+    "speakerNotes": ""
+  },
+  {
+    "id": "1fb1ab74-4d77-48f8-87f4-4fcf87b3f01f",
+    "position": 2,
+    "filepath": "src/pages/slides/FamilyOffice.tsx",
+    "title": "A family office built to operate.",
+    "description": "Investment platform overview",
+    "speakerNotes": ""
+  },
+  {
+    "id": "c7610956-ea5e-4a22-b20a-3f7ed6f25f49",
+    "position": 3,
+    "filepath": "src/pages/slides/CapitalProvider.tsx",
+    "title": "More than a capital provider.",
+    "description": "Operating conviction",
+    "speakerNotes": ""
+  },
+  {
+    "id": "70e1b7dc-3b74-44d4-9b77-cb2bb7c480be",
+    "position": 4,
+    "filepath": "src/pages/slides/TwoSituations.tsx",
+    "title": "Two types of situation. One standard of rigor.",
+    "description": "Investment mandate",
+    "speakerNotes": ""
+  },
+  {
+    "id": "93ec50f9-144b-40b6-bbda-2e0d07edccee",
+    "position": 5,
+    "filepath": "src/pages/slides/OperatingGroup.tsx",
+    "title": "The VDA Operating Group.",
+    "description": "Operating platform capabilities",
+    "speakerNotes": ""
+  },
+  {
+    "id": "c1e75989-c6f6-472c-9442-70483420cdd9",
+    "position": 6,
+    "filepath": "src/pages/slides/ControlStandard.tsx",
+    "title": "Control is a standard of accountability.",
+    "description": "Control investment model",
+    "speakerNotes": ""
+  },
+  {
+    "id": "c9a947df-09a7-4fca-8af3-a86c202f65fd",
+    "position": 7,
+    "filepath": "src/pages/slides/Outcomes.tsx",
+    "title": "Representative outcomes.",
+    "description": "Representative track record",
+    "speakerNotes": ""
+  },
+  {
+    "id": "6c5c50a8-23b7-4ea5-a53a-6c4c9b4a8d28",
+    "position": 8,
+    "filepath": "src/pages/slides/Team.tsx",
+    "title": "The operators behind the office.",
+    "description": "Leadership",
+    "speakerNotes": ""
+  },
+  {
+    "id": "ef88c288-e31d-4617-9e40-8a64572543c5",
+    "position": 9,
+    "filepath": "src/pages/slides/WhyCall.tsx",
+    "title": "Why serious counterparties call us.",
+    "description": "Why Van Dyke Acquisitions",
+    "speakerNotes": ""
+  },
+  {
+    "id": "3211391a-3b51-481c-8a63-804e7093fd0b",
+    "position": 10,
+    "filepath": "src/pages/slides/Introduce.tsx",
+    "title": "Introduce a situation.",
+    "description": "Contact and introduction path",
+    "speakerNotes": ""
+  }
+]
