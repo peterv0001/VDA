@@ -85,6 +85,35 @@ export interface VelocityOsIntakeInput {
   urgency: VelocityOsIntakeInputUrgency;
 }
 
+export interface ContactInquiry {
+  id: number;
+  fullName: string;
+  organization: string;
+  email: string;
+  /** @nullable */
+  phone: string | null;
+  category: string;
+  /** @nullable */
+  description: string | null;
+  createdAt: string;
+}
+
+export interface PortfolioAccessRequest {
+  id: number;
+  fullName: string;
+  organization: string;
+  email: string;
+  /** @nullable */
+  titleRole: string | null;
+  reason: string;
+  createdAt: string;
+}
+
+export interface AdminSubmissions {
+  inquiries: ContactInquiry[];
+  accessRequests: PortfolioAccessRequest[];
+}
+
 export interface SubmissionResult {
   success: boolean;
   message: string;

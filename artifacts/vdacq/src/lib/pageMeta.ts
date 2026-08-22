@@ -10,6 +10,7 @@ export function buildFullTitle(title: string): string {
 export interface PageMeta {
   title: string;
   description: string;
+  noIndex?: boolean;
 }
 
 export const PAGE_META: Record<string, PageMeta> = {
@@ -47,6 +48,11 @@ export const PAGE_META: Record<string, PageMeta> = {
     title: "Contact",
     description:
       "Get in touch with Van Dyke Acquisitions — acquisition opportunities, lending inquiries, and partnership discussions in the CPG space.",
+  },
+  "/admin": {
+    title: "Owner Access",
+    description: "Secure owner review portal for Van Dyke Acquisitions.",
+    noIndex: true,
   },
   "/404": {
     title: "Page Not Found",

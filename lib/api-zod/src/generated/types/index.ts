@@ -6,10 +6,13 @@
  * OpenAPI spec version: 0.1.0
  */
 
+export * from "./adminSubmissions";
+export * from "./contactInquiry";
 export * from "./createAccessRequestBody";
 export * from "./createInquiryBody";
 export * from "./errorResponse";
 export * from "./healthStatus";
+export * from "./portfolioAccessRequest";
 export * from "./submissionResult";
 export * from "./velocityOsIntakeInput";
 export * from "./velocityOsIntakeInputUrgency";

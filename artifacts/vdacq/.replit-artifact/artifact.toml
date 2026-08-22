@@ -27,6 +27,14 @@ publicDir = "artifacts/vdacq/dist/public"
 serve = "static"
 
 [[services.production.rewrites]]
+from = "/admin"
+to = "/admin/index.html"
+
+[[services.production.rewrites]]
+from = "/admin/"
+to = "/admin/index.html"
+
+[[services.production.rewrites]]
 from = "/platform"
 to = "/platform/index.html"
 

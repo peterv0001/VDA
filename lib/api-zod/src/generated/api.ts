@@ -104,3 +104,33 @@ export const CreateVelocityOsIntakeBody = zod.object({
     "exploring",
   ]),
 });
+
+/**
+ * Returns contact inquiries and portfolio access requests, newest first
+ * @summary Review website submissions
+ */
+export const ListAdminSubmissionsResponse = zod.object({
+  inquiries: zod.array(
+    zod.object({
+      id: zod.number(),
+      fullName: zod.string(),
+      organization: zod.string(),
+      email: zod.string().email(),
+      phone: zod.string().nullable(),
+      category: zod.string(),
+      description: zod.string().nullable(),
+      createdAt: zod.date(),
+    }),
+  ),
+  accessRequests: zod.array(
+    zod.object({
+      id: zod.number(),
+      fullName: zod.string(),
+      organization: zod.string(),
+      email: zod.string().email(),
+      titleRole: zod.string().nullable(),
+      reason: zod.string(),
+      createdAt: zod.date(),
+    }),
+  ),
+});

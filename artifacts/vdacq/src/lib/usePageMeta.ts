@@ -15,7 +15,9 @@ function setMeta(attr: "name" | "property", key: string, content: string) {
 }
 
 function setCanonical(href: string) {
-  let el = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+  let el = document.head.querySelector<HTMLLinkElement>(
+    'link[rel="canonical"]',
+  );
   if (!el) {
     el = document.createElement("link");
     el.setAttribute("rel", "canonical");
@@ -24,12 +26,17 @@ function setCanonical(href: string) {
   el.setAttribute("href", href);
 }
 
-export function usePageMeta(title: string, description: string) {
+export function usePageMeta(
+  title: string,
+  description: string,
+  noIndex = false,
+) {
   useEffect(() => {
     const fullTitle = buildFullTitle(title);
     const canonicalUrl = canonicalUrlForPath(window.location.pathname);
     document.title = fullTitle;
     setMeta("name", "description", description);
+    setMeta("name", "robots", noIndex ? "noindex, nofollow" : "index, follow");
     setCanonical(canonicalUrl);
     setMeta("property", "og:title", fullTitle);
     setMeta("property", "og:description", description);
@@ -50,5 +57,5 @@ export function usePageMeta(title: string, description: string) {
     setMeta("name", "twitter:title", fullTitle);
     setMeta("name", "twitter:description", description);
     setMeta("name", "twitter:image", ogImageUrl);
-  }, [title, description]);
+  }, [title, description, noIndex]);
 }

@@ -61,7 +61,9 @@ for (const relativePath of routeFiles) {
     ...html.matchAll(/<link\b[^>]*\brel\s*=\s*(["'])canonical\1[^>]*>/gi),
   ];
   if (canonicalTags.length !== 1) {
-    fail(`${route} has ${canonicalTags.length} canonical link tags; expected 1`);
+    fail(
+      `${route} has ${canonicalTags.length} canonical link tags; expected 1`,
+    );
   }
   if (attributeValue(canonicalTags[0][0], "href") !== expectedUrl) {
     fail(`${route} canonical URL must be ${expectedUrl}`);
@@ -77,7 +79,16 @@ for (const relativePath of routeFiles) {
     fail(`${route} og:url must be ${expectedUrl}`);
   }
 
-  canonicalUrls.add(expectedUrl);
+  const robotsTags = [
+    ...html.matchAll(/<meta\b[^>]*\bname\s*=\s*(["'])robots\1[^>]*>/gi),
+  ];
+  const robotsContent = robotsTags
+    .map((tag) => attributeValue(tag[0], "content") ?? "")
+    .join(",")
+    .toLowerCase();
+  if (!robotsContent.includes("noindex")) {
+    canonicalUrls.add(expectedUrl);
+  }
 }
 
 const sitemap = readFileSync(path.join(distPublic, "sitemap.xml"), "utf8");
@@ -106,9 +117,9 @@ for (const sitemapUrl of sitemapUrlCounts.keys()) {
 }
 
 const robots = readFileSync(path.join(distPublic, "robots.txt"), "utf8");
-const sitemapDirectives = [
-  ...robots.matchAll(/^sitemap:\s*(\S+)\s*$/gim),
-].map((match) => match[1]);
+const sitemapDirectives = [...robots.matchAll(/^sitemap:\s*(\S+)\s*$/gim)].map(
+  (match) => match[1],
+);
 const expectedSitemapUrl = `${SITE_URL}/sitemap.xml`;
 if (
   sitemapDirectives.length !== 1 ||

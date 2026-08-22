@@ -17,6 +17,7 @@ import type {
 } from "@tanstack/react-query";
 
 import type {
+  AdminSubmissions,
   CreateAccessRequestBody,
   CreateInquiryBody,
   ErrorResponse,
@@ -371,3 +372,79 @@ export const useCreateVelocityOsIntake = <
 > => {
   return useMutation(getCreateVelocityOsIntakeMutationOptions(options));
 };
+
+/**
+ * Returns contact inquiries and portfolio access requests, newest first
+ * @summary Review website submissions
+ */
+export const getListAdminSubmissionsUrl = () => {
+  return `/api/admin/submissions`;
+};
+
+export const listAdminSubmissions = async (
+  options?: RequestInit,
+): Promise<AdminSubmissions> => {
+  return customFetch<AdminSubmissions>(getListAdminSubmissionsUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListAdminSubmissionsQueryKey = () => {
+  return [`/api/admin/submissions`] as const;
+};
+
+export const getListAdminSubmissionsQueryOptions = <
+  TData = Awaited<ReturnType<typeof listAdminSubmissions>>,
+  TError = ErrorType<ErrorResponse>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listAdminSubmissions>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getListAdminSubmissionsQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof listAdminSubmissions>>
+  > = ({ signal }) => listAdminSubmissions({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listAdminSubmissions>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListAdminSubmissionsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listAdminSubmissions>>
+>;
+export type ListAdminSubmissionsQueryError = ErrorType<ErrorResponse>;
+
+/**
+ * @summary Review website submissions
+ */
+
+export function useListAdminSubmissions<
+  TData = Awaited<ReturnType<typeof listAdminSubmissions>>,
+  TError = ErrorType<ErrorResponse>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listAdminSubmissions>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListAdminSubmissionsQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}

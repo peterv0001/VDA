@@ -16,6 +16,8 @@ tags:
     description: Portfolio access request operations
   - name: velocity-os-intakes
     description: Velocity OS operations intake requests
+  - name: admin
+    description: Protected owner operations
 paths:
   /healthz:
     get:
@@ -123,7 +125,44 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+  /admin/submissions:
+    get:
+      operationId: listAdminSubmissions
+      tags: [admin]
+      summary: Review website submissions
+      description: Returns contact inquiries and portfolio access requests, newest first
+      security:
+        - basicAuth: []
+      responses:
+        "200":
+          description: Website submissions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminSubmissions"
+        "401":
+          description: Owner authentication required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "503":
+          description: Owner access is not configured
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
   schemas:
     HealthStatus:
       type: object
@@ -233,6 +272,77 @@ components:
         - primaryChallenge
         - desiredOutcome
         - urgency
+    ContactInquiry:
+      type: object
+      properties:
+        id:
+          type: integer
+        fullName:
+          type: string
+        organization:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: ["string", "null"]
+        category:
+          type: string
+        description:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - fullName
+        - organization
+        - email
+        - phone
+        - category
+        - description
+        - createdAt
+    PortfolioAccessRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        fullName:
+          type: string
+        organization:
+          type: string
+        email:
+          type: string
+          format: email
+        titleRole:
+          type: ["string", "null"]
+        reason:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - fullName
+        - organization
+        - email
+        - titleRole
+        - reason
+        - createdAt
+    AdminSubmissions:
+      type: object
+      properties:
+        inquiries:
+          type: array
+          items:
+            $ref: "#/components/schemas/ContactInquiry"
+        accessRequests:
+          type: array
+          items:
+            $ref: "#/components/schemas/PortfolioAccessRequest"
+      required:
+        - inquiries
+        - accessRequests
     SubmissionResult:
       type: object
       properties:

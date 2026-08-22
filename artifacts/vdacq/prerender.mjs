@@ -5,13 +5,8 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const distPublic = path.join(__dirname, "dist", "public");
 
-const {
-  render,
-  PAGE_META,
-  buildFullTitle,
-  SITE_URL,
-  canonicalUrlForPath,
-} = await import("./dist/server/entry-server.js");
+const { render, PAGE_META, buildFullTitle, SITE_URL, canonicalUrlForPath } =
+  await import("./dist/server/entry-server.js");
 
 const template = readFileSync(path.join(distPublic, "index.html"), "utf-8");
 
@@ -37,6 +32,10 @@ const ROUTE_LABELS = {
 };
 
 function buildJsonLd(route, meta, fullTitle) {
+  if (meta.noIndex) {
+    return "";
+  }
+
   const canonicalUrl = canonicalUrlForPath(route);
   const schemas = [];
 
@@ -103,6 +102,7 @@ for (const [route, meta] of Object.entries(PAGE_META)) {
   }
   const fullTitle = escapeHtml(buildFullTitle(meta.title));
   const description = escapeHtml(meta.description);
+  const robots = meta.noIndex ? "noindex, nofollow" : "index, follow";
   const jsonLd = buildJsonLd(route, meta, buildFullTitle(meta.title));
   const canonicalUrl = escapeHtml(canonicalUrlForPath(route));
 
@@ -112,6 +112,7 @@ for (const [route, meta] of Object.entries(PAGE_META)) {
       /(<meta name="description" content=")[^"]*(")/,
       `$1${description}$2`,
     )
+    .replace(/(<meta name="robots" content=")[^"]*(")/, `$1${robots}$2`)
     .replace(
       /(<meta property="og:title" content=")[^"]*(")/,
       `$1${fullTitle}$2`,
@@ -124,10 +125,7 @@ for (const [route, meta] of Object.entries(PAGE_META)) {
       /(<meta property="og:url" content=")[^"]*(")/,
       `$1${canonicalUrl}$2`,
     )
-    .replace(
-      /(<link rel="canonical" href=")[^"]*(")/,
-      `$1${canonicalUrl}$2`,
-    )
+    .replace(/(<link rel="canonical" href=")[^"]*(")/, `$1${canonicalUrl}$2`)
     .replace(
       /(<meta name="twitter:title" content=")[^"]*(")/,
       `$1${fullTitle}$2`,

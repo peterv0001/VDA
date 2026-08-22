@@ -10,6 +10,7 @@ import TeamPage from "./pages/Team";
 import ContactPage from "./pages/Contact";
 import FundingPage from "./pages/Funding";
 import VelocityOSPage from "./pages/VelocityOS";
+import AdminPage from "./pages/Admin";
 import { usePageMeta } from "./lib/usePageMeta";
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
@@ -60,35 +61,42 @@ export default function App({ ssrPath }: { ssrPath?: string }) {
     <Router base={base} ssrPath={ssrPath}>
       <LegacyHashRedirect />
       <ScrollToTop />
-      <Nav />
       <Switch>
-        <Route path="/">
-          <Home onModalOpen={openModal} />
-        </Route>
-        <Route path="/platform">
-          <PlatformPage />
-        </Route>
-        <Route path="/track-record">
-          <TrackRecordPage onModalOpen={openModal} />
-        </Route>
-        <Route path="/team">
-          <TeamPage />
-        </Route>
-        <Route path="/funding">
-          <FundingPage />
-        </Route>
-        <Route path="/velocity-os">
-          <VelocityOSPage />
-        </Route>
-        <Route path="/contact">
-          <ContactPage />
+        <Route path="/admin">
+          <AdminPage />
         </Route>
         <Route>
-          <NotFound />
+          <Nav />
+          <Switch>
+            <Route path="/">
+              <Home onModalOpen={openModal} />
+            </Route>
+            <Route path="/platform">
+              <PlatformPage />
+            </Route>
+            <Route path="/track-record">
+              <TrackRecordPage onModalOpen={openModal} />
+            </Route>
+            <Route path="/team">
+              <TeamPage />
+            </Route>
+            <Route path="/funding">
+              <FundingPage />
+            </Route>
+            <Route path="/velocity-os">
+              <VelocityOSPage />
+            </Route>
+            <Route path="/contact">
+              <ContactPage />
+            </Route>
+            <Route>
+              <NotFound />
+            </Route>
+          </Switch>
+          <Footer onModalOpen={openModal} />
+          {modalOpen && <Modal onClose={() => setModalOpen(false)} />}
         </Route>
       </Switch>
-      <Footer onModalOpen={openModal} />
-      {modalOpen && <Modal onClose={() => setModalOpen(false)} />}
     </Router>
   );
 }
