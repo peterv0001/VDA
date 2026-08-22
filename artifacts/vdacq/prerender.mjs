@@ -5,21 +5,15 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const distPublic = path.join(__dirname, "dist", "public");
 
-const { render, PAGE_META, buildFullTitle } = await import(
-  "./dist/server/entry-server.js"
-);
+const {
+  render,
+  PAGE_META,
+  buildFullTitle,
+  SITE_URL,
+  canonicalUrlForPath,
+} = await import("./dist/server/entry-server.js");
 
 const template = readFileSync(path.join(distPublic, "index.html"), "utf-8");
-
-const SITE_URL = "https://www.vdacq.com";
-
-function canonicalUrlForRoute(route) {
-  if (route === "/") {
-    return `${SITE_URL}/`;
-  }
-
-  return `${SITE_URL}${route.endsWith("/") ? route : `${route}/`}`;
-}
 
 const ORGANIZATION_SCHEMA = {
   "@context": "https://schema.org",
@@ -43,7 +37,7 @@ const ROUTE_LABELS = {
 };
 
 function buildJsonLd(route, meta, fullTitle) {
-  const canonicalUrl = canonicalUrlForRoute(route);
+  const canonicalUrl = canonicalUrlForPath(route);
   const schemas = [];
 
   if (route === "/") {
@@ -110,7 +104,7 @@ for (const [route, meta] of Object.entries(PAGE_META)) {
   const fullTitle = escapeHtml(buildFullTitle(meta.title));
   const description = escapeHtml(meta.description);
   const jsonLd = buildJsonLd(route, meta, buildFullTitle(meta.title));
-  const canonicalUrl = escapeHtml(canonicalUrlForRoute(route));
+  const canonicalUrl = escapeHtml(canonicalUrlForPath(route));
 
   const html = template
     .replace(/<title>[\s\S]*?<\/title>/, `<title>${fullTitle}</title>`)
