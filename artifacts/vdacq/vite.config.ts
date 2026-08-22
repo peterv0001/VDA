@@ -75,7 +75,7 @@ export default defineConfig(async ({ command }) => {
       react(),
       runtimeErrorOverlay(),
       {
-        name: "inject-og-image-url",
+        name: "inject-site-urls",
         transformIndexHtml(html) {
           const homepageCanonical = `${siteOrigin}${normalizedBase}`;
           return html

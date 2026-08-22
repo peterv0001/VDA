@@ -5,10 +5,43 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const distPublic = path.join(__dirname, "dist", "public");
 
-const { render, PAGE_META, buildFullTitle, SITE_URL, canonicalUrlForPath } =
-  await import("./dist/server/entry-server.js");
+const { render, PAGE_META, buildFullTitle } = await import(
+  "./dist/server/entry-server.js"
+);
 
 const template = readFileSync(path.join(distPublic, "index.html"), "utf-8");
+
+function resolveSiteOrigin() {
+  const siteUrl = process.env.SITE_URL?.trim();
+
+  if (!siteUrl) {
+    throw new Error(
+      "SITE_URL is required for prerendering so canonical and social metadata use the site's stable public origin.",
+    );
+  }
+
+  let parsed;
+  try {
+    parsed = new URL(
+      siteUrl.includes("://") ? siteUrl : `https://${siteUrl}`,
+    );
+  } catch {
+    throw new Error(
+      `SITE_URL is set but is not a valid URL: "${siteUrl}". ` +
+        "Set it to the site's public origin, e.g. https://www.example.com",
+    );
+  }
+  return parsed.origin;
+}
+
+const SITE_URL = resolveSiteOrigin();
+
+function canonicalUrlForPath(pathname) {
+  const absolutePath = pathname.startsWith("/") ? pathname : `/${pathname}`;
+  const route = absolutePath.endsWith("/") ? absolutePath : `${absolutePath}/`;
+
+  return `${SITE_URL}${route}`;
+}
 
 const ORGANIZATION_SCHEMA = {
   "@context": "https://schema.org",

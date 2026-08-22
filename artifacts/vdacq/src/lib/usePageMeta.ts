@@ -44,7 +44,7 @@ export function usePageMeta(
     setMeta("property", "og:site_name", SITE_NAME);
     setMeta("property", "og:locale", "en_US");
     setMeta("property", "og:url", canonicalUrl);
-    const ogImageUrl = `${window.location.origin}${import.meta.env.BASE_URL}og-image.jpg`;
+    const ogImageUrl = `${SITE_URL}/og-image.jpg`;
     setMeta("property", "og:image", ogImageUrl);
     setMeta("property", "og:image:width", "1200");
     setMeta("property", "og:image:height", "630");
