@@ -114,6 +114,25 @@ export interface AdminSubmissions {
   accessRequests: PortfolioAccessRequest[];
 }
 
+export interface VelocityOsJournalUnlockInput {
+  /** @maxLength 254 */
+  email: string;
+}
+
+export interface VelocityOsJournalDocument {
+  title: string;
+  version: string;
+  filename: string;
+}
+
+export interface VelocityOsJournalUnlock {
+  success: boolean;
+  message: string;
+  downloadUrl: string;
+  expiresAt: string;
+  document: VelocityOsJournalDocument;
+}
+
 export interface SubmissionResult {
   success: boolean;
   message: string;

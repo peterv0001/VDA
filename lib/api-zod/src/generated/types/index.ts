@@ -16,3 +16,6 @@ export * from "./portfolioAccessRequest";
 export * from "./submissionResult";
 export * from "./velocityOsIntakeInput";
 export * from "./velocityOsIntakeInputUrgency";
+export * from "./velocityOsJournalDocument";
+export * from "./velocityOsJournalUnlock";
+export * from "./velocityOsJournalUnlockInput";

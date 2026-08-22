@@ -1,5 +1,9 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { useCreateVelocityOsIntake } from "@workspace/api-client-react";
+import {
+  downloadVelocityOsJournal,
+  useCreateVelocityOsIntake,
+  useUnlockVelocityOsJournal,
+} from "@workspace/api-client-react";
 import { useReveal } from "../lib/useReveal";
 import { usePageMeta } from "../lib/usePageMeta";
 import { PAGE_META } from "../lib/pageMeta";
@@ -9,6 +13,116 @@ type Urgency =
   | "this-quarter"
   | "next-six-months"
   | "exploring";
+
+const PREVIEW_PAGES = [
+  {
+    title: "Cover",
+    description:
+      "The Operator's Daily Journal cover: 365 days, 52 modules, four quarterly resets, and one principle, question, and action each day.",
+  },
+  {
+    title: "Opening principle",
+    description:
+      "The journal's opening maxim: run the inside like Toyota and position the outside like Sequoia.",
+  },
+  {
+    title: "Title page",
+    description:
+      "The Operator's Daily Journal, built on The Velocity Operating System version 3.0.",
+  },
+  {
+    title: "About this edition",
+    description:
+      "How 365 days are sequenced into 52 modules across Foundation, Core, Applied, and Advanced levels.",
+  },
+  {
+    title: "How to use this journal",
+    description:
+      "The 20-minute daily loop, weekly review, quarterly reset, and guidance to write numbers rather than adjectives.",
+  },
+  {
+    title: "The Operating Constitution",
+    description:
+      "Eight principles covering distribution realism, survivorship, learning velocity, traceability, evidence, capital, standard work, and truth.",
+  },
+  {
+    title: "Non-negotiables and pocket questions",
+    description:
+      "Nine operating rules and twelve questions used to force evidence, ownership, survivorship, and pre-registered decisions.",
+  },
+  {
+    title: "Your baseline — Day Zero",
+    description:
+      "A numbers-only baseline for runway, concentration, decision latency, tests shipped, kill rate, revenue per employee, and the binding constraint.",
+  },
+  {
+    title: "Day 001 — Strategy Begins With the Distribution",
+    description:
+      "A daily principle, operator question, before-noon action, operating checklist, and evening calibration.",
+  },
+  {
+    title: "Day 002 — Model the Domain",
+    description:
+      "A Foundation-level daily entry that turns distribution realism into a concrete operating action.",
+  },
+  {
+    title: "Day 003",
+    description:
+      "A Week 01 Foundation entry with a sourced principle, operator question, action, checklist, and evening review.",
+  },
+  {
+    title: "Day 004",
+    description:
+      "A Week 01 Foundation entry showing the repeated standard-work structure of the daily loop.",
+  },
+  {
+    title: "Day 005",
+    description:
+      "A Week 01 Foundation entry for applying the system before reactive work begins.",
+  },
+  {
+    title: "Day 006",
+    description:
+      "A Week 01 Foundation entry connecting one measurable action to daily operating checks.",
+  },
+  {
+    title: "Day 007",
+    description:
+      "The final daily entry in Week 01 before the first weekly review converts the entries into a decision.",
+  },
+  {
+    title: "Weekly Review — Week 01",
+    description:
+      "Ship-list hit rate, kills and verdicts, deposits, runway and covenant checks, next week's single play, and the lesson that changes how the operator works.",
+  },
+  {
+    title: "Day 008",
+    description:
+      "The first Week 02 Foundation entry, continuing the principle-question-action cadence.",
+  },
+  {
+    title: "Day 009",
+    description:
+      "A Week 02 entry with one operating question, one action, the daily checklist, and an evening calibration.",
+  },
+  {
+    title: "Day 010",
+    description:
+      "A Week 02 entry that applies the system to a measurable operating constraint.",
+  },
+  {
+    title: "Day 011 — Which Tail Are We Failing to Feed?",
+    description:
+      "A driver-tree question decomposing revenue into reach, per-unit productivity, and price and mix.",
+  },
+] as const;
+
+function statusCode(error: unknown): number | undefined {
+  if (!error || typeof error !== "object" || !("status" in error)) {
+    return undefined;
+  }
+  return typeof error.status === "number" ? error.status : undefined;
+}
 
 export default function VelocityOSPage() {
   usePageMeta(PAGE_META["/velocity-os"].title, PAGE_META["/velocity-os"].description);
@@ -27,6 +141,16 @@ export default function VelocityOSPage() {
   const [validationError, setValidationError] = useState("");
   const errorRef = useRef<HTMLParagraphElement>(null);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = PREVIEW_PAGES.length;
+
+  const [unlockEmail, setUnlockEmail] = useState("");
+  const [unlockValidationError, setUnlockValidationError] = useState("");
+  const [downloadError, setDownloadError] = useState("");
+  const [isDownloading, setIsDownloading] = useState(false);
+  const unlockErrorRef = useRef<HTMLParagraphElement>(null);
+  const unlockMutation = useUnlockVelocityOsJournal();
+
   const mutation = useCreateVelocityOsIntake();
 
   useEffect(() => {
@@ -34,6 +158,78 @@ export default function VelocityOSPage() {
       errorRef.current?.focus();
     }
   }, [mutation.isError, validationError]);
+
+  useEffect(() => {
+    if (unlockValidationError || unlockMutation.isError || downloadError) {
+      unlockErrorRef.current?.focus();
+    }
+  }, [downloadError, unlockMutation.isError, unlockValidationError]);
+
+  const handleUnlock = (e: FormEvent) => {
+    e.preventDefault();
+    const email = unlockEmail.trim();
+    setUnlockValidationError("");
+    setDownloadError("");
+    unlockMutation.reset();
+
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setUnlockValidationError(
+        "Enter a valid email address to unlock the complete journal.",
+      );
+      return;
+    }
+
+    unlockMutation.mutate({ data: { email } });
+  };
+
+  const nextPage = () => {
+    if (currentPage < totalPages) setCurrentPage((page) => page + 1);
+  };
+
+  const prevPage = () => {
+    if (currentPage > 1) setCurrentPage((page) => page - 1);
+  };
+
+  const handleJournalDownload = async () => {
+    const unlock = unlockMutation.data;
+    if (!unlock) return;
+
+    const token = unlock.downloadUrl.split("/").filter(Boolean).at(-1);
+    if (!token) {
+      setDownloadError(
+        "This download link could not be used. Create a fresh link and try again.",
+      );
+      return;
+    }
+
+    setDownloadError("");
+    setIsDownloading(true);
+    try {
+      const journal = await downloadVelocityOsJournal(token);
+      const objectUrl = URL.createObjectURL(journal);
+      const anchor = document.createElement("a");
+      anchor.href = objectUrl;
+      anchor.download = unlock.document.filename;
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      window.setTimeout(() => URL.revokeObjectURL(objectUrl), 30_000);
+    } catch (error) {
+      setDownloadError(
+        statusCode(error) === 410
+          ? "This 10-minute download link has expired. Create a fresh link to continue."
+          : "The download was interrupted or is temporarily unavailable. Try again, or create a fresh link.",
+      );
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
+  const resetJournalUnlock = () => {
+    setDownloadError("");
+    setUnlockValidationError("");
+    unlockMutation.reset();
+  };
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -108,6 +304,13 @@ export default function VelocityOSPage() {
     document.getElementById("intake-form")?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const scrollToJournal = () => {
+    document.getElementById("journal")?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const currentPreviewPage =
+    PREVIEW_PAGES[currentPage - 1] ?? PREVIEW_PAGES[0];
+
   return (
     <>
       <div className="page-head" />
@@ -124,6 +327,9 @@ export default function VelocityOSPage() {
           <div className="vos-hero-cta">
             <button onClick={scrollToIntake} className="btn-gold">
               Get help with my operations
+            </button>
+            <button onClick={scrollToJournal} className="btn-outline-dark">
+              Preview the daily journal
             </button>
           </div>
         </div>
@@ -219,6 +425,222 @@ export default function VelocityOSPage() {
                 <p className="vos-card-d">{pillar.desc}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section
+        className="vos-journal"
+        id="journal"
+        aria-labelledby="journal-heading"
+      >
+        <div className="s-in rv">
+          <div className="eyebrow">The Operator's Daily Journal</div>
+          <h2 className="vos-h2" id="journal-heading">
+            Execution is not a concept.
+            <br />
+            It is a daily practice.
+          </h2>
+          <div className="vos-journal-intro">
+            <p>
+              The Operator's Daily Journal is the physical manifestation of
+              Velocity OS. It turns principles into owned actions, installs an
+              operating cadence, makes driver-tree measures visible, and turns
+              experimentation and capital allocation into pre-registered
+              decisions. Repetition creates standard work and operating leverage;
+              the reviews create a truth-forward culture.
+            </p>
+            <div className="vos-j-stats">
+              <div className="vjs-item"><strong>365</strong> Daily Entries</div>
+              <div className="vjs-item"><strong>52</strong> Weekly Modules</div>
+              <div className="vjs-item"><strong>4</strong> Quarterly Resets</div>
+              <div className="vjs-item">
+                <strong>4</strong> Foundation → Advanced
+              </div>
+              <div className="vjs-item"><strong>≈20</strong> Min. Daily Loop</div>
+            </div>
+          </div>
+
+          <div className="vos-j-grid">
+            <div className="vjg-col">
+              <h3>The Daily Loop</h3>
+              <p><strong>Morning:</strong> One principle, one operator question, one action. A focused daily checklist to set the trajectory.</p>
+              <p><strong>Evening:</strong> Evening calibration. What moved? What did you buy versus earn? What did you get wrong?</p>
+            </div>
+            <div className="vjg-col">
+              <h3>The Weekly Review</h3>
+              <p>Every seventh day forces a look at the data: ship-list hit rate, learning velocity, kills, cash/covenant checks, and the single play for next week.</p>
+            </div>
+            <div className="vjg-col">
+              <h3>The Quarterly Reset</h3>
+              <p>Four times a year, the journal stops for a full reset. A convexity audit, kill list, and a prediction review against your pre-registered decision criteria.</p>
+            </div>
+          </div>
+
+          <div
+            className="vos-j-viewer"
+            data-testid="viewer"
+            role="region"
+            aria-labelledby="preview-heading"
+            aria-describedby="preview-page-summary"
+          >
+            <div className="vjv-header">
+              <h3 className="vjv-title" id="preview-heading">
+                Preview: First 20 Physical Pages
+              </h3>
+              <span className="vjv-status" data-testid="page-status" aria-live="polite">Page {currentPage} of {totalPages}</span>
+            </div>
+            <div className="vjv-body">
+              <button
+                className="vjv-btn"
+                onClick={prevPage}
+                disabled={currentPage === 1}
+                data-testid="previous"
+                aria-label="Previous page"
+              >
+                &larr;
+              </button>
+              <div className="vjv-img-wrap">
+                <img
+                  key={currentPage}
+                  src={`/velocity-os-journal/pages/page-${String(currentPage).padStart(2, "0")}.png`}
+                  alt={`${currentPreviewPage.title}. ${currentPreviewPage.description}`}
+                  className="vjv-img"
+                  data-testid="page-image"
+                  width="918"
+                  height="1188"
+                />
+              </div>
+              <button
+                className="vjv-btn"
+                onClick={nextPage}
+                disabled={currentPage === totalPages}
+                data-testid="next"
+                aria-label="Next page"
+              >
+                &rarr;
+              </button>
+            </div>
+            <p className="vjv-page-summary" id="preview-page-summary">
+              <strong>{currentPreviewPage.title}.</strong>{" "}
+              {currentPreviewPage.description}
+            </p>
+            <div className="vjv-fallback">
+              <a
+                href="/velocity-os-journal/operators-daily-journal-preview.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Open the 20-page preview PDF
+              </a>
+            </div>
+            <details className="vjv-transcript">
+              <summary>Read a text guide to all 20 preview pages</summary>
+              <ol>
+                {PREVIEW_PAGES.map((page, index) => (
+                  <li key={page.title}>
+                    <strong>Page {index + 1}: {page.title}</strong>
+                    <span>{page.description}</span>
+                  </li>
+                ))}
+              </ol>
+            </details>
+          </div>
+
+          <div className="vos-j-gate">
+            <h3>Unlock the Complete Journal</h3>
+            <p>
+              Enter your email for immediate access to the complete 440-page
+              Operator&apos;s Daily Journal. No account or email verification is
+              required.
+            </p>
+
+            {unlockMutation.isSuccess && unlockMutation.data ? (
+              <div className="vjg-success" data-testid="unlock-status" role="status" aria-live="polite">
+                <h4>Unlocked successfully</h4>
+                <p>{unlockMutation.data.message}</p>
+                <button
+                  type="button"
+                  className="btn-gold"
+                  onClick={handleJournalDownload}
+                  disabled={isDownloading}
+                >
+                  {isDownloading
+                    ? "Preparing download..."
+                    : `Download ${unlockMutation.data.document.title}`}
+                </button>
+                {downloadError && (
+                  <p
+                    className="form-error vjg-download-error"
+                    role="alert"
+                    ref={unlockErrorRef}
+                    tabIndex={-1}
+                  >
+                    {downloadError}
+                  </p>
+                )}
+                {downloadError && (
+                  <button
+                    type="button"
+                    className="vjg-new-link"
+                    onClick={resetJournalUnlock}
+                  >
+                    Create a fresh link
+                  </button>
+                )}
+              </div>
+            ) : (
+              <form
+                className="vjg-form"
+                onSubmit={handleUnlock}
+                noValidate
+                aria-busy={unlockMutation.isPending}
+              >
+                <label className="vjg-label" htmlFor="journal-email">
+                  Email address
+                </label>
+                <div className="vjg-f-row">
+                  <input
+                    id="journal-email"
+                    type="email"
+                    className="cf-input"
+                    placeholder="Work Email"
+                    value={unlockEmail}
+                    onChange={e => setUnlockEmail(e.target.value)}
+                    required
+                    data-testid="email"
+                    aria-label="Email address for journal download"
+                  />
+                  <button
+                    type="submit"
+                    className="btn-gold"
+                    disabled={unlockMutation.isPending}
+                    data-testid="unlock-button"
+                  >
+                    {unlockMutation.isPending ? "Unlocking..." : "Unlock Journal"}
+                  </button>
+                </div>
+                {(unlockValidationError || unlockMutation.isError) && (
+                  <p
+                    className="form-error vjg-form-error"
+                    role="alert"
+                    data-testid="unlock-status"
+                    ref={unlockErrorRef}
+                    tabIndex={-1}
+                  >
+                    {unlockValidationError ||
+                      (statusCode(unlockMutation.error) === 503
+                        ? "The journal is temporarily unavailable. Please try again in a few minutes."
+                        : "We could not save your request. Please check your email and try again.")}
+                  </p>
+                )}
+                <p className="vjg-privacy">
+                  We collect your email only to record access to this resource
+                  and unlock the download. This does not subscribe you to
+                  marketing communications.
+                </p>
+              </form>
+            )}
           </div>
         </div>
       </section>

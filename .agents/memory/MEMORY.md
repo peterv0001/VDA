@@ -3,5 +3,6 @@
 - [SPA prerendering](vdacq-prerender.md) — routes prerendered at build time; new routes need the shared meta record + production rewrites; vite preview does NOT mimic production static serving.
 - [Libre Baskerville icon rendering](vdacq-icon-rendering.md) — expose Google Fonts' variable TTF through Fontconfig to select its named Bold instance for VD icon PNGs.
 - [Legacy SPA hash redirects](legacy-hash-redirects.md) — handle both initial load and hashchange; same-route navigation may leave a retired fragment intact.
+- [Rebase test merges](rebase-test-merges.md) — a marker-free semantic merge can still scramble e2e blocks; enumerate and run the full suite after every task rebase.
 - [Basic auth fetch challenges](basic-auth-fetch-challenges.md) — challenge missing credentials, but return plain 401 for invalid explicit credentials so browser fetches settle.
 - [Animated overlay focus](animated-overlay-focus.md) — make visibility immediate on open and delay focus until after the trigger click, or browser focus calls can silently fail.

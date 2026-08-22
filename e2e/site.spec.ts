@@ -1,10 +1,20 @@
 import { test, expect, type Page } from "@playwright/test";
+import { createHash, randomBytes } from "node:crypto";
+import {
+  db,
+  pool,
+  velocityOsJournalLeadsTable,
+} from "../lib/db/src/index";
 
 const uniq = () => `${Date.now()}-${Math.floor(Math.random() * 100000)}`;
 
 async function expectHome(page: Page) {
   await expect(page.locator(".hero h1")).toContainText("deserve better ownership");
 }
+
+test.afterAll(async () => {
+  await pool.end();
+});
 
 test.describe("Navigation", () => {
   test("redirects retired homepage section hashes to their current pages", async ({ page }) => {
@@ -119,11 +129,10 @@ test.describe("Mobile navigation", () => {
     await burger.click();
     const menu = page.locator("#mobile-menu");
 
-    const homeLink = menu.getByRole("link", { name: "Home" });
-
-    const overflowVelocity = await page.evaluate(
+    const overflowWithMenu = await page.evaluate(
       () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
     );
+    expect(overflowWithMenu).toBeLessThanOrEqual(0);
     await expect(menu).toBeVisible();
     await menu.locator(".mobile-menu-link", { hasText: "Platform" }).click();
     await expect(page).toHaveURL(/\/platform$/);
@@ -151,6 +160,212 @@ test.describe("Mobile navigation", () => {
   });
 });
 
+test.describe("Velocity OS Operator's Daily Journal", () => {
+  test("serves only the 20-page public preview and provides accessible page controls", async ({
+    page,
+    request,
+  }) => {
+    await page.goto("/velocity-os");
+
+    await expect(page.getByText("365", { exact: true })).toBeVisible();
+    await expect(page.getByText("52", { exact: true })).toBeVisible();
+    await expect(page.getByText("≈20", { exact: true })).toBeVisible();
+
+    const viewer = page.getByTestId("viewer");
+    await viewer.scrollIntoViewIfNeeded();
+    await expect(viewer).toHaveAttribute("role", "region");
+    await expect(page.getByTestId("page-status")).toHaveText("Page 1 of 20");
+    await expect(page.getByTestId("previous")).toBeDisabled();
+    await page.getByTestId("next").click();
+    await expect(page.getByTestId("page-status")).toHaveText("Page 2 of 20");
+    await expect(page.getByTestId("page-image")).toHaveAttribute(
+      "alt",
+      /Opening principle/,
+    );
+
+    const previewLink = viewer.getByRole("link", {
+      name: "Open the 20-page preview PDF",
+    });
+    await expect(previewLink).toHaveAttribute(
+      "href",
+      "/velocity-os-journal/operators-daily-journal-preview.pdf",
+    );
+
+    const preview = await request.get(
+      "/velocity-os-journal/operators-daily-journal-preview.pdf",
+    );
+    expect(preview.status()).toBe(200);
+    expect(preview.headers()["content-type"]).toContain("application/pdf");
+    const previewText = (await preview.body()).toString("latin1");
+    expect(previewText).toMatch(/\/Count\s+20\b/);
+
+    const twentyFirstPage = await request.get(
+      "/velocity-os-journal/pages/page-21.png",
+    );
+    expect(twentyFirstPage.headers()["content-type"]).not.toContain("image/");
+
+    const guessedFullJournal = await request.get(
+      "/velocity-os-journal/velocity-os-operators-daily-journal.pdf",
+    );
+    expect(guessedFullJournal.headers()["content-type"]).not.toContain(
+      "application/pdf",
+    );
+  });
+
+  test("validates email and unlocks the complete journal without an account", async ({
+    page,
+  }) => {
+    const id = uniq();
+    await page.goto("/velocity-os");
+
+    const email = page.getByTestId("email");
+    await email.scrollIntoViewIfNeeded();
+    await email.fill("not-an-email");
+    await page.getByTestId("unlock-button").click();
+    await expect(page.getByTestId("unlock-status")).toHaveText(
+      "Enter a valid email address to unlock the complete journal.",
+    );
+
+    await email.fill(`journal-ui-${id}@example.com`);
+    const [response] = await Promise.all([
+      page.waitForResponse(
+        (candidate) =>
+          candidate.url().includes("/api/velocity-os/journal-unlocks") &&
+          candidate.request().method() === "POST",
+      ),
+      page.getByTestId("unlock-button").click(),
+    ]);
+    expect(response.status()).toBe(201);
+    await expect(page.getByTestId("unlock-status")).toContainText(
+      "Unlocked successfully",
+    );
+    await expect(
+      page.getByRole("button", {
+        name: "Download The Operator's Daily Journal",
+      }),
+    ).toBeVisible();
+  });
+
+  test("captures a normalized lead, authorizes the full PDF, and records the download event", async ({
+    request,
+  }) => {
+    const id = uniq();
+    const email = `journal-api-${id}@example.com`;
+    const unlock = await request.post("/api/velocity-os/journal-unlocks", {
+      data: { email: ` ${email.toUpperCase()} ` },
+    });
+    expect(unlock.status()).toBe(201);
+
+    const firstBody = await unlock.json();
+    const duplicateUnlock = await request.post(
+      "/api/velocity-os/journal-unlocks",
+      {
+        data: { email },
+      },
+    );
+    expect(duplicateUnlock.status()).toBe(201);
+    const body = await duplicateUnlock.json();
+    expect(body.downloadUrl).not.toBe(firstBody.downloadUrl);
+
+    expect(body.document).toMatchObject({
+      title: "The Operator's Daily Journal",
+      version: "first-edition-2026",
+      filename: "velocity-os-operators-daily-journal.pdf",
+    });
+    expect(body.downloadUrl).toMatch(
+      /^\/api\/velocity-os\/journal-downloads\/[A-Za-z0-9_-]{43}$/,
+    );
+    expect(new Date(body.expiresAt).getTime()).toBeGreaterThan(Date.now());
+
+    const download = await request.get(body.downloadUrl);
+    expect(download.status()).toBe(200);
+    expect(download.headers()["content-type"]).toContain("application/pdf");
+    expect(download.headers()["content-disposition"]).toContain(
+      "velocity-os-operators-daily-journal.pdf",
+    );
+    const pdf = await download.body();
+    expect(pdf.subarray(0, 5).toString()).toBe("%PDF-");
+    expect(pdf.byteLength).toBe(1_329_095);
+
+    const leads = await db.select().from(velocityOsJournalLeadsTable);
+    const matchingLeads = leads.filter(
+      (candidate) => candidate.email === email,
+    );
+    expect(matchingLeads).toHaveLength(1);
+    const lead = matchingLeads[0];
+    expect(lead).toBeDefined();
+    expect(lead?.documentVersion).toBe("first-edition-2026");
+    expect(lead?.submittedAt).toBeInstanceOf(Date);
+    expect(lead?.downloadedAt).toBeInstanceOf(Date);
+    expect(lead?.downloadTokenHash).not.toContain(
+      body.downloadUrl.split("/").at(-1),
+    );
+  });
+
+  test("rejects unauthorized and expired download authorizations", async ({
+    request,
+  }) => {
+    const unauthorized = await request.get(
+      `/api/velocity-os/journal-downloads/${"A".repeat(43)}`,
+    );
+    expect(unauthorized.status()).toBe(401);
+    await expect(unauthorized.json()).resolves.toMatchObject({
+      error: expect.stringContaining("invalid"),
+    });
+
+    const token = randomBytes(32).toString("base64url");
+    await db.insert(velocityOsJournalLeadsTable).values({
+      email: `expired-${uniq()}@example.com`,
+      documentId: "operators-daily-journal",
+      documentVersion: "first-edition-2026",
+      downloadTokenHash: createHash("sha256").update(token).digest("hex"),
+      downloadTokenExpiresAt: new Date(Date.now() - 60_000),
+      submittedAt: new Date(Date.now() - 120_000),
+    });
+
+    const expired = await request.get(
+      `/api/velocity-os/journal-downloads/${token}`,
+    );
+    expect(expired.status()).toBe(410);
+    await expect(expired.json()).resolves.toMatchObject({
+      error: expect.stringContaining("expired"),
+    });
+  });
+});
+
+test.describe("Velocity OS journal on mobile", () => {
+  test.use({ viewport: { width: 375, height: 812 } });
+
+  test("keeps the preview and unlock controls comfortable without horizontal overflow", async ({
+    page,
+  }) => {
+    await page.goto("/velocity-os");
+    const viewer = page.getByTestId("viewer");
+    await viewer.scrollIntoViewIfNeeded();
+
+    const overflow = await page.evaluate(
+      () =>
+        document.documentElement.scrollWidth -
+        document.documentElement.clientWidth,
+    );
+    expect(overflow).toBeLessThanOrEqual(0);
+
+    for (const testId of ["previous", "next"]) {
+      const box = await page.getByTestId(testId).boundingBox();
+      expect(box?.width).toBeGreaterThanOrEqual(44);
+      expect(box?.height).toBeGreaterThanOrEqual(44);
+    }
+
+    await page.getByTestId("next").click();
+    await expect(page.getByTestId("page-status")).toHaveText("Page 2 of 20");
+
+    const inputFontSize = await page
+      .getByTestId("email")
+      .evaluate((element) => parseFloat(getComputedStyle(element).fontSize));
+    expect(inputFontSize).toBeGreaterThanOrEqual(16);
+  });
+});
+
 test.describe("Velocity OS operations intake", () => {
   test("opens directly and shows a clear validation error", async ({ page }) => {
     await page.goto("/velocity-os");
@@ -166,20 +381,32 @@ test.describe("Velocity OS operations intake", () => {
 
   test("submits a dedicated intake and confirms review expectations", async ({ page }) => {
     const id = uniq();
-    await page.goto("/contact");
+    await page.goto("/velocity-os");
 
-    await page.getByPlaceholder("Your full name").fill(`E2E Test ${id}`);
-    await page.getByPlaceholder("Firm, fund, or company").fill("E2E Test Org");
-    await page.getByPlaceholder("Professional email").fill(`e2e-${id}@example.com`);
-    await page.getByPlaceholder("Direct line (optional)").fill("555-000-0000");
-    await page.locator("form.cf select.cf-input").selectOption({ label: "Other / General" });
+    await page.locator("#fullName").fill(`Velocity E2E ${id}`);
+    await page.locator("#titleRole").fill("Operator");
+    await page.locator("#workEmail").fill(`velocity-e2e-${id}@example.com`);
+    await page.locator("#phone").fill("555-000-0000");
+    await page.locator("#companyName").fill("E2E Operations Co");
+    await page.locator("#companyWebsite").fill("https://example.com");
     await page
-      .getByPlaceholder("Briefly describe the opportunity, situation, or reason for reaching out...")
-      .fill(`Automated e2e test submission ${id}. Safe to ignore.`);
+      .locator("#companyContext")
+      .fill("A growing operating company with a distributed leadership team.");
+    await page
+      .locator("#primaryChallenge")
+      .fill("Decision ownership and operating cadence are inconsistent today.");
+    await page
+      .locator("#desiredOutcome")
+      .fill("Install measurable accountability and a reliable weekly cadence.");
+    await page.locator("#urgency").selectOption("this-quarter");
 
     const [response] = await Promise.all([
-      page.waitForResponse((r) => r.url().includes("/api/access-requests") && r.request().method() === "POST"),
-      dialog.getByRole("button", { name: "Submit Access Request" }).click(),
+      page.waitForResponse(
+        (candidate) =>
+          candidate.url().includes("/api/velocity-os-intakes") &&
+          candidate.request().method() === "POST",
+      ),
+      page.getByRole("button", { name: "Submit Request" }).click(),
     ]);
     expect(response.status()).toBe(201);
 
@@ -278,8 +505,12 @@ test.describe("Contact form", () => {
       .fill(`Automated e2e test submission ${id}. Safe to ignore.`);
 
     const [response] = await Promise.all([
-      page.waitForResponse((r) => r.url().includes("/api/access-requests") && r.request().method() === "POST"),
-      dialog.getByRole("button", { name: "Submit Access Request" }).click(),
+      page.waitForResponse(
+        (candidate) =>
+          candidate.url().includes("/api/inquiries") &&
+          candidate.request().method() === "POST",
+      ),
+      page.getByRole("button", { name: "Submit Inquiry" }).click(),
     ]);
     expect(response.status()).toBe(201);
 
@@ -323,5 +554,3 @@ test.describe("Portfolio access modal", () => {
     await expect(page.getByRole("dialog")).not.toBeVisible();
   });
 });
-
-    const finalAction = menu.getByRole("link", { name: "Introduce a Situation" });

@@ -186,3 +186,30 @@ for (const [route, meta] of Object.entries(PAGE_META)) {
   writeFileSync(outFile, html);
   console.log(`prerendered ${route} -> ${path.relative(__dirname, outFile)}`);
 }
+
+const sitemapUrls = Object.entries(PAGE_META)
+  .filter(([route, meta]) => route !== "/404" && !meta.noIndex)
+  .map(([route]) => `  <url><loc>${canonicalUrlForPath(route)}</loc></url>`)
+  .join("\n");
+
+writeFileSync(
+  path.join(distPublic, "sitemap.xml"),
+  [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    sitemapUrls,
+    "</urlset>",
+    "",
+  ].join("\n"),
+);
+
+writeFileSync(
+  path.join(distPublic, "robots.txt"),
+  [
+    "User-agent: *",
+    "Allow: /",
+    "",
+    `Sitemap: ${SITE_URL}/sitemap.xml`,
+    "",
+  ].join("\n"),
+);

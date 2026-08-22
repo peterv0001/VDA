@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { canonicalUrlForPath } from "./canonicalUrl";
+import { SITE_URL, canonicalUrlForPath } from "./canonicalUrl";
 import { SITE_NAME, buildFullTitle } from "./pageMeta";
 
 function setMeta(attr: "name" | "property", key: string, content: string) {

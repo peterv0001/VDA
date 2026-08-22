@@ -134,3 +134,32 @@ export const ListAdminSubmissionsResponse = zod.object({
     }),
   ),
 });
+
+/**
+ * Captures a resource lead and creates a short-lived authorization for the private journal download
+ * @summary Unlock the complete Operator's Daily Journal
+ */
+export const unlockVelocityOsJournalBodyEmailMax = 254;
+
+export const UnlockVelocityOsJournalBody = zod.object({
+  email: zod.string().email().max(unlockVelocityOsJournalBodyEmailMax),
+});
+
+/**
+ * Streams the private journal after validating a short-lived download authorization
+ * @summary Download the complete Operator's Daily Journal
+ */
+export const downloadVelocityOsJournalPathTokenMin = 43;
+export const downloadVelocityOsJournalPathTokenMax = 43;
+
+export const downloadVelocityOsJournalPathTokenRegExp = new RegExp(
+  "^[A-Za-z0-9_-]+$",
+);
+
+export const DownloadVelocityOsJournalParams = zod.object({
+  token: zod.coerce
+    .string()
+    .min(downloadVelocityOsJournalPathTokenMin)
+    .max(downloadVelocityOsJournalPathTokenMax)
+    .regex(downloadVelocityOsJournalPathTokenRegExp),
+});

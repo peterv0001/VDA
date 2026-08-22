@@ -18,6 +18,8 @@ tags:
     description: Velocity OS operations intake requests
   - name: admin
     description: Protected owner operations
+  - name: velocity-os-journal
+    description: Velocity OS Operator's Daily Journal access
 paths:
   /healthz:
     get:
@@ -154,6 +156,88 @@ paths:
                 $ref: "#/components/schemas/ErrorResponse"
         "500":
           description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /velocity-os/journal-unlocks:
+    post:
+      operationId: unlockVelocityOsJournal
+      tags: [velocity-os-journal]
+      summary: Unlock the complete Operator's Daily Journal
+      description: Captures a resource lead and creates a short-lived authorization for the private journal download
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VelocityOsJournalUnlockInput"
+      responses:
+        "201":
+          description: Journal access created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VelocityOsJournalUnlock"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "503":
+          description: Journal file is temporarily unavailable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /velocity-os/journal-downloads/{token}:
+    get:
+      operationId: downloadVelocityOsJournal
+      tags: [velocity-os-journal]
+      summary: Download the complete Operator's Daily Journal
+      description: Streams the private journal after validating a short-lived download authorization
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 43
+            maxLength: 43
+            pattern: "^[A-Za-z0-9_-]+$"
+      responses:
+        "200":
+          description: Complete Operator's Daily Journal PDF
+          headers:
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        "401":
+          description: Download authorization is invalid
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "410":
+          description: Download authorization has expired
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "503":
+          description: Journal file is temporarily unavailable
           content:
             application/json:
               schema:
@@ -343,6 +427,48 @@ components:
       required:
         - inquiries
         - accessRequests
+    VelocityOsJournalUnlockInput:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 254
+      required:
+        - email
+    VelocityOsJournalDocument:
+      type: object
+      properties:
+        title:
+          type: string
+        version:
+          type: string
+        filename:
+          type: string
+      required:
+        - title
+        - version
+        - filename
+    VelocityOsJournalUnlock:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        downloadUrl:
+          type: string
+        expiresAt:
+          type: string
+          format: date-time
+        document:
+          $ref: "#/components/schemas/VelocityOsJournalDocument"
+      required:
+        - success
+        - message
+        - downloadUrl
+        - expiresAt
+        - document
     SubmissionResult:
       type: object
       properties:

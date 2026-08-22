@@ -4,7 +4,21 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const distPublic = path.join(__dirname, "dist", "public");
-const SITE_URL = "https://www.vdacq.com";
+
+function resolveSiteOrigin() {
+  const siteUrl = process.env.SITE_URL?.trim();
+  if (!siteUrl) {
+    throw new Error(
+      "SEO verification requires SITE_URL to match the origin used by the production build.",
+    );
+  }
+
+  return new URL(
+    siteUrl.includes("://") ? siteUrl : `https://${siteUrl}`,
+  ).origin;
+}
+
+const SITE_URL = resolveSiteOrigin();
 
 function getPublicRouteFiles(directory, relativeDirectory = "") {
   return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {

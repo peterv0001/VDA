@@ -24,6 +24,8 @@ import type {
   HealthStatus,
   SubmissionResult,
   VelocityOsIntakeInput,
+  VelocityOsJournalUnlock,
+  VelocityOsJournalUnlockInput,
 } from "./api.schemas";
 
 import { customFetch } from "../custom-fetch";
@@ -441,6 +443,184 @@ export function useListAdminSubmissions<
   request?: SecondParameter<typeof customFetch>;
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getListAdminSubmissionsQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * Captures a resource lead and creates a short-lived authorization for the private journal download
+ * @summary Unlock the complete Operator's Daily Journal
+ */
+export const getUnlockVelocityOsJournalUrl = () => {
+  return `/api/velocity-os/journal-unlocks`;
+};
+
+export const unlockVelocityOsJournal = async (
+  velocityOsJournalUnlockInput: VelocityOsJournalUnlockInput,
+  options?: RequestInit,
+): Promise<VelocityOsJournalUnlock> => {
+  return customFetch<VelocityOsJournalUnlock>(getUnlockVelocityOsJournalUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(velocityOsJournalUnlockInput),
+  });
+};
+
+export const getUnlockVelocityOsJournalMutationOptions = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof unlockVelocityOsJournal>>,
+    TError,
+    { data: BodyType<VelocityOsJournalUnlockInput> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof unlockVelocityOsJournal>>,
+  TError,
+  { data: BodyType<VelocityOsJournalUnlockInput> },
+  TContext
+> => {
+  const mutationKey = ["unlockVelocityOsJournal"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof unlockVelocityOsJournal>>,
+    { data: BodyType<VelocityOsJournalUnlockInput> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return unlockVelocityOsJournal(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type UnlockVelocityOsJournalMutationResult = NonNullable<
+  Awaited<ReturnType<typeof unlockVelocityOsJournal>>
+>;
+export type UnlockVelocityOsJournalMutationBody =
+  BodyType<VelocityOsJournalUnlockInput>;
+export type UnlockVelocityOsJournalMutationError = ErrorType<ErrorResponse>;
+
+/**
+ * @summary Unlock the complete Operator's Daily Journal
+ */
+export const useUnlockVelocityOsJournal = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof unlockVelocityOsJournal>>,
+    TError,
+    { data: BodyType<VelocityOsJournalUnlockInput> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof unlockVelocityOsJournal>>,
+  TError,
+  { data: BodyType<VelocityOsJournalUnlockInput> },
+  TContext
+> => {
+  return useMutation(getUnlockVelocityOsJournalMutationOptions(options));
+};
+
+/**
+ * Streams the private journal after validating a short-lived download authorization
+ * @summary Download the complete Operator's Daily Journal
+ */
+export const getDownloadVelocityOsJournalUrl = (token: string) => {
+  return `/api/velocity-os/journal-downloads/${token}`;
+};
+
+export const downloadVelocityOsJournal = async (
+  token: string,
+  options?: RequestInit,
+): Promise<Blob> => {
+  return customFetch<Blob>(getDownloadVelocityOsJournalUrl(token), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getDownloadVelocityOsJournalQueryKey = (token: string) => {
+  return [`/api/velocity-os/journal-downloads/${token}`] as const;
+};
+
+export const getDownloadVelocityOsJournalQueryOptions = <
+  TData = Awaited<ReturnType<typeof downloadVelocityOsJournal>>,
+  TError = ErrorType<ErrorResponse>,
+>(
+  token: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof downloadVelocityOsJournal>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getDownloadVelocityOsJournalQueryKey(token);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof downloadVelocityOsJournal>>
+  > = ({ signal }) =>
+    downloadVelocityOsJournal(token, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!token,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof downloadVelocityOsJournal>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type DownloadVelocityOsJournalQueryResult = NonNullable<
+  Awaited<ReturnType<typeof downloadVelocityOsJournal>>
+>;
+export type DownloadVelocityOsJournalQueryError = ErrorType<ErrorResponse>;
+
+/**
+ * @summary Download the complete Operator's Daily Journal
+ */
+
+export function useDownloadVelocityOsJournal<
+  TData = Awaited<ReturnType<typeof downloadVelocityOsJournal>>,
+  TError = ErrorType<ErrorResponse>,
+>(
+  token: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof downloadVelocityOsJournal>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getDownloadVelocityOsJournalQueryOptions(token, options);
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: QueryKey;
