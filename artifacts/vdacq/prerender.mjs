@@ -13,6 +13,14 @@ const template = readFileSync(path.join(distPublic, "index.html"), "utf-8");
 
 const SITE_URL = "https://www.vdacq.com";
 
+function canonicalUrlForRoute(route) {
+  if (route === "/") {
+    return `${SITE_URL}/`;
+  }
+
+  return `${SITE_URL}${route.endsWith("/") ? route : `${route}/`}`;
+}
+
 const ORGANIZATION_SCHEMA = {
   "@context": "https://schema.org",
   "@type": "Organization",
@@ -34,7 +42,7 @@ const ROUTE_LABELS = {
 };
 
 function buildJsonLd(route, meta, fullTitle) {
-  const canonicalUrl = route === "/" ? SITE_URL : `${SITE_URL}${route}`;
+  const canonicalUrl = canonicalUrlForRoute(route);
   const schemas = [];
 
   if (route === "/") {
@@ -101,7 +109,7 @@ for (const [route, meta] of Object.entries(PAGE_META)) {
   const fullTitle = escapeHtml(buildFullTitle(meta.title));
   const description = escapeHtml(meta.description);
   const jsonLd = buildJsonLd(route, meta, buildFullTitle(meta.title));
-  const canonicalUrl = escapeHtml(route === "/" ? SITE_URL : `${SITE_URL}${route}`);
+  const canonicalUrl = escapeHtml(canonicalUrlForRoute(route));
 
   const html = template
     .replace(/<title>[\s\S]*?<\/title>/, `<title>${fullTitle}</title>`)

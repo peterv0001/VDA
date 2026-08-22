@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import { SITE_NAME, buildFullTitle } from "./pageMeta";
 
+const SITE_URL = "https://www.vdacq.com";
+
 function setMeta(attr: "name" | "property", key: string, content: string) {
   let el = document.head.querySelector<HTMLMetaElement>(
     `meta[${attr}="${key}"]`,
@@ -26,7 +28,10 @@ function setCanonical(href: string) {
 export function usePageMeta(title: string, description: string) {
   useEffect(() => {
     const fullTitle = buildFullTitle(title);
-    const canonicalUrl = window.location.origin + window.location.pathname;
+    const pathname = window.location.pathname.endsWith("/")
+      ? window.location.pathname
+      : `${window.location.pathname}/`;
+    const canonicalUrl = `${SITE_URL}${pathname}`;
     document.title = fullTitle;
     setMeta("name", "description", description);
     setCanonical(canonicalUrl);
