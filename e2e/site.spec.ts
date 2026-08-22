@@ -119,6 +119,8 @@ test.describe("Mobile navigation", () => {
     await burger.click();
     const menu = page.locator("#mobile-menu");
 
+    const homeLink = menu.getByRole("link", { name: "Home" });
+
     const overflowVelocity = await page.evaluate(
       () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
     );
@@ -321,3 +323,5 @@ test.describe("Portfolio access modal", () => {
     await expect(page.getByRole("dialog")).not.toBeVisible();
   });
 });
+
+    const finalAction = menu.getByRole("link", { name: "Introduce a Situation" });
