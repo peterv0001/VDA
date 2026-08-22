@@ -14,6 +14,17 @@ import { usePageMeta } from "./lib/usePageMeta";
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 
+const legacyHashRedirects: Record<string, string> = {
+  portfolio: "/track-record",
+  track: "/track-record",
+  team: "/team",
+  contact: "/contact",
+  manifesto: "/",
+  mandate: "/",
+  platform: "/platform",
+  ctrl: "/platform",
+  why: "/platform",
+};
 function ScrollToTop() {
   const [location] = useLocation();
   useEffect(() => {
@@ -47,6 +58,7 @@ export default function App({ ssrPath }: { ssrPath?: string }) {
 
   return (
     <Router base={base} ssrPath={ssrPath}>
+      <LegacyHashRedirect />
       <ScrollToTop />
       <Nav />
       <Switch>
@@ -79,4 +91,36 @@ export default function App({ ssrPath }: { ssrPath?: string }) {
       {modalOpen && <Modal onClose={() => setModalOpen(false)} />}
     </Router>
   );
+}
+
+function LegacyHashRedirect() {
+  const [location, navigate] = useLocation();
+
+  useEffect(() => {
+    if (location !== "/") return;
+
+    const redirectLegacyHash = () => {
+      const hash = window.location.hash.slice(1).toLowerCase();
+      const target = legacyHashRedirects[hash];
+      if (!target) return;
+
+      if (target === location) {
+        window.history.replaceState(
+          null,
+          "",
+          `${window.location.pathname}${window.location.search}`,
+        );
+        window.scrollTo(0, 0);
+        return;
+      }
+
+      navigate(target, { replace: true });
+    };
+
+    redirectLegacyHash();
+    window.addEventListener("hashchange", redirectLegacyHash);
+    return () => window.removeEventListener("hashchange", redirectLegacyHash);
+  }, [location, navigate]);
+
+  return null;
 }

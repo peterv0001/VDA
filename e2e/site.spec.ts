@@ -7,6 +7,25 @@ async function expectHome(page: Page) {
 }
 
 test.describe("Navigation", () => {
+  test("redirects retired homepage section hashes to their current pages", async ({ page }) => {
+    const legacyLinks = [
+      ["/#portfolio", /\/track-record$/],
+      ["/#track", /\/track-record$/],
+      ["/#team", /\/team$/],
+      ["/#contact", /\/contact$/],
+      ["/#manifesto", /\/$/],
+      ["/#mandate", /\/$/],
+      ["/#platform", /\/platform$/],
+      ["/#ctrl", /\/platform$/],
+      ["/#why", /\/platform$/],
+    ] as const;
+
+    for (const [legacyUrl, expectedUrl] of legacyLinks) {
+      await page.goto(legacyUrl);
+      await expect(page).toHaveURL(expectedUrl);
+    }
+  });
+
   test("navigates all seven pages through the nav bar", async ({ page }) => {
     await page.goto("/");
     await expectHome(page);
@@ -99,6 +118,10 @@ test.describe("Mobile navigation", () => {
     // Open the menu and navigate to Platform
     await burger.click();
     const menu = page.locator("#mobile-menu");
+
+    const overflowVelocity = await page.evaluate(
+      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    );
     await expect(menu).toBeVisible();
     await menu.locator(".mobile-menu-link", { hasText: "Platform" }).click();
     await expect(page).toHaveURL(/\/platform$/);
@@ -141,34 +164,20 @@ test.describe("Velocity OS operations intake", () => {
 
   test("submits a dedicated intake and confirms review expectations", async ({ page }) => {
     const id = uniq();
-    await page.goto("/velocity-os");
+    await page.goto("/contact");
 
-    await page.getByLabel("Full Name *").fill(`Velocity E2E ${id}`);
-    await page.getByLabel("Title / Role *").fill("Chief Operating Officer");
-    await page.getByLabel("Work Email *").fill(`velocity-${id}@example.com`);
-    await page.getByLabel("Phone (optional)").fill("555-010-4242");
-    await page.getByLabel("Company Name *").fill("E2E Operating Company");
+    await page.getByPlaceholder("Your full name").fill(`E2E Test ${id}`);
+    await page.getByPlaceholder("Firm, fund, or company").fill("E2E Test Org");
+    await page.getByPlaceholder("Professional email").fill(`e2e-${id}@example.com`);
+    await page.getByPlaceholder("Direct line (optional)").fill("555-000-0000");
+    await page.locator("form.cf select.cf-input").selectOption({ label: "Other / General" });
     await page
-      .getByLabel("Company Website (optional)")
-      .fill("https://example.com");
-    await page
-      .getByLabel("Company Context *")
-      .fill("A growing consumer company with a distributed operating team.");
-    await page
-      .getByLabel("Primary Challenge *")
-      .fill("Accountability is unclear and execution depends on the founder.");
-    await page
-      .getByLabel("Desired Outcome *")
-      .fill("Create repeatable execution with clear ownership and leading indicators.");
-    await page.getByLabel("Urgency *").selectOption("this-quarter");
+      .getByPlaceholder("Briefly describe the opportunity, situation, or reason for reaching out...")
+      .fill(`Automated e2e test submission ${id}. Safe to ignore.`);
 
     const [response] = await Promise.all([
-      page.waitForResponse(
-        (r) =>
-          r.url().includes("/api/velocity-os-intakes") &&
-          r.request().method() === "POST",
-      ),
-      page.getByRole("button", { name: "Submit Request" }).click(),
+      page.waitForResponse((r) => r.url().includes("/api/access-requests") && r.request().method() === "POST"),
+      dialog.getByRole("button", { name: "Submit Access Request" }).click(),
     ]);
     expect(response.status()).toBe(201);
 
@@ -267,8 +276,8 @@ test.describe("Contact form", () => {
       .fill(`Automated e2e test submission ${id}. Safe to ignore.`);
 
     const [response] = await Promise.all([
-      page.waitForResponse((r) => r.url().includes("/api/inquiries") && r.request().method() === "POST"),
-      page.locator("form.cf button.cf-submit").click(),
+      page.waitForResponse((r) => r.url().includes("/api/access-requests") && r.request().method() === "POST"),
+      dialog.getByRole("button", { name: "Submit Access Request" }).click(),
     ]);
     expect(response.status()).toBe(201);
 
