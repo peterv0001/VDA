@@ -44,6 +44,31 @@ export const PAGE_META: Record<string, PageMeta> = {
     description:
       "See how Velocity OS turns operating principles into daily actions, weekly decisions, and quarterly resets. Preview 20 pages of the Operator's Daily Journal and unlock the complete workbook.",
   },
+  "/how-we-operate": {
+    title: "How We Operate",
+    description:
+      "Explore Van Dyke Acquisitions' open Velocity Operating System library: the illustrated operating model, metrics and questions, decision rules, and checklists.",
+  },
+  "/how-we-operate/book": {
+    title: "The Velocity Operating System",
+    description:
+      "Read the complete illustrated edition of The Velocity Operating System by Peter V. Griscom: lean discipline, power-law positioning, and AI as enterprise electricity.",
+  },
+  "/how-we-operate/metrics-and-questions": {
+    title: "Velocity OS Metrics & Questions",
+    description:
+      "Read the 29-page Velocity OS Metrics & Questions companion: operating measures and questions for evidence-led execution.",
+  },
+  "/how-we-operate/rule-book": {
+    title: "Velocity OS Rule Book",
+    description:
+      "Read the 11-page Velocity OS Rule Book: cited decision rules and governance standards for durable operating discipline.",
+  },
+  "/how-we-operate/checklist-book": {
+    title: "Velocity OS Checklist Book",
+    description:
+      "Read the 41-page Velocity OS Checklist Book: execution and review checklists for repeatable operating practice.",
+  },
   "/contact": {
     title: "Contact",
     description:

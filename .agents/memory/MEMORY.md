@@ -6,3 +6,4 @@
 - [Rebase test merges](rebase-test-merges.md) — a marker-free semantic merge can still scramble e2e blocks; enumerate and run the full suite after every task rebase.
 - [Basic auth fetch challenges](basic-auth-fetch-challenges.md) — challenge missing credentials, but return plain 401 for invalid explicit credentials so browser fetches settle.
 - [Animated overlay focus](animated-overlay-focus.md) — make visibility immediate on open and delay focus until after the trigger click, or browser focus calls can silently fail.
+- [Iframe reader keyboard navigation](iframe-reader-keyboard.md) — use a focusable iframe document plus postMessage; browser-reserved shortcuts may never reach embedded content.

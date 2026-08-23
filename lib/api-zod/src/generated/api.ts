@@ -163,3 +163,32 @@ export const DownloadVelocityOsJournalParams = zod.object({
     .max(downloadVelocityOsJournalPathTokenMax)
     .regex(downloadVelocityOsJournalPathTokenRegExp),
 });
+
+/**
+ * Captures a resource lead and creates a short-lived authorization for the private illustrated-book download
+ * @summary Unlock the illustrated Velocity Operating System download
+ */
+export const unlockVelocityOsIllustratedBookBodyEmailMax = 254;
+
+export const UnlockVelocityOsIllustratedBookBody = zod.object({
+  email: zod.string().email().max(unlockVelocityOsIllustratedBookBodyEmailMax),
+});
+
+/**
+ * Streams the private illustrated book after validating a short-lived download authorization
+ * @summary Download the illustrated Velocity Operating System
+ */
+export const downloadVelocityOsIllustratedBookPathTokenMin = 43;
+export const downloadVelocityOsIllustratedBookPathTokenMax = 43;
+
+export const downloadVelocityOsIllustratedBookPathTokenRegExp = new RegExp(
+  "^[A-Za-z0-9_-]+$",
+);
+
+export const DownloadVelocityOsIllustratedBookParams = zod.object({
+  token: zod.coerce
+    .string()
+    .min(downloadVelocityOsIllustratedBookPathTokenMin)
+    .max(downloadVelocityOsIllustratedBookPathTokenMax)
+    .regex(downloadVelocityOsIllustratedBookPathTokenRegExp),
+});

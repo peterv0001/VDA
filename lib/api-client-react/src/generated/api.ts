@@ -628,3 +628,192 @@ export function useDownloadVelocityOsJournal<
 
   return { ...query, queryKey: queryOptions.queryKey };
 }
+
+/**
+ * Captures a resource lead and creates a short-lived authorization for the private illustrated-book download
+ * @summary Unlock the illustrated Velocity Operating System download
+ */
+export const getUnlockVelocityOsIllustratedBookUrl = () => {
+  return `/api/velocity-os/illustrated-book-unlocks`;
+};
+
+export const unlockVelocityOsIllustratedBook = async (
+  velocityOsJournalUnlockInput: VelocityOsJournalUnlockInput,
+  options?: RequestInit,
+): Promise<VelocityOsJournalUnlock> => {
+  return customFetch<VelocityOsJournalUnlock>(
+    getUnlockVelocityOsIllustratedBookUrl(),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(velocityOsJournalUnlockInput),
+    },
+  );
+};
+
+export const getUnlockVelocityOsIllustratedBookMutationOptions = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof unlockVelocityOsIllustratedBook>>,
+    TError,
+    { data: BodyType<VelocityOsJournalUnlockInput> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof unlockVelocityOsIllustratedBook>>,
+  TError,
+  { data: BodyType<VelocityOsJournalUnlockInput> },
+  TContext
+> => {
+  const mutationKey = ["unlockVelocityOsIllustratedBook"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof unlockVelocityOsIllustratedBook>>,
+    { data: BodyType<VelocityOsJournalUnlockInput> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return unlockVelocityOsIllustratedBook(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type UnlockVelocityOsIllustratedBookMutationResult = NonNullable<
+  Awaited<ReturnType<typeof unlockVelocityOsIllustratedBook>>
+>;
+export type UnlockVelocityOsIllustratedBookMutationBody =
+  BodyType<VelocityOsJournalUnlockInput>;
+export type UnlockVelocityOsIllustratedBookMutationError =
+  ErrorType<ErrorResponse>;
+
+/**
+ * @summary Unlock the illustrated Velocity Operating System download
+ */
+export const useUnlockVelocityOsIllustratedBook = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof unlockVelocityOsIllustratedBook>>,
+    TError,
+    { data: BodyType<VelocityOsJournalUnlockInput> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof unlockVelocityOsIllustratedBook>>,
+  TError,
+  { data: BodyType<VelocityOsJournalUnlockInput> },
+  TContext
+> => {
+  return useMutation(
+    getUnlockVelocityOsIllustratedBookMutationOptions(options),
+  );
+};
+
+/**
+ * Streams the private illustrated book after validating a short-lived download authorization
+ * @summary Download the illustrated Velocity Operating System
+ */
+export const getDownloadVelocityOsIllustratedBookUrl = (token: string) => {
+  return `/api/velocity-os/illustrated-book-downloads/${token}`;
+};
+
+export const downloadVelocityOsIllustratedBook = async (
+  token: string,
+  options?: RequestInit,
+): Promise<Blob> => {
+  return customFetch<Blob>(getDownloadVelocityOsIllustratedBookUrl(token), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getDownloadVelocityOsIllustratedBookQueryKey = (token: string) => {
+  return [`/api/velocity-os/illustrated-book-downloads/${token}`] as const;
+};
+
+export const getDownloadVelocityOsIllustratedBookQueryOptions = <
+  TData = Awaited<ReturnType<typeof downloadVelocityOsIllustratedBook>>,
+  TError = ErrorType<ErrorResponse>,
+>(
+  token: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof downloadVelocityOsIllustratedBook>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ??
+    getDownloadVelocityOsIllustratedBookQueryKey(token);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof downloadVelocityOsIllustratedBook>>
+  > = ({ signal }) =>
+    downloadVelocityOsIllustratedBook(token, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!token,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof downloadVelocityOsIllustratedBook>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type DownloadVelocityOsIllustratedBookQueryResult = NonNullable<
+  Awaited<ReturnType<typeof downloadVelocityOsIllustratedBook>>
+>;
+export type DownloadVelocityOsIllustratedBookQueryError =
+  ErrorType<ErrorResponse>;
+
+/**
+ * @summary Download the illustrated Velocity Operating System
+ */
+
+export function useDownloadVelocityOsIllustratedBook<
+  TData = Awaited<ReturnType<typeof downloadVelocityOsIllustratedBook>>,
+  TError = ErrorType<ErrorResponse>,
+>(
+  token: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof downloadVelocityOsIllustratedBook>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getDownloadVelocityOsIllustratedBookQueryOptions(
+    token,
+    options,
+  );
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}

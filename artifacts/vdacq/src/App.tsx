@@ -10,6 +10,11 @@ import TeamPage from "./pages/Team";
 import ContactPage from "./pages/Contact";
 import FundingPage from "./pages/Funding";
 import VelocityOSPage from "./pages/VelocityOS";
+import HowWeOperatePage from "./pages/HowWeOperate";
+import {
+  BookReaderPage,
+  ResourceReaderPage,
+} from "./pages/OperatingLibraryReaders";
 import AdminPage from "./pages/Admin";
 import { usePageMeta } from "./lib/usePageMeta";
 
@@ -66,38 +71,81 @@ export default function App({ ssrPath }: { ssrPath?: string }) {
           <AdminPage />
         </Route>
         <Route>
-          <Nav />
-          <Switch>
-            <Route path="/">
-              <Home onModalOpen={openModal} />
-            </Route>
-            <Route path="/platform">
-              <PlatformPage />
-            </Route>
-            <Route path="/track-record">
-              <TrackRecordPage onModalOpen={openModal} />
-            </Route>
-            <Route path="/team">
-              <TeamPage />
-            </Route>
-            <Route path="/funding">
-              <FundingPage />
-            </Route>
-            <Route path="/velocity-os">
-              <VelocityOSPage />
-            </Route>
-            <Route path="/contact">
-              <ContactPage />
-            </Route>
-            <Route>
-              <NotFound />
-            </Route>
-          </Switch>
-          <Footer onModalOpen={openModal} />
-          {modalOpen && <Modal onClose={() => setModalOpen(false)} />}
+          <PublicSite
+            modalOpen={modalOpen}
+            openModal={openModal}
+            closeModal={() => setModalOpen(false)}
+          />
         </Route>
       </Switch>
     </Router>
+  );
+}
+
+function PublicSite({
+  modalOpen,
+  openModal,
+  closeModal,
+}: {
+  modalOpen: boolean;
+  openModal: () => void;
+  closeModal: () => void;
+}) {
+  const [location] = useLocation();
+  const isReaderRoute = [
+    "/how-we-operate/book",
+    "/how-we-operate/metrics-and-questions",
+    "/how-we-operate/rule-book",
+    "/how-we-operate/checklist-book",
+  ].includes(location);
+
+  return (
+    <>
+      {!isReaderRoute && <Nav />}
+      <Switch>
+        <Route path="/">
+          <Home onModalOpen={openModal} />
+        </Route>
+        <Route path="/platform">
+          <PlatformPage />
+        </Route>
+        <Route path="/track-record">
+          <TrackRecordPage onModalOpen={openModal} />
+        </Route>
+        <Route path="/team">
+          <TeamPage />
+        </Route>
+        <Route path="/funding">
+          <FundingPage />
+        </Route>
+        <Route path="/velocity-os">
+          <VelocityOSPage />
+        </Route>
+        <Route path="/how-we-operate">
+          <HowWeOperatePage />
+        </Route>
+        <Route path="/how-we-operate/book">
+          <BookReaderPage />
+        </Route>
+        <Route path="/how-we-operate/metrics-and-questions">
+          <ResourceReaderPage resource="metrics-and-questions" />
+        </Route>
+        <Route path="/how-we-operate/rule-book">
+          <ResourceReaderPage resource="rule-book" />
+        </Route>
+        <Route path="/how-we-operate/checklist-book">
+          <ResourceReaderPage resource="checklist-book" />
+        </Route>
+        <Route path="/contact">
+          <ContactPage />
+        </Route>
+        <Route>
+          <NotFound />
+        </Route>
+      </Switch>
+      {!isReaderRoute && <Footer onModalOpen={openModal} />}
+      {!isReaderRoute && modalOpen && <Modal onClose={closeModal} />}
+    </>
   );
 }
 

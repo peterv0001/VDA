@@ -75,6 +75,46 @@ from = "/velocity-os/"
 to = "/velocity-os/index.html"
 
 [[services.production.rewrites]]
+from = "/how-we-operate"
+to = "/how-we-operate/index.html"
+
+[[services.production.rewrites]]
+from = "/how-we-operate/"
+to = "/how-we-operate/index.html"
+
+[[services.production.rewrites]]
+from = "/how-we-operate/book"
+to = "/how-we-operate/book/index.html"
+
+[[services.production.rewrites]]
+from = "/how-we-operate/book/"
+to = "/how-we-operate/book/index.html"
+
+[[services.production.rewrites]]
+from = "/how-we-operate/metrics-and-questions"
+to = "/how-we-operate/metrics-and-questions/index.html"
+
+[[services.production.rewrites]]
+from = "/how-we-operate/metrics-and-questions/"
+to = "/how-we-operate/metrics-and-questions/index.html"
+
+[[services.production.rewrites]]
+from = "/how-we-operate/rule-book"
+to = "/how-we-operate/rule-book/index.html"
+
+[[services.production.rewrites]]
+from = "/how-we-operate/rule-book/"
+to = "/how-we-operate/rule-book/index.html"
+
+[[services.production.rewrites]]
+from = "/how-we-operate/checklist-book"
+to = "/how-we-operate/checklist-book/index.html"
+
+[[services.production.rewrites]]
+from = "/how-we-operate/checklist-book/"
+to = "/how-we-operate/checklist-book/index.html"
+
+[[services.production.rewrites]]
 from = "/contact"
 to = "/contact/index.html"
 

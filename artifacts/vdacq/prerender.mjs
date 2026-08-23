@@ -60,6 +60,11 @@ const ROUTE_LABELS = {
   "/track-record": "Track Record",
   "/team": "Team",
   "/funding": "Get Funding",
+  "/how-we-operate": "How We Operate",
+  "/how-we-operate/book": "The Velocity Operating System",
+  "/how-we-operate/metrics-and-questions": "Velocity OS Metrics & Questions",
+  "/how-we-operate/rule-book": "Velocity OS Rule Book",
+  "/how-we-operate/checklist-book": "Velocity OS Checklist Book",
   "/velocity-os": "Operations Help",
   "/contact": "Contact",
 };
@@ -187,9 +192,25 @@ for (const [route, meta] of Object.entries(PAGE_META)) {
   console.log(`prerendered ${route} -> ${path.relative(__dirname, outFile)}`);
 }
 
-const sitemapUrls = Object.entries(PAGE_META)
+const publicBookFile = path.join(
+  distPublic,
+  "operating-library",
+  "velocity-operating-system",
+  "index.html",
+);
+const publicBookHtml = readFileSync(publicBookFile, "utf-8").replaceAll(
+  "https://www.vdacq.com",
+  SITE_URL,
+);
+writeFileSync(publicBookFile, publicBookHtml);
+
+const sitemapUrls = [
+  ...Object.entries(PAGE_META)
   .filter(([route, meta]) => route !== "/404" && !meta.noIndex)
-  .map(([route]) => `  <url><loc>${canonicalUrlForPath(route)}</loc></url>`)
+  .map(([route]) => canonicalUrlForPath(route)),
+  canonicalUrlForPath("/operating-library/velocity-operating-system"),
+]
+  .map((url) => `  <url><loc>${url}</loc></url>`)
   .join("\n");
 
 writeFileSync(

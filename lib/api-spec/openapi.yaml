@@ -242,6 +242,88 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+  /velocity-os/illustrated-book-unlocks:
+    post:
+      operationId: unlockVelocityOsIllustratedBook
+      tags: [velocity-os-illustrated-book]
+      summary: Unlock the illustrated Velocity Operating System download
+      description: Captures a resource lead and creates a short-lived authorization for the private illustrated-book download
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VelocityOsJournalUnlockInput"
+      responses:
+        "201":
+          description: Illustrated book access created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VelocityOsJournalUnlock"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "503":
+          description: Illustrated book file is temporarily unavailable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /velocity-os/illustrated-book-downloads/{token}:
+    get:
+      operationId: downloadVelocityOsIllustratedBook
+      tags: [velocity-os-illustrated-book]
+      summary: Download the illustrated Velocity Operating System
+      description: Streams the private illustrated book after validating a short-lived download authorization
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 43
+            maxLength: 43
+            pattern: "^[A-Za-z0-9_-]+$"
+      responses:
+        "200":
+          description: Complete illustrated Velocity Operating System PDF
+          headers:
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        "401":
+          description: Download authorization is invalid
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "410":
+          description: Download authorization has expired
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "503":
+          description: Illustrated book file is temporarily unavailable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 components:
   securitySchemes:
     basicAuth:

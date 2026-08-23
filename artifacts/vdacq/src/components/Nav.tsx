@@ -7,6 +7,7 @@ const links: [string, string][] = [
   ["/track-record", "Track Record"],
   ["/team", "Team"],
   ["/funding", "Get Funding"],
+  ["/how-we-operate", "How We Operate"],
   ["/velocity-os", "Operations Help"],
   ["/contact", "Contact"],
 ];

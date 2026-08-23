@@ -36,7 +36,7 @@ test.describe("Navigation", () => {
     }
   });
 
-  test("navigates all seven pages through the nav bar", async ({ page }) => {
+  test("navigates all eight pages through the nav bar", async ({ page }) => {
     await page.goto("/");
     await expectHome(page);
 
@@ -61,6 +61,10 @@ test.describe("Navigation", () => {
     await expect(
       page.getByRole("link", { name: /Get Operational Funding/ }),
     ).toHaveAttribute("href", "https://leadershieldfunding.com");
+
+    await page.locator(".nav-links").getByText("How We Operate", { exact: true }).click();
+    await expect(page).toHaveURL(/\/how-we-operate$/);
+    await expect(page.getByRole("heading", { name: "How We Operate" })).toBeVisible();
 
     await page.locator(".nav-links").getByText("Operations Help", { exact: true }).click();
     await expect(page).toHaveURL(/\/velocity-os$/);
@@ -140,6 +144,12 @@ test.describe("Mobile navigation", () => {
 
     // Menu closes after navigating
     await expect(menu).toBeHidden();
+
+    // Navigate to the public operating library through the menu
+    await page.getByRole("button", { name: "Open menu" }).click();
+    await menu.locator(".mobile-menu-link", { hasText: "How We Operate" }).click();
+    await expect(page).toHaveURL(/\/how-we-operate$/);
+    await expect(page.getByRole("heading", { name: "How We Operate" })).toBeVisible();
 
     // Navigate to Operations Help through the menu and check the page fits
     await page.getByRole("button", { name: "Open menu" }).click();
@@ -330,6 +340,254 @@ test.describe("Velocity OS Operator's Daily Journal", () => {
     await expect(expired.json()).resolves.toMatchObject({
       error: expect.stringContaining("expired"),
     });
+  });
+});
+
+test.describe("How We Operate public library", () => {
+  test("keeps the book reader public and gates only the illustrated PDF download", async ({
+    page,
+    request,
+  }) => {
+    const id = uniq();
+    const email = `illustrated-book-${id}@example.com`;
+
+    await page.goto("/how-we-operate/book");
+    await expect(page.getByTestId("book-reader")).toBeVisible();
+
+    const guessedPdf = await request.get(
+      "/operating-library/the-velocity-operating-system-v3-1-illustrated.pdf",
+    );
+    expect(guessedPdf.headers()["content-type"]).not.toContain("application/pdf");
+
+    const emailInput = page.getByTestId("illustrated-book-email");
+    await emailInput.scrollIntoViewIfNeeded();
+    await emailInput.fill("not-an-email");
+    await page.getByTestId("illustrated-book-unlock").click();
+    await expect(page.getByRole("alert")).toHaveText(
+      "Enter a valid email address to receive the illustrated book.",
+    );
+
+    await emailInput.fill(email);
+    const [unlockResponse] = await Promise.all([
+      page.waitForResponse(
+        (response) =>
+          response.url().includes(
+            "/api/velocity-os/illustrated-book-unlocks",
+          ) && response.request().method() === "POST",
+      ),
+      page.getByTestId("illustrated-book-unlock").click(),
+    ]);
+    expect(unlockResponse.status()).toBe(201);
+    await expect(
+      page.getByRole("button", { name: "Download the illustrated PDF" }),
+    ).toBeVisible();
+
+    const unlockBody = await unlockResponse.json();
+    expect(unlockBody.document).toMatchObject({
+      title: "The Velocity Operating System — Illustrated Edition",
+      version: "illustrated-v3-1",
+      filename: "the-velocity-operating-system-v3-1-illustrated.pdf",
+    });
+    expect(unlockBody.downloadUrl).toMatch(
+      /^\/api\/velocity-os\/illustrated-book-downloads\/[A-Za-z0-9_-]{43}$/,
+    );
+
+    const protectedPdf = await request.get(unlockBody.downloadUrl);
+    expect(protectedPdf.status()).toBe(200);
+    expect(protectedPdf.headers()["content-type"]).toContain("application/pdf");
+    expect(protectedPdf.headers()["content-disposition"]).toContain(
+      "the-velocity-operating-system-v3-1-illustrated.pdf",
+    );
+    const pdf = await protectedPdf.body();
+    expect(pdf.subarray(0, 5).toString()).toBe("%PDF-");
+    expect(pdf.byteLength).toBeGreaterThan(1_000_000);
+
+    const leads = await db.select().from(velocityOsJournalLeadsTable);
+    const lead = leads.find(
+      (candidate) =>
+        candidate.email === email &&
+        candidate.documentId === "velocity-os-illustrated-book",
+    );
+    expect(lead?.documentVersion).toBe("illustrated-v3-1");
+    expect(lead?.downloadedAt).toBeInstanceOf(Date);
+
+    const unauthorized = await request.get(
+      `/api/velocity-os/illustrated-book-downloads/${"A".repeat(43)}`,
+    );
+    expect(unauthorized.status()).toBe(401);
+  });
+
+  test("rotates illustrated-book links and rejects expired authorizations", async ({
+    request,
+  }) => {
+    const email = `illustrated-rotation-${uniq()}@example.com`;
+    const firstUnlock = await request.post(
+      "/api/velocity-os/illustrated-book-unlocks",
+      { data: { email } },
+    );
+    expect(firstUnlock.status()).toBe(201);
+    const firstBody = await firstUnlock.json();
+
+    const secondUnlock = await request.post(
+      "/api/velocity-os/illustrated-book-unlocks",
+      { data: { email } },
+    );
+    expect(secondUnlock.status()).toBe(201);
+    const secondBody = await secondUnlock.json();
+    expect(secondBody.downloadUrl).not.toBe(firstBody.downloadUrl);
+
+    const replaced = await request.get(firstBody.downloadUrl);
+    expect(replaced.status()).toBe(401);
+
+    const token = randomBytes(32).toString("base64url");
+    await db.insert(velocityOsJournalLeadsTable).values({
+      email: `illustrated-expired-${uniq()}@example.com`,
+      documentId: "velocity-os-illustrated-book",
+      documentVersion: "illustrated-v3-1",
+      downloadTokenHash: createHash("sha256").update(token).digest("hex"),
+      downloadTokenExpiresAt: new Date(Date.now() - 60_000),
+      submittedAt: new Date(Date.now() - 120_000),
+    });
+
+    const expired = await request.get(
+      `/api/velocity-os/illustrated-book-downloads/${token}`,
+    );
+    expect(expired.status()).toBe(410);
+    await expect(expired.json()).resolves.toMatchObject({
+      error: expect.stringContaining("expired"),
+    });
+  });
+
+  test("publishes the book and all three field references without an email gate", async ({
+    page,
+    request,
+  }) => {
+    await page.goto("/");
+    await page.locator(".nav-links").getByText("How We Operate", { exact: true }).click();
+    await expect(page).toHaveURL(/\/how-we-operate$/);
+    await expect(page.getByRole("heading", { name: "How We Operate" })).toBeVisible();
+    await expect(page.getByText(/Five parts and 16 chapters/)).toBeVisible();
+    await expect(
+      page.locator("footer").getByRole("link", { name: "How We Operate" }),
+    ).toHaveAttribute("href", "/how-we-operate");
+
+    await page.getByRole("link", { name: "Read the complete book" }).click();
+    await expect(page).toHaveURL(/\/how-we-operate\/book$/);
+    const bookFrame = page.getByTestId("book-reader").locator("iframe");
+    await expect(bookFrame).toBeVisible();
+    await expect(page.locator(".nav")).toHaveCount(0);
+    await expect(page.locator("footer")).toHaveCount(0);
+    await expect(bookFrame).toHaveAttribute(
+      "src",
+      /velocity-operating-system\/index\.html#prefacewhy-i-wrote-this/,
+    );
+
+    const contentsControl = page.locator(".reader-contents summary");
+    await contentsControl.focus();
+    await expect(contentsControl).toBeFocused();
+    expect(
+      await contentsControl.evaluate(
+        (element) => getComputedStyle(element).outlineStyle,
+      ),
+    ).not.toBe("none");
+    await contentsControl.click();
+    await page.getByRole("link", { name: /1\. The Physics of the Firm/ }).click();
+    await expect(page).toHaveURL(/\/how-we-operate\/book#ch1$/);
+    await expect(bookFrame).toHaveAttribute("src", /#ch1$/);
+    await expect(
+      page.getByRole("button", { name: /Next.*Lean as the Survivorship Engine/ }),
+    ).toBeVisible();
+    await page
+      .frameLocator('[data-testid="book-reader"] iframe')
+      .locator("body")
+      .press("Shift+ArrowRight");
+    await expect(page).toHaveURL(/\/how-we-operate\/book#ch2$/);
+    await expect(bookFrame).toHaveAttribute("src", /#ch2$/);
+
+    const bookDocument = page.frameLocator('[data-testid="book-reader"] iframe');
+    await expect(bookDocument.locator('svg[role="img"]')).toHaveCount(26);
+    await expect(bookDocument.locator("svg[aria-labelledby]")).toHaveCount(26);
+    expect(
+      await bookDocument.locator("svg").evaluateAll((graphics) =>
+        graphics.every((graphic) => {
+          const labelId = graphic.getAttribute("aria-labelledby");
+          return Boolean(labelId && graphic.ownerDocument.getElementById(labelId));
+        }),
+      ),
+    ).toBe(true);
+
+    const book = await request.get(
+      "/operating-library/velocity-operating-system/index.html",
+    );
+    expect(book.status()).toBe(200);
+    await expect(book.text()).resolves.toContain("The 90-Day Installation Plan");
+
+    for (const resource of [
+      {
+        card: "Metrics & Questions",
+        route: /\/how-we-operate\/metrics-and-questions$/,
+        reader: "metrics-and-questions-reader",
+        filename: "velocity-os-metrics-and-questions.pdf",
+        pages: 29,
+      },
+      {
+        card: "Rule Book",
+        route: /\/how-we-operate\/rule-book$/,
+        reader: "rule-book-reader",
+        filename: "velocity-os-rule-book.pdf",
+        pages: 11,
+      },
+      {
+        card: "Checklist Book",
+        route: /\/how-we-operate\/checklist-book$/,
+        reader: "checklist-book-reader",
+        filename: "velocity-os-checklist-book.pdf",
+        pages: 41,
+      },
+    ]) {
+      await page.goto("/how-we-operate");
+      await page.getByRole("link", { name: resource.card, exact: true }).click();
+      await expect(page).toHaveURL(resource.route);
+      await expect(page.getByTestId(resource.reader)).toBeVisible();
+      const pageNumber = page.getByRole("spinbutton", { name: /Page/ });
+      await expect(pageNumber).toHaveValue("1");
+      await page.getByRole("button", { name: "Next page" }).click();
+      await expect(pageNumber).toHaveValue("2");
+      await expect(page.getByRole("link", { name: "Download PDF" })).toHaveAttribute(
+        "href",
+        `/operating-library/${resource.filename}`,
+      );
+
+      const document = await request.get(`/operating-library/${resource.filename}`);
+      expect(document.status()).toBe(200);
+      expect(document.headers()["content-type"]).toContain("application/pdf");
+      expect((await document.body()).toString("latin1")).toMatch(
+        new RegExp(`/Count\\s+${resource.pages}\\b`),
+      );
+    }
+
+    await page.goto("/velocity-os");
+    await page.getByRole("link", { name: "Explore the open library" }).click();
+    await expect(page).toHaveURL(/\/how-we-operate$/);
+  });
+});
+
+test.describe("How We Operate on mobile", () => {
+  test.use({ viewport: { width: 375, height: 812 } });
+
+  test("keeps the library and reference fallback usable on a phone", async ({ page }) => {
+    await page.goto("/how-we-operate");
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      ),
+    ).toBeLessThanOrEqual(0);
+    await page.getByRole("link", { name: "Metrics & Questions", exact: true }).click();
+    await expect(page.getByText(/Your device may open PDFs/)).toBeVisible();
+    await expect(page.getByRole("link", { name: "Open Metrics & Questions" })).toHaveAttribute(
+      "href",
+      "/operating-library/velocity-os-metrics-and-questions.pdf",
+    );
   });
 });
 

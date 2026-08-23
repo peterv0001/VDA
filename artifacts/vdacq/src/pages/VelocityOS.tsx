@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import { Link } from "wouter";
 import {
   downloadVelocityOsJournal,
   useCreateVelocityOsIntake,
@@ -328,6 +329,9 @@ export default function VelocityOSPage() {
             <button onClick={scrollToIntake} className="btn-gold">
               Get help with my operations
             </button>
+            <Link href="/how-we-operate" className="btn-outline-dark">
+              Explore the open library
+            </Link>
             <button onClick={scrollToJournal} className="btn-outline-dark">
               Preview the daily journal
             </button>

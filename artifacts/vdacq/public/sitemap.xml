@@ -31,6 +31,36 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://www.vdacq.com/how-we-operate/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.vdacq.com/how-we-operate/book/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.vdacq.com/operating-library/velocity-operating-system/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.vdacq.com/how-we-operate/metrics-and-questions/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.vdacq.com/how-we-operate/rule-book/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.vdacq.com/how-we-operate/checklist-book/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://www.vdacq.com/velocity-os/</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>monthly</changefreq>
