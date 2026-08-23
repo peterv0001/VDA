@@ -3,12 +3,12 @@ import { Link, useLocation } from "wouter";
 
 const links: [string, string][] = [
   ["/", "Home"],
-  ["/platform", "Platform"],
-  ["/track-record", "Track Record"],
-  ["/team", "Team"],
-  ["/funding", "Get Funding"],
   ["/how-we-operate", "How We Operate"],
+  ["/funding", "Get Funding"],
   ["/velocity-os", "Operations Help"],
+  ["/team", "Team"],
+  ["/track-record", "Track Record"],
+  ["/platform", "Platform"],
   ["/contact", "Contact"],
 ];
 
@@ -87,7 +87,9 @@ export function Nav() {
     wasMenuOpen.current = menuOpen;
   }, [menuOpen]);
   return (
-    <nav className={`nav${scrolled ? " scrolled" : ""}${menuOpen ? " menu-open" : ""}`}>
+    <nav
+      className={`nav${scrolled ? " scrolled" : ""}${menuOpen ? " menu-open" : ""}`}
+    >
       <Link href="/" className="nav-brand">
         <div className="nav-wordmark">
           Van Dyke <span>Acquisitions</span>
@@ -141,7 +143,9 @@ export function Nav() {
                 key={href}
                 href={href}
                 className={`mobile-menu-link${location === href ? " active" : ""}`}
-                style={{ transitionDelay: menuOpen ? `${0.08 + i * 0.05}s` : "0s" }}
+                style={{
+                  transitionDelay: menuOpen ? `${0.08 + i * 0.05}s` : "0s",
+                }}
               >
                 <span className="mobile-menu-num">0{i + 1}</span>
                 {label}

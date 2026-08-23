@@ -36,21 +36,26 @@ test.describe("Navigation", () => {
     }
   });
 
-  test("navigates all eight pages through the nav bar", async ({ page }) => {
+  test("keeps the operating library first and navigates all pages through the nav bar", async ({ page }) => {
     await page.goto("/");
     await expectHome(page);
 
-    await page.locator(".nav-links").getByText("Platform", { exact: true }).click();
-    await expect(page).toHaveURL(/\/platform$/);
-    await expect(page.locator(".eyebrow").first()).toContainText("Operating Platform");
+    const expectedNavOrder = [
+      "Home",
+      "How We Operate",
+      "Get Funding",
+      "Operations Help",
+      "Team",
+      "Track Record",
+      "Platform",
+      "Contact",
+    ];
+    await expect(page.locator(".nav-links .nav-link")).toHaveText(expectedNavOrder);
+    await expect(page.locator("footer .footer-links a")).toHaveText(expectedNavOrder);
 
-    await page.locator(".nav-links").getByText("Track Record", { exact: true }).click();
-    await expect(page).toHaveURL(/\/track-record$/);
-    await expect(page.locator(".eyebrow").first()).toContainText("Track Record");
-
-    await page.locator(".nav-links").getByText("Team", { exact: true }).click();
-    await expect(page).toHaveURL(/\/team$/);
-    await expect(page.getByText("The operators behind the office.")).toBeVisible();
+    await page.locator(".nav-links").getByText("How We Operate", { exact: true }).click();
+    await expect(page).toHaveURL(/\/how-we-operate$/);
+    await expect(page.getByRole("heading", { name: "How We Operate" })).toBeVisible();
 
     await page.locator(".nav-links").getByText("Get Funding", { exact: true }).click();
     await expect(page).toHaveURL(/\/funding$/);
@@ -62,13 +67,21 @@ test.describe("Navigation", () => {
       page.getByRole("link", { name: /Get Operational Funding/ }),
     ).toHaveAttribute("href", "https://leadershieldfunding.com");
 
-    await page.locator(".nav-links").getByText("How We Operate", { exact: true }).click();
-    await expect(page).toHaveURL(/\/how-we-operate$/);
-    await expect(page.getByRole("heading", { name: "How We Operate" })).toBeVisible();
-
     await page.locator(".nav-links").getByText("Operations Help", { exact: true }).click();
     await expect(page).toHaveURL(/\/velocity-os$/);
     await expect(page.getByRole("heading", { name: /Execution is not an accident/ })).toBeVisible();
+
+    await page.locator(".nav-links").getByText("Team", { exact: true }).click();
+    await expect(page).toHaveURL(/\/team$/);
+    await expect(page.getByText("The operators behind the office.")).toBeVisible();
+
+    await page.locator(".nav-links").getByText("Track Record", { exact: true }).click();
+    await expect(page).toHaveURL(/\/track-record$/);
+    await expect(page.locator(".eyebrow").first()).toContainText("Track Record");
+
+    await page.locator(".nav-links").getByText("Platform", { exact: true }).click();
+    await expect(page).toHaveURL(/\/platform$/);
+    await expect(page.locator(".eyebrow").first()).toContainText("Operating Platform");
 
     await page.locator(".nav-links").getByText("Contact", { exact: true }).click();
     await expect(page).toHaveURL(/\/contact$/);
@@ -138,6 +151,16 @@ test.describe("Mobile navigation", () => {
     );
     expect(overflowWithMenu).toBeLessThanOrEqual(0);
     await expect(menu).toBeVisible();
+    await expect(menu.locator(".mobile-menu-link")).toHaveText([
+      "01Home",
+      "02How We Operate",
+      "03Get Funding",
+      "04Operations Help",
+      "05Team",
+      "06Track Record",
+      "07Platform",
+      "08Contact",
+    ]);
     await menu.locator(".mobile-menu-link", { hasText: "Platform" }).click();
     await expect(page).toHaveURL(/\/platform$/);
     await expect(page.locator(".eyebrow").first()).toContainText("Operating Platform");
@@ -737,6 +760,60 @@ test.describe("Homepage funding banner", () => {
     await cta.click();
     await expect(page).toHaveURL(/\/funding$/);
     await expect(page.getByText("Get Growth Funding", { exact: true })).toBeVisible();
+  });
+});
+
+test.describe("Homepage operating-system callout", () => {
+  test("introduces the public system and leads to the book and library", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    await expectHome(page);
+
+    const callout = page.locator(".operating-callout");
+    await callout.scrollIntoViewIfNeeded();
+    await expect(callout).toBeVisible();
+    await expect(
+      callout.getByText("Our practical system, shared in public."),
+    ).toBeVisible();
+    await expect(
+      callout.getByText(/practical framework behind how we run companies/),
+    ).toBeVisible();
+
+    await callout.getByRole("link", { name: "Read the book" }).click();
+    await expect(page).toHaveURL(/\/how-we-operate\/book$/);
+
+    await page.goto("/");
+    const libraryCallout = page.locator(".operating-callout");
+    await libraryCallout
+      .getByRole("link", { name: /Explore How We Operate/ })
+      .click();
+    await expect(page).toHaveURL(/\/how-we-operate$/);
+  });
+});
+
+test.describe("Homepage operating-system callout on mobile", () => {
+  test.use({ viewport: { width: 375, height: 812 } });
+
+  test("keeps the operating-system callout within the viewport", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const callout = page.locator(".operating-callout");
+    await callout.scrollIntoViewIfNeeded();
+    await expect(
+      callout.getByRole("link", { name: "Read the book" }),
+    ).toBeVisible();
+    await expect(
+      callout.getByRole("link", { name: /Explore How We Operate/ }),
+    ).toBeVisible();
+    expect(
+      await page.evaluate(
+        () =>
+          document.documentElement.scrollWidth -
+          document.documentElement.clientWidth,
+      ),
+    ).toBeLessThanOrEqual(0);
   });
 });
 

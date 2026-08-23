@@ -34,11 +34,10 @@ function Hero({ onModalOpen }: { onModalOpen: () => void }) {
         <div className="hero-rule" />
         <p className="hero-body">
           In 10 years and <strong>20+ control acquisitions</strong>, we have
-          operated CPG businesses from{" "}
-          <strong>under $5M to over $300M</strong> in annual revenue. We have
-          built brands from the factory floor, restructured P&Ls from the
-          operating chair, and created exits that institutional capital couldn't
-          engineer.{" "}
+          operated CPG businesses from <strong>under $5M to over $300M</strong>{" "}
+          in annual revenue. We have built brands from the factory floor,
+          restructured P&Ls from the operating chair, and created exits that
+          institutional capital couldn't engineer.{" "}
           <strong>
             No fund cycle. No LP pressure. One principal. Full accountability.
           </strong>
@@ -186,6 +185,40 @@ function Manifesto() {
   );
 }
 
+function OperatingSystemCallout() {
+  return (
+    <section className="operating-callout">
+      <div className="s-in operating-callout-inner rv">
+        <div className="operating-callout-marker" aria-hidden="true">
+          <span>01</span>
+          <span>VOS</span>
+        </div>
+        <div className="operating-callout-copy">
+          <div className="eyebrow light">The Operating System</div>
+          <h2>Our practical system, shared in public.</h2>
+          <p>
+            The Velocity Operating System is the practical framework behind how
+            we run companies: the principles, measures, decision rules, and
+            checklists that turn operating experience into repeatable work.
+          </p>
+          <p>
+            We publish it because the operating edge should be inspectable—not a
+            black box.
+          </p>
+        </div>
+        <div className="operating-callout-actions">
+          <Link href="/how-we-operate/book" className="btn-gold">
+            Read the book
+          </Link>
+          <Link href="/how-we-operate" className="operating-callout-library">
+            Explore How We Operate <span aria-hidden="true">→</span>
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function DualMandate() {
   return (
     <section className="dual" id="mandate">
@@ -214,15 +247,10 @@ function DualMandate() {
               }}
             />
             <div className="dcard-label r">
-              <span
-                className="dcard-dot"
-                style={{ background: "#c03535" }}
-              />
+              <span className="dcard-dot" style={{ background: "#c03535" }} />
               Distressed Acquisitions
             </div>
-            <div className="dcard-h">
-              When complexity creates opportunity.
-            </div>
+            <div className="dcard-h">When complexity creates opportunity.</div>
             <p className="dcard-p">
               Our founding mandate. We are among the few buyers in the consumer
               space with the operational infrastructure to pursue genuinely
@@ -255,10 +283,7 @@ function DualMandate() {
               }}
             />
             <div className="dcard-label g">
-              <span
-                className="dcard-dot"
-                style={{ background: "#3d9c5a" }}
-              />
+              <span className="dcard-dot" style={{ background: "#3d9c5a" }} />
               Growth-Stage Acquisitions
             </div>
             <div className="dcard-h">
@@ -306,9 +331,9 @@ function FundingBand() {
             <p className="fund-band-p">
               Not every situation calls for a change of ownership. Through our
               partner platforms — <strong>Cohort Capital</strong> for growth
-              financing and <strong>Lead Shield Funding</strong> for
-              operational capital — we connect CPG operators with the right
-              capital for their stage.
+              financing and <strong>Lead Shield Funding</strong> for operational
+              capital — we connect CPG operators with the right capital for
+              their stage.
             </p>
           </div>
           <div className="fund-band-cta">
@@ -379,6 +404,7 @@ export default function Home({ onModalOpen }: { onModalOpen: () => void }) {
       <Hero onModalOpen={onModalOpen} />
       <ConvictionBand />
       <Manifesto />
+      <OperatingSystemCallout />
       <DualMandate />
       <FundingBand />
       <Teasers />

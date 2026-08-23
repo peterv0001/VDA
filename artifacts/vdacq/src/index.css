@@ -325,6 +325,79 @@ kbd { padding: 2px 5px; border: 1px solid rgba(13,31,19,.22); border-radius: 2px
 .vcp-t { font-size: 13px; font-weight: 600; color: var(--forest); margin-bottom: 5px; }
 .vcp-d { font-size: 12px; color: var(--muted); line-height: 1.65; }
 
+.operating-callout {
+  background: var(--forest3);
+  border-top: 1px solid rgba(168,123,46,.16);
+  border-bottom: 1px solid rgba(168,123,46,.16);
+  padding: 72px 60px;
+}
+.operating-callout-inner {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr) auto;
+  gap: 48px;
+  align-items: center;
+}
+.operating-callout-marker {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-right: 28px;
+  border-right: 1px solid rgba(168,123,46,.26);
+  color: var(--gold3);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+.operating-callout-marker span:first-child {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 36px;
+  font-weight: 400;
+  letter-spacing: -.04em;
+  line-height: 1;
+}
+.operating-callout-copy { max-width: 660px; }
+.operating-callout-copy .eyebrow { margin-bottom: 14px; }
+.operating-callout-copy h2 {
+  color: var(--cream);
+  font-family: 'Libre Baskerville', serif;
+  font-size: clamp(25px, 3vw, 38px);
+  line-height: 1.2;
+}
+.operating-callout-copy p {
+  color: rgba(244,239,228,.62);
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.85;
+  margin-top: 14px;
+}
+.operating-callout-copy p + p { color: var(--gold4); }
+.operating-callout-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  min-width: 195px;
+}
+.operating-callout-actions .btn-gold { text-decoration: none; }
+.operating-callout-library {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--cream);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+.operating-callout-library:hover { color: var(--gold3); }
+.operating-callout-actions a:focus-visible {
+  outline: 3px solid var(--gold3);
+  outline-offset: 4px;
+}
+
 .dual { background: var(--forest2); padding: 96px 60px; }
 .dual-intro { max-width: 640px; margin-bottom: 52px; }
 .dual-intro-body { font-size: 14px; line-height: 1.9; color: rgba(244,239,228,.45); font-weight: 300; margin-top: 12px; }
@@ -768,6 +841,9 @@ kbd { padding: 2px 5px; border: 1px solid rgba(13,31,19,.22); border-radius: 2px
   .fund-band { padding: 64px 24px; }
   .fund-band-inner { grid-template-columns: 1fr; gap: 28px; }
   .fund-band-cta { justify-content: flex-start; }
+  .operating-callout { padding: 64px 24px; }
+  .operating-callout-inner { grid-template-columns: 86px minmax(0, 1fr); gap: 30px; }
+  .operating-callout-actions { grid-column: 2; flex-direction: row; flex-wrap: wrap; align-items: center; }
   .funding-grid { grid-template-columns: 1fr; }
   .teaser-grid { grid-template-columns: 1fr 1fr; }
   .page-head { height: 72px; }
@@ -806,7 +882,7 @@ kbd { padding: 2px 5px; border: 1px solid rgba(13,31,19,.22); border-radius: 2px
   .vos-card { padding: 32px 22px; }
   .vos-form-container { padding: 28px 20px; }
   section, .manifesto, .dual, .platform, .track, .ctrl, .portfolio,
-  .why, .team, .contact, .teasers, .funding, .fund-band { padding: 56px 20px; }
+  .why, .team, .contact, .teasers, .funding, .fund-band, .operating-callout { padding: 56px 20px; }
   .nav-wordmark { font-size: 16px; }
   .nav-sub { font-size: 7.5px; letter-spacing: .2em; }
   .hero-content { padding: 110px 20px 64px; }
@@ -825,6 +901,18 @@ kbd { padding: 2px 5px; border: 1px solid rgba(13,31,19,.22); border-radius: 2px
   .conv-inner .cb-item:last-child { border-bottom: none; }
   .mfst-pull { font-size: 17px; padding-left: 16px; }
   .vc-pillars { grid-template-columns: 1fr; }
+  .operating-callout-inner { grid-template-columns: 1fr; gap: 24px; }
+  .operating-callout-marker {
+    flex-direction: row;
+    align-items: baseline;
+    gap: 12px;
+    padding: 0 0 14px;
+    border-right: 0;
+    border-bottom: 1px solid rgba(168,123,46,.26);
+  }
+  .operating-callout-actions { grid-column: auto; align-items: stretch; }
+  .operating-callout-actions .btn-gold { width: 100%; }
+  .operating-callout-library { justify-content: center; }
   .dcard { padding: 32px 22px; }
   .dcard-h { font-size: 20px; }
   .tr-grid { grid-template-columns: 1fr; }
