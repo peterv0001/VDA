@@ -5,9 +5,8 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const distPublic = path.join(__dirname, "dist", "public");
 
-const { render, PAGE_META, buildFullTitle } = await import(
-  "./dist/server/entry-server.js"
-);
+const { render, PAGE_META, buildFullTitle } =
+  await import("./dist/server/entry-server.js");
 
 const template = readFileSync(path.join(distPublic, "index.html"), "utf-8");
 
@@ -22,9 +21,7 @@ function resolveSiteOrigin() {
 
   let parsed;
   try {
-    parsed = new URL(
-      siteUrl.includes("://") ? siteUrl : `https://${siteUrl}`,
-    );
+    parsed = new URL(siteUrl.includes("://") ? siteUrl : `https://${siteUrl}`);
   } catch {
     throw new Error(
       `SITE_URL is set but is not a valid URL: "${siteUrl}". ` +
@@ -50,7 +47,7 @@ const ORGANIZATION_SCHEMA = {
   url: SITE_URL,
   logo: `${SITE_URL}/icon-512.png`,
   description:
-    "Van Dyke Acquisitions is a family office deploying permanent capital in control positions across the consumer packaged goods industry. Established 2014.",
+    "Van Dyke Acquisitions acquires and operates CPG companies with permanent capital, control ownership, and operating authority.",
   foundingDate: "2014",
   sameAs: [],
 };
@@ -206,8 +203,8 @@ writeFileSync(publicBookFile, publicBookHtml);
 
 const sitemapUrls = [
   ...Object.entries(PAGE_META)
-  .filter(([route, meta]) => route !== "/404" && !meta.noIndex)
-  .map(([route]) => canonicalUrlForPath(route)),
+    .filter(([route, meta]) => route !== "/404" && !meta.noIndex)
+    .map(([route]) => canonicalUrlForPath(route)),
   canonicalUrlForPath("/operating-library/velocity-operating-system"),
 ]
   .map((url) => `  <url><loc>${url}</loc></url>`)

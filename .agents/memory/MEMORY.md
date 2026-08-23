@@ -7,3 +7,4 @@
 - [Basic auth fetch challenges](basic-auth-fetch-challenges.md) — challenge missing credentials, but return plain 401 for invalid explicit credentials so browser fetches settle.
 - [Animated overlay focus](animated-overlay-focus.md) — make visibility immediate on open and delay focus until after the trigger click, or browser focus calls can silently fail.
 - [Iframe reader keyboard navigation](iframe-reader-keyboard.md) — use a focusable iframe document plus postMessage; browser-reserved shortcuts may never reach embedded content.
+- [VDACQ funding portfolio language](vdacq-funding-portfolio-language.md) — present Cohort and LeaderShield as funding options, never as the complete list of companies VDACQ owns.

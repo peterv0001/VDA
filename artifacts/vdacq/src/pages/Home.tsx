@@ -5,41 +5,32 @@ import { PAGE_META } from "../lib/pageMeta";
 
 function Hero({ onModalOpen }: { onModalOpen: () => void }) {
   return (
-    <div className="hero">
+    <header className="hero">
       <div className="hero-tex" />
       <div className="hero-vline" style={{ left: "25%" }} />
       <div className="hero-vline" style={{ left: "50%" }} />
       <div className="hero-vline" style={{ left: "75%" }} />
       <div className="hero-content">
         <div className="hero-kicker">
-          <div className="hero-pill">Control Investor</div>
+          <div className="hero-pill">CPG Control Investor</div>
           <div className="hero-sep" />
-          <div className="hero-est">
-            Established 2014 &middot; CPG Exclusive
-          </div>
+          <div className="hero-est">Permanent Capital · Established 2014</div>
         </div>
         <h1>
-          We don't advise.
-          <br />
-          We don't observe.
-          <span className="accent">We own. We operate.</span>
+          We acquire and operate <span className="accent">CPG companies.</span>
           <span className="sub-h">
-            Van Dyke Acquisitions is a family office deploying permanent capital
-            in control positions across the consumer packaged goods industry —
-            with the operating platform, sector depth, and decision authority to
-            transform companies that others won't touch and accelerate those
-            that deserve better ownership.
+            Van Dyke Acquisitions takes majority or full ownership of consumer
+            packaged goods businesses. We do not advise from the sidelines or
+            take passive positions—we own the work and hold the operating
+            authority to do it.
           </span>
         </h1>
         <div className="hero-rule" />
         <p className="hero-body">
-          In 10 years and <strong>20+ control acquisitions</strong>, we have
-          operated CPG businesses from <strong>under $5M to over $300M</strong>{" "}
-          in annual revenue. We have built brands from the factory floor,
-          restructured P&Ls from the operating chair, and created exits that
-          institutional capital couldn't engineer.{" "}
+          We pursue two situations with the same standard:{" "}
+          <strong>distressed CPG businesses that need stabilization</strong> and{" "}
           <strong>
-            No fund cycle. No LP pressure. One principal. Full accountability.
+            growth-stage CPG businesses ready for better ownership.
           </strong>
         </p>
         <div className="hero-btns">
@@ -54,10 +45,10 @@ function Hero({ onModalOpen }: { onModalOpen: () => void }) {
       <div className="proof-bar">
         {[
           ["20+", "Control Acquisitions"],
-          ["10+", "Years of Operation"],
-          ["$300M", "Largest Co. Managed"],
-          ["CPG", "Exclusive Category"],
-          ["\u221E", "Holding Period"],
+          ["10+", "Years Operating"],
+          ["$300M", "Largest Company Managed"],
+          ["CPG", "Exclusive Focus"],
+          ["∞", "Holding Period"],
         ].map(([n, l]) => (
           <div key={l} className="pb-item">
             <div className="pb-n">{n}</div>
@@ -65,120 +56,108 @@ function Hero({ onModalOpen }: { onModalOpen: () => void }) {
           </div>
         ))}
       </div>
-    </div>
+    </header>
   );
 }
 
-function ConvictionBand() {
+function ControlStandard() {
   const items = [
-    ["Investment Type", "Control Acquisitions Only"],
-    ["Category Focus", "Consumer Packaged Goods"],
-    ["Capital Structure", "Permanent Family Office Capital"],
-    ["Mandate", "Distressed & Growth-Stage"],
-    ["Operating Arm", "VDA Operating Group \u00B7 PVG Capital"],
+    ["Capital", "Permanent family office capital"],
+    ["Ownership", "Majority or full ownership"],
+    ["Authority", "Operating authority at close"],
+    ["Focus", "Consumer packaged goods only"],
   ];
   return (
-    <div className="conv-band">
-      <div className="conv-inner">
-        {items.map(([cap, val]) => (
-          <div key={cap} className="cb-item">
-            <div className="cb-cap">{cap}</div>
-            <div className="cb-val">{val}</div>
-          </div>
-        ))}
+    <section
+      className="control-standard"
+      aria-labelledby="control-standard-title"
+    >
+      <div className="s-in control-standard-inner rv">
+        <div>
+          <div className="eyebrow">The Control Standard</div>
+          <h2 id="control-standard-title" className="s-h">
+            Ownership that can make the change.
+          </h2>
+        </div>
+        <div className="control-standard-grid">
+          {items.map(([label, value]) => (
+            <div className="control-standard-item" key={label}>
+              <span>{label}</span>
+              <strong>{value}</strong>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+    </section>
   );
 }
 
-function Manifesto() {
+function AcquisitionPaths() {
+  const paths = [
+    {
+      label: "Distressed CPG Acquisitions",
+      title: "When a business needs stabilization.",
+      description:
+        "We acquire CPG businesses where operational complexity, creditor pressure, or a broken cost and execution model requires an owner who can act quickly.",
+      signals: [
+        "Creditor, covenant, receivership, or pre-insolvency situations",
+        "Manufacturing, supply chain, margin, or leadership breakdowns",
+        "Assets that need a buyer with operating infrastructure",
+      ],
+      className: "distressed",
+    },
+    {
+      label: "Growth-Stage CPG Acquisitions",
+      title: "When a brand needs better ownership.",
+      description:
+        "We acquire healthy CPG companies with real consumer pull that have outgrown their current ownership, capital structure, or operating capacity.",
+      signals: [
+        "Founder transitions, succession, and majority exits",
+        "Brands constrained by distribution, channel, or execution gaps",
+        "Growth companies seeking a permanent control owner",
+      ],
+      className: "growth",
+    },
+  ];
+
   return (
-    <section className="manifesto" id="manifesto">
+    <section
+      className="acquisition-paths"
+      aria-labelledby="acquisition-paths-title"
+    >
       <div className="s-in">
-        <div className="mfst-grid rv">
-          <div>
-            <div className="eyebrow">Our Conviction</div>
-            <h2 className="s-h">More than a capital provider.</h2>
-            <div className="mfst-pull">
-              "The firms that will define the next decade of CPG value creation
-              are those with operating capabilities embedded at the ownership
-              level — not just at the board level."
-            </div>
-            <div className="mfst-badge-row">
-              {[
-                "Distressed M&A",
-                "Turnaround",
-                "Growth Acceleration",
-                "Operational Control",
-                "Brand Building",
-                "Specialty Lending",
-              ].map((b) => (
-                <span key={b} className="mfst-badge">
-                  {b}
-                </span>
-              ))}
-            </div>
-          </div>
-          <div>
-            <p className="mfst-body">
-              Van Dyke Acquisitions was not built to deploy capital and observe.
-              It was built by operators — people who have run factories,
-              restructured supply chains, rebuilt distribution networks, and
-              navigated the complexity of consumer brands in distress and in
-              growth.{" "}
-              <strong>
-                That is our edge. It compounds with every acquisition we make.
-              </strong>
-              <br />
-              <br />
-              We were founded in 2014 — originally as Golden Tiger Holdings —
-              with a core beverage manufacturing business that at peak produced
-              8,000 cans per minute. The experience of building, scaling, and
-              ultimately exiting that business gave us something no investment
-              committee can manufacture:{" "}
-              <strong>
-                the credibility of having operated at scale in consumer goods
-              </strong>{" "}
-              before deploying a dollar of acquisition capital.
-              <br />
-              <br />
-              Today, we bring that operating DNA to every situation we enter —
-              whether a brand facing creditor pressure and needing immediate
-              operational stabilization, or a founder-led business that has
-              outgrown its current ownership structure and needs a partner who
-              will act with speed and conviction.
-            </p>
-            <div className="vc-pillars">
-              {[
-                [
-                  "01 \u2014 Capital",
-                  "Permanent. No Expiry.",
-                  "Family office structure means we hold on our timeline, not a fund's calendar. Zero LP pressure.",
-                ],
-                [
-                  "02 \u2014 Control",
-                  "Majority or Full. Non-Negotiable.",
-                  "We take controlling stakes. The ability to act decisively is prerequisite, not preference.",
-                ],
-                [
-                  "03 \u2014 Operators",
-                  "We've Run These Businesses.",
-                  "Our team has held P&L ownership in CPG — manufacturing, brand, and distribution alike.",
-                ],
-                [
-                  "04 \u2014 Category",
-                  "CPG Only. Always.",
-                  "Exclusive sector focus drives insights, relationships, and pattern recognition that generalists lack.",
-                ],
-              ].map(([ico, t, d]) => (
-                <div key={ico} className="vcp">
-                  <div className="vcp-ico">{ico}</div>
-                  <div className="vcp-t">{t}</div>
-                  <div className="vcp-d">{d}</div>
-                </div>
-              ))}
-            </div>
-          </div>
+        <div className="acquisition-paths-intro rv">
+          <div className="eyebrow light">Acquisitions</div>
+          <h2 id="acquisition-paths-title" className="s-h">
+            Two acquisition paths.
+            <br />
+            One ownership model.
+          </h2>
+          <p>
+            In either situation, we acquire control, put operating authority
+            behind the business, and hold for the work—not for a fund deadline.
+          </p>
+        </div>
+        <div className="acquisition-paths-grid rv">
+          {paths.map((path) => (
+            <article
+              className={`acquisition-card ${path.className}`}
+              key={path.label}
+            >
+              <div className="acquisition-card-label">{path.label}</div>
+              <h3>{path.title}</h3>
+              <p>{path.description}</p>
+              <ul>
+                {path.signals.map((signal) => (
+                  <li key={signal}>{signal}</li>
+                ))}
+              </ul>
+              <Link href="/contact" className="acquisition-card-link">
+                Introduce an acquisition opportunity{" "}
+                <span aria-hidden="true">→</span>
+              </Link>
+            </article>
+          ))}
         </div>
       </div>
     </section>
@@ -187,23 +166,28 @@ function Manifesto() {
 
 function OperatingSystemCallout() {
   return (
-    <section className="operating-callout">
+    <section
+      className="operating-callout"
+      aria-labelledby="operating-system-title"
+    >
       <div className="s-in operating-callout-inner rv">
         <div className="operating-callout-marker" aria-hidden="true">
           <span>01</span>
           <span>VOS</span>
         </div>
         <div className="operating-callout-copy">
-          <div className="eyebrow light">The Operating System</div>
-          <h2>Our practical system, shared in public.</h2>
+          <div className="eyebrow light">The Velocity Operating System</div>
+          <h2 id="operating-system-title">
+            Our operating method, shared in public.
+          </h2>
           <p>
-            The Velocity Operating System is the practical framework behind how
-            we run companies: the principles, measures, decision rules, and
-            checklists that turn operating experience into repeatable work.
+            The Velocity Operating System is the practical method we use to
+            create operating change: principles, measures, decision rules, and
+            checklists that turn accountability into repeatable work.
           </p>
           <p>
-            We publish it because the operating edge should be inspectable—not a
-            black box.
+            Start with the illustrated book, then use the public library when
+            the work calls for a specific measure, rule, or practice.
           </p>
         </div>
         <div className="operating-callout-actions">
@@ -211,7 +195,7 @@ function OperatingSystemCallout() {
             Read the book
           </Link>
           <Link href="/how-we-operate" className="operating-callout-library">
-            Explore How We Operate <span aria-hidden="true">→</span>
+            Explore the library <span aria-hidden="true">→</span>
           </Link>
         </div>
       </div>
@@ -219,177 +203,152 @@ function OperatingSystemCallout() {
   );
 }
 
-function DualMandate() {
+function OperationsOfferings() {
   return (
-    <section className="dual" id="mandate">
+    <section
+      className="operations-offerings"
+      aria-labelledby="operations-offerings-title"
+    >
       <div className="s-in">
-        <div className="dual-intro rv">
-          <div className="eyebrow light">Investment Mandate</div>
-          <h2 className="s-h" style={{ color: "var(--cream)" }}>
-            Two types of situation.
-            <br />
-            One standard of rigor.
-          </h2>
-          <p className="dual-intro-body">
-            We have expanded beyond our original distressed mandate — not
-            because we have softened our standards, but because the operating
-            intensity we apply to turnarounds creates a genuine competitive
-            advantage in healthy growth situations as well. Our diligence is the
-            same. Our involvement is the same. Our accountability is the same.
+        <div className="operations-offerings-head rv">
+          <div>
+            <div className="eyebrow">Operating Engagements</div>
+            <h2 id="operations-offerings-title" className="s-h">
+              Hands-on help when an acquisition is not the answer.
+            </h2>
+          </div>
+          <p>
+            We also use the Velocity Operating System directly with ownership
+            groups and leadership teams that need change now.
           </p>
         </div>
-        <div className="dual-grid rv">
-          <div className="dcard">
-            <div
-              className="dcard-bar"
-              style={{
-                background: "linear-gradient(90deg,#7a1f1f,#c03535)",
-              }}
-            />
-            <div className="dcard-label r">
-              <span className="dcard-dot" style={{ background: "#c03535" }} />
-              Distressed Acquisitions
-            </div>
-            <div className="dcard-h">When complexity creates opportunity.</div>
-            <p className="dcard-p">
-              Our founding mandate. We are among the few buyers in the consumer
-              space with the operational infrastructure to pursue genuinely
-              distressed CPG situations — not just financially stressed, but
-              operationally broken. We move where institutional capital cannot,
-              and we stabilize what others decline.
+        <div className="operations-offerings-grid rv">
+          <article className="operations-offering">
+            <div className="operations-offering-number">01</div>
+            <h3>Velocity OS Workshops</h3>
+            <p>
+              Hands-on working sessions for teams that need to establish shared
+              facts, clearer decision rights, operating cadence, and a practical
+              next set of actions.
             </p>
-            <ul className="dcard-sigs">
-              {[
-                "Brands under creditor pressure, covenant breach, or bank workout",
-                "Post-bankruptcy assets and pre-insolvency acquisitions",
-                "Receivership and trustee-directed sale processes",
-                "Founder-led businesses with operational dysfunction",
-                "Distressed debt positions convertible to equity control",
-                "Special situations via PVG Capital, our credit affiliate",
-              ].map((s) => (
-                <li key={s}>{s}</li>
-              ))}
-            </ul>
-            <div className="dcard-ft">
-              10+ years of distressed CPG acquisition and turnaround track
-              record
-            </div>
-          </div>
-          <div className="dcard">
-            <div
-              className="dcard-bar"
-              style={{
-                background: "linear-gradient(90deg,#1e5c30,#3d9c5a)",
-              }}
-            />
-            <div className="dcard-label g">
-              <span className="dcard-dot" style={{ background: "#3d9c5a" }} />
-              Growth-Stage Acquisitions
-            </div>
-            <div className="dcard-h">
-              When a brand deserves better ownership.
-            </div>
-            <p className="dcard-p">
-              Our expanded mandate. Healthy CPG brands with real consumer pull
-              but misaligned ownership, capital constraints, or growth plateaus
-              are now equally compelling. We apply turnaround-caliber diligence
-              and operational depth to acceleration — not just recovery. The
-              result: a faster path to the brand's potential than any financial
-              buyer can offer.
+            <Link href="/velocity-os#intake-form">Request a workshop →</Link>
+          </article>
+          <article className="operations-offering">
+            <div className="operations-offering-number">02</div>
+            <h3>Turnaround Consulting</h3>
+            <p>
+              Focused operational intervention for businesses facing a material
+              execution, margin, cash, or leadership constraint without a change
+              in ownership.
             </p>
-            <ul className="dcard-sigs">
-              {[
-                "CPG brands with $2M\u2013$50M revenue seeking a decisive control partner",
-                "Founder transitions, succession situations, and majority exits",
-                "PE-backed assets requiring a longer-horizon permanent owner",
-                "Brands with channel gaps, distribution underperformance, or DTC-to-retail pivots",
-                "Roll-up targets within our active CPG portfolio verticals",
-              ].map((s) => (
-                <li key={s}>{s}</li>
-              ))}
-            </ul>
-            <div className="dcard-ft">
-              Now actively acquiring healthy, growth-stage CPG companies
-            </div>
-          </div>
+            <Link href="/velocity-os#intake-form">
+              Begin an operations conversation →
+            </Link>
+          </article>
         </div>
       </div>
     </section>
   );
 }
 
-function FundingBand() {
+function FundingOptions() {
   return (
-    <section className="fund-band">
+    <section
+      className="funding-options"
+      aria-labelledby="funding-options-title"
+    >
       <div className="s-in">
-        <div className="fund-band-inner rv">
-          <div>
-            <div className="eyebrow">Need Capital?</div>
-            <h2 className="s-h" style={{ marginBottom: 14 }}>
-              Funding for brands we don't acquire.
-            </h2>
-            <p className="fund-band-p">
-              Not every situation calls for a change of ownership. Through our
-              partner platforms — <strong>Cohort Capital</strong> for growth
-              financing and <strong>Lead Shield Funding</strong> for operational
-              capital — we connect CPG operators with the right capital for
-              their stage.
-            </p>
-          </div>
-          <div className="fund-band-cta">
-            <Link href="/funding" className="btn-gold fund-band-btn">
-              Explore Funding Options &rarr;
-            </Link>
-          </div>
+        <div className="funding-options-head rv">
+          <div className="eyebrow light">Get Funding Options</div>
+          <h2 id="funding-options-title" className="s-h">
+            Funding when an acquisition
+            <br />
+            is not the answer.
+          </h2>
+          <p>
+            For businesses Van Dyke does not acquire, Cohort Capital and
+            LeaderShield Funding offer two distinct paths: growth financing and
+            operational funding.
+          </p>
         </div>
+        <div className="funding-options-grid rv">
+          <article className="funding-option-card">
+            <div className="funding-option-type">Growth Financing</div>
+            <h3>Cohort Capital</h3>
+            <p>
+              Growth financing for CPG brands with traction that need capital
+              for inventory, retail expansion, marketing, and revenue
+              acceleration.
+            </p>
+            <a
+              href="https://cohortfunding.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Explore Cohort Capital
+            </a>
+          </article>
+          <article className="funding-option-card">
+            <div className="funding-option-type">Operational Funding</div>
+            <h3>LeaderShield Funding</h3>
+            <p>
+              Operational funding for businesses that need working capital to
+              manage cash-flow gaps, production runs, payroll, and day-to-day
+              continuity.
+            </p>
+            <a
+              href="https://leadershieldfunding.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Explore LeaderShield Funding
+            </a>
+          </article>
+        </div>
+        <Link href="/funding" className="funding-options-link rv">
+          Compare funding options <span aria-hidden="true">→</span>
+        </Link>
       </div>
     </section>
   );
 }
 
-function Teasers() {
-  const items: [string, string, string, string][] = [
-    [
-      "/track-record",
-      "Track Record",
-      "20+ control acquisitions across the CPG spectrum",
-      "Named exits, revenue ranges, and current holdings — from distressed turnarounds to growth-stage platforms.",
-    ],
-    [
-      "/platform",
-      "Operating Platform",
-      "The VDA Operating Group",
-      "Six proprietary capabilities deployed into every acquisition — from lean operations to specialty lending.",
-    ],
-    [
-      "/team",
-      "Leadership",
-      "The operators behind the office",
-      "A senior team spanning acquisitions, operations, technology, revenue, and portfolio management.",
-    ],
-    [
-      "/contact",
-      "Start a Conversation",
-      "Introduce a situation",
-      "Advisors, founders, creditors, and co-investors — we respond within one business day.",
-    ],
-  ];
+function ProofAndNextStep({ onModalOpen }: { onModalOpen: () => void }) {
   return (
-    <section className="teasers">
-      <div className="s-in">
-        <div className="rv">
-          <div className="eyebrow">Explore Van Dyke</div>
-          <h2 className="s-h">Go deeper.</h2>
-        </div>
-        <div className="teaser-grid rv">
-          {items.map(([href, eye, title, desc]) => (
-            <Link key={href} href={href} className="teaser-card">
-              <div className="teaser-eye">{eye}</div>
-              <div className="teaser-title">{title}</div>
-              <p className="teaser-desc">{desc}</p>
-              <div className="teaser-link">Explore &rarr;</div>
+    <section className="proof-next" aria-labelledby="proof-next-title">
+      <div className="s-in proof-next-grid rv">
+        <div>
+          <div className="eyebrow">Proof, When It Matters</div>
+          <h2 id="proof-next-title" className="s-h">
+            A record built in
+            <br />
+            the operating chair.
+          </h2>
+          <p>
+            Review representative control acquisitions, then request verified
+            access for the confidential portfolio detail.
+          </p>
+          <div className="proof-next-actions">
+            <Link href="/track-record" className="btn-outline-dark">
+              View Track Record
             </Link>
-          ))}
+            <button className="proof-access-button" onClick={onModalOpen}>
+              Request Full Portfolio Access
+            </button>
+          </div>
+        </div>
+        <div className="proof-next-contact">
+          <div className="eyebrow light">Start Here</div>
+          <h3>What do you need?</h3>
+          <Link href="/contact">
+            An acquisition conversation <span aria-hidden="true">→</span>
+          </Link>
+          <Link href="/velocity-os#intake-form">
+            Operational help <span aria-hidden="true">→</span>
+          </Link>
+          <Link href="/funding">
+            Growth or operational funding <span aria-hidden="true">→</span>
+          </Link>
         </div>
       </div>
     </section>
@@ -399,15 +358,16 @@ function Teasers() {
 export default function Home({ onModalOpen }: { onModalOpen: () => void }) {
   usePageMeta(PAGE_META["/"].title, PAGE_META["/"].description);
   useReveal();
+
   return (
     <>
       <Hero onModalOpen={onModalOpen} />
-      <ConvictionBand />
-      <Manifesto />
+      <ControlStandard />
+      <AcquisitionPaths />
       <OperatingSystemCallout />
-      <DualMandate />
-      <FundingBand />
-      <Teasers />
+      <OperationsOfferings />
+      <FundingOptions />
+      <ProofAndNextStep onModalOpen={onModalOpen} />
     </>
   );
 }

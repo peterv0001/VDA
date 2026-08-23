@@ -6,7 +6,7 @@ const options = [
   {
     label: "Growth Capital",
     name: "Get Growth Funding",
-    partner: "Cohort Capital",
+    company: "Cohort Capital",
     href: "https://cohortfunding.com",
     display: "cohortfunding.com",
     desc: "For scaling CPG brands with proven traction. Cohort Capital structures growth financing to fund inventory, retail expansion, and revenue acceleration \u2014 without giving up control before you're ready.",
@@ -19,10 +19,10 @@ const options = [
   {
     label: "Operational Capital",
     name: "Get Operational Funding",
-    partner: "Lead Shield Funding",
+    company: "LeaderShield Funding",
     href: "https://leadershieldfunding.com",
     display: "leadershieldfunding.com",
-    desc: "For operators who need working capital now. Lead Shield Funding provides operational financing to bridge cash-flow gaps, cover payroll and production runs, and keep the business moving.",
+    desc: "For operators who need working capital now. LeaderShield Funding provides operational financing to bridge cash-flow gaps, cover payroll and production runs, and keep the business moving.",
     points: [
       "Working capital & cash-flow solutions",
       "Bridge financing for production & payroll",
@@ -47,8 +47,9 @@ export default function FundingPage() {
               of the journey.
             </h1>
             <p className="s-sub" style={{ color: "rgba(244,239,228,.4)" }}>
-              Whether you're scaling a brand or bridging an operational gap, our
-              partner platforms deploy the right capital for your situation.
+              For businesses Van Dyke does not acquire, our owned companies
+              provide growth financing or operational funding for the situation
+              at hand.
             </p>
           </div>
           <div className="funding-grid rv">
@@ -57,7 +58,7 @@ export default function FundingPage() {
                 <div className="fcard-label">{o.label}</div>
                 <div className="fcard-h">{o.name}</div>
                 <div className="fcard-partner">
-                  via {o.partner} &middot; {o.display}
+                  A Van Dyke Acquisitions company · {o.company} · {o.display}
                 </div>
                 <p className="fcard-p">{o.desc}</p>
                 <ul className="fcard-points">
@@ -77,8 +78,8 @@ export default function FundingPage() {
             ))}
           </div>
           <p className="funding-note rv">
-            Funding decisions are made by our partner platforms. Applications
-            open in a new window.
+            Funding decisions are made by Cohort Capital and LeaderShield
+            Funding. Applications open in a new window.
           </p>
         </div>
       </section>

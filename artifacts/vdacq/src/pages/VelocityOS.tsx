@@ -9,11 +9,7 @@ import { useReveal } from "../lib/useReveal";
 import { usePageMeta } from "../lib/usePageMeta";
 import { PAGE_META } from "../lib/pageMeta";
 
-type Urgency =
-  | "immediate"
-  | "this-quarter"
-  | "next-six-months"
-  | "exploring";
+type Urgency = "immediate" | "this-quarter" | "next-six-months" | "exploring";
 
 const PREVIEW_PAGES = [
   {
@@ -126,7 +122,10 @@ function statusCode(error: unknown): number | undefined {
 }
 
 export default function VelocityOSPage() {
-  usePageMeta(PAGE_META["/velocity-os"].title, PAGE_META["/velocity-os"].description);
+  usePageMeta(
+    PAGE_META["/velocity-os"].title,
+    PAGE_META["/velocity-os"].description,
+  );
   useReveal();
 
   const [fullName, setFullName] = useState("");
@@ -302,15 +301,16 @@ export default function VelocityOSPage() {
   };
 
   const scrollToIntake = () => {
-    document.getElementById("intake-form")?.scrollIntoView({ behavior: "smooth" });
+    document
+      .getElementById("intake-form")
+      ?.scrollIntoView({ behavior: "smooth" });
   };
 
   const scrollToJournal = () => {
     document.getElementById("journal")?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const currentPreviewPage =
-    PREVIEW_PAGES[currentPage - 1] ?? PREVIEW_PAGES[0];
+  const currentPreviewPage = PREVIEW_PAGES[currentPage - 1] ?? PREVIEW_PAGES[0];
 
   return (
     <>
@@ -320,10 +320,14 @@ export default function VelocityOSPage() {
         <div className="s-in rv">
           <div className="eyebrow">Velocity OS</div>
           <h1 className="s-h">
-            Execution is not an accident. <span className="accent">It is a system.</span>
+            Execution is not an accident.{" "}
+            <span className="accent">It is a system.</span>
           </h1>
           <p className="vos-sub">
-            Velocity OS is our proprietary operating model, designed for owners and operators whose companies need clearer accountability and repeatable execution. It bridges the gap between high-level strategy and daily reality.
+            Velocity OS is our operating model, with a public library and
+            hands-on workshops or turnaround engagements for owners and
+            operators whose companies need clearer accountability and repeatable
+            execution.
           </p>
           <div className="vos-hero-cta">
             <button onClick={scrollToIntake} className="btn-gold">
@@ -381,8 +385,8 @@ export default function VelocityOSPage() {
             <p>
               We start by understanding the operating constraint, the outcomes
               ownership needs, and where execution is breaking down. From there,
-              we determine whether a focused Velocity OS working relationship is
-              the right fit.
+              we determine whether a hands-on workshop, turnaround engagement,
+              or focused Velocity OS working relationship is the right fit.
             </p>
           </div>
         </div>
@@ -451,33 +455,55 @@ export default function VelocityOSPage() {
               Velocity OS. It turns principles into owned actions, installs an
               operating cadence, makes driver-tree measures visible, and turns
               experimentation and capital allocation into pre-registered
-              decisions. Repetition creates standard work and operating leverage;
-              the reviews create a truth-forward culture.
+              decisions. Repetition creates standard work and operating
+              leverage; the reviews create a truth-forward culture.
             </p>
             <div className="vos-j-stats">
-              <div className="vjs-item"><strong>365</strong> Daily Entries</div>
-              <div className="vjs-item"><strong>52</strong> Weekly Modules</div>
-              <div className="vjs-item"><strong>4</strong> Quarterly Resets</div>
+              <div className="vjs-item">
+                <strong>365</strong> Daily Entries
+              </div>
+              <div className="vjs-item">
+                <strong>52</strong> Weekly Modules
+              </div>
+              <div className="vjs-item">
+                <strong>4</strong> Quarterly Resets
+              </div>
               <div className="vjs-item">
                 <strong>4</strong> Foundation → Advanced
               </div>
-              <div className="vjs-item"><strong>≈20</strong> Min. Daily Loop</div>
+              <div className="vjs-item">
+                <strong>≈20</strong> Min. Daily Loop
+              </div>
             </div>
           </div>
 
           <div className="vos-j-grid">
             <div className="vjg-col">
               <h3>The Daily Loop</h3>
-              <p><strong>Morning:</strong> One principle, one operator question, one action. A focused daily checklist to set the trajectory.</p>
-              <p><strong>Evening:</strong> Evening calibration. What moved? What did you buy versus earn? What did you get wrong?</p>
+              <p>
+                <strong>Morning:</strong> One principle, one operator question,
+                one action. A focused daily checklist to set the trajectory.
+              </p>
+              <p>
+                <strong>Evening:</strong> Evening calibration. What moved? What
+                did you buy versus earn? What did you get wrong?
+              </p>
             </div>
             <div className="vjg-col">
               <h3>The Weekly Review</h3>
-              <p>Every seventh day forces a look at the data: ship-list hit rate, learning velocity, kills, cash/covenant checks, and the single play for next week.</p>
+              <p>
+                Every seventh day forces a look at the data: ship-list hit rate,
+                learning velocity, kills, cash/covenant checks, and the single
+                play for next week.
+              </p>
             </div>
             <div className="vjg-col">
               <h3>The Quarterly Reset</h3>
-              <p>Four times a year, the journal stops for a full reset. A convexity audit, kill list, and a prediction review against your pre-registered decision criteria.</p>
+              <p>
+                Four times a year, the journal stops for a full reset. A
+                convexity audit, kill list, and a prediction review against your
+                pre-registered decision criteria.
+              </p>
             </div>
           </div>
 
@@ -492,7 +518,13 @@ export default function VelocityOSPage() {
               <h3 className="vjv-title" id="preview-heading">
                 Preview: First 20 Physical Pages
               </h3>
-              <span className="vjv-status" data-testid="page-status" aria-live="polite">Page {currentPage} of {totalPages}</span>
+              <span
+                className="vjv-status"
+                data-testid="page-status"
+                aria-live="polite"
+              >
+                Page {currentPage} of {totalPages}
+              </span>
             </div>
             <div className="vjv-body">
               <button
@@ -543,7 +575,9 @@ export default function VelocityOSPage() {
               <ol>
                 {PREVIEW_PAGES.map((page, index) => (
                   <li key={page.title}>
-                    <strong>Page {index + 1}: {page.title}</strong>
+                    <strong>
+                      Page {index + 1}: {page.title}
+                    </strong>
                     <span>{page.description}</span>
                   </li>
                 ))}
@@ -560,7 +594,12 @@ export default function VelocityOSPage() {
             </p>
 
             {unlockMutation.isSuccess && unlockMutation.data ? (
-              <div className="vjg-success" data-testid="unlock-status" role="status" aria-live="polite">
+              <div
+                className="vjg-success"
+                data-testid="unlock-status"
+                role="status"
+                aria-live="polite"
+              >
                 <h4>Unlocked successfully</h4>
                 <p>{unlockMutation.data.message}</p>
                 <button
@@ -610,7 +649,7 @@ export default function VelocityOSPage() {
                     className="cf-input"
                     placeholder="Work Email"
                     value={unlockEmail}
-                    onChange={e => setUnlockEmail(e.target.value)}
+                    onChange={(e) => setUnlockEmail(e.target.value)}
                     required
                     data-testid="email"
                     aria-label="Email address for journal download"
@@ -621,7 +660,9 @@ export default function VelocityOSPage() {
                     disabled={unlockMutation.isPending}
                     data-testid="unlock-button"
                   >
-                    {unlockMutation.isPending ? "Unlocking..." : "Unlock Journal"}
+                    {unlockMutation.isPending
+                      ? "Unlocking..."
+                      : "Unlock Journal"}
                   </button>
                 </div>
                 {(unlockValidationError || unlockMutation.isError) && (
@@ -658,7 +699,10 @@ export default function VelocityOSPage() {
                 Introduce your operational challenge.
               </h2>
               <p className="vos-intake-p">
-                We work selectively with ownership groups and executive teams who are serious about implementing a rigorous operating system. Provide context below, and our operations team will review your request.
+                We work selectively with ownership groups and executive teams
+                who are serious about implementing a rigorous operating system.
+                Provide context below, and our operations team will review your
+                request.
               </p>
             </div>
 
@@ -681,39 +725,96 @@ export default function VelocityOSPage() {
                 >
                   <div className="cf-row">
                     <div className="cf-field">
-                      <label className="cf-label" htmlFor="fullName">Full Name *</label>
-                      <input id="fullName" className="cf-input" value={fullName} onChange={(e) => setFullName(e.target.value)} maxLength={120} required />
+                      <label className="cf-label" htmlFor="fullName">
+                        Full Name *
+                      </label>
+                      <input
+                        id="fullName"
+                        className="cf-input"
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
+                        maxLength={120}
+                        required
+                      />
                     </div>
                     <div className="cf-field">
-                      <label className="cf-label" htmlFor="titleRole">Title / Role *</label>
-                      <input id="titleRole" className="cf-input" value={titleRole} onChange={(e) => setTitleRole(e.target.value)} maxLength={120} required />
+                      <label className="cf-label" htmlFor="titleRole">
+                        Title / Role *
+                      </label>
+                      <input
+                        id="titleRole"
+                        className="cf-input"
+                        value={titleRole}
+                        onChange={(e) => setTitleRole(e.target.value)}
+                        maxLength={120}
+                        required
+                      />
                     </div>
                   </div>
 
                   <div className="cf-row">
                     <div className="cf-field">
-                      <label className="cf-label" htmlFor="workEmail">Work Email *</label>
-                      <input id="workEmail" type="email" className="cf-input" value={workEmail} onChange={(e) => setWorkEmail(e.target.value)} maxLength={254} required />
+                      <label className="cf-label" htmlFor="workEmail">
+                        Work Email *
+                      </label>
+                      <input
+                        id="workEmail"
+                        type="email"
+                        className="cf-input"
+                        value={workEmail}
+                        onChange={(e) => setWorkEmail(e.target.value)}
+                        maxLength={254}
+                        required
+                      />
                     </div>
                     <div className="cf-field">
-                      <label className="cf-label" htmlFor="phone">Phone (optional)</label>
-                      <input id="phone" type="tel" className="cf-input" value={phone} onChange={(e) => setPhone(e.target.value)} maxLength={40} />
+                      <label className="cf-label" htmlFor="phone">
+                        Phone (optional)
+                      </label>
+                      <input
+                        id="phone"
+                        type="tel"
+                        className="cf-input"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        maxLength={40}
+                      />
                     </div>
                   </div>
 
                   <div className="cf-row">
                     <div className="cf-field">
-                      <label className="cf-label" htmlFor="companyName">Company Name *</label>
-                      <input id="companyName" className="cf-input" value={companyName} onChange={(e) => setCompanyName(e.target.value)} maxLength={160} required />
+                      <label className="cf-label" htmlFor="companyName">
+                        Company Name *
+                      </label>
+                      <input
+                        id="companyName"
+                        className="cf-input"
+                        value={companyName}
+                        onChange={(e) => setCompanyName(e.target.value)}
+                        maxLength={160}
+                        required
+                      />
                     </div>
                     <div className="cf-field">
-                      <label className="cf-label" htmlFor="companyWebsite">Company Website (optional)</label>
-                      <input id="companyWebsite" type="url" className="cf-input" value={companyWebsite} onChange={(e) => setCompanyWebsite(e.target.value)} maxLength={300} />
+                      <label className="cf-label" htmlFor="companyWebsite">
+                        Company Website (optional)
+                      </label>
+                      <input
+                        id="companyWebsite"
+                        type="url"
+                        className="cf-input"
+                        value={companyWebsite}
+                        onChange={(e) => setCompanyWebsite(e.target.value)}
+                        maxLength={300}
+                      />
                     </div>
                   </div>
 
                   <div className="cf-field">
-                    <label className="cf-label" htmlFor="companyContext">Company Context *</label>
+                    <label className="cf-label" htmlFor="companyContext">
+                      Company Context *
+                    </label>
                     <textarea
                       id="companyContext"
                       className="cf-input cf-textarea"
@@ -726,7 +827,9 @@ export default function VelocityOSPage() {
                   </div>
 
                   <div className="cf-field">
-                    <label className="cf-label" htmlFor="primaryChallenge">Primary Challenge *</label>
+                    <label className="cf-label" htmlFor="primaryChallenge">
+                      Primary Challenge *
+                    </label>
                     <textarea
                       id="primaryChallenge"
                       className="cf-input cf-textarea"
@@ -739,7 +842,9 @@ export default function VelocityOSPage() {
                   </div>
 
                   <div className="cf-field">
-                    <label className="cf-label" htmlFor="desiredOutcome">Desired Outcome *</label>
+                    <label className="cf-label" htmlFor="desiredOutcome">
+                      Desired Outcome *
+                    </label>
                     <textarea
                       id="desiredOutcome"
                       className="cf-input cf-textarea"
@@ -752,7 +857,9 @@ export default function VelocityOSPage() {
                   </div>
 
                   <div className="cf-field">
-                    <label className="cf-label" htmlFor="urgency">Urgency *</label>
+                    <label className="cf-label" htmlFor="urgency">
+                      Urgency *
+                    </label>
                     <select
                       id="urgency"
                       className="cf-input"
@@ -760,7 +867,9 @@ export default function VelocityOSPage() {
                       onChange={(e) => setUrgency(e.target.value as Urgency)}
                       required
                     >
-                      <option value="" disabled>Select urgency</option>
+                      <option value="" disabled>
+                        Select urgency
+                      </option>
                       <option value="immediate">Immediate</option>
                       <option value="this-quarter">This Quarter</option>
                       <option value="next-six-months">Next Six Months</option>
@@ -781,7 +890,11 @@ export default function VelocityOSPage() {
                     </p>
                   )}
 
-                  <button type="submit" className="cf-submit" disabled={mutation.isPending}>
+                  <button
+                    type="submit"
+                    className="cf-submit"
+                    disabled={mutation.isPending}
+                  >
                     {mutation.isPending ? "Submitting..." : "Submit Request"}
                   </button>
                 </form>

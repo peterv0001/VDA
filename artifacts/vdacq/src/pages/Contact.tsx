@@ -20,7 +20,12 @@ export default function ContactPage() {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     setValidationError("");
-    if (!fullName.trim() || !contactEmail.trim() || !organization.trim() || !category) {
+    if (
+      !fullName.trim() ||
+      !contactEmail.trim() ||
+      !organization.trim() ||
+      !category
+    ) {
       setValidationError("Please fill in all required fields.");
       return;
     }
@@ -53,7 +58,8 @@ export default function ContactPage() {
                     "\u2192",
                     <>
                       <strong>M&A Advisors & Investment Bankers</strong>{" "}
-                      representing a sell-side CPG mandate — distressed or healthy
+                      representing a sell-side CPG mandate — distressed or
+                      healthy
                     </>,
                   ],
                   [
@@ -96,7 +102,10 @@ export default function ContactPage() {
               <div className="cf">
                 <div className="form-success">
                   <div className="form-success-icon">&#x2713;</div>
-                  <p>Your inquiry has been received. We'll be in touch within one business day.</p>
+                  <p>
+                    Your inquiry has been received. We'll be in touch within one
+                    business day.
+                  </p>
                 </div>
               </div>
             ) : (
@@ -104,26 +113,56 @@ export default function ContactPage() {
                 <div className="cf-row">
                   <div className="cf-field">
                     <label className="cf-label">Full Name *</label>
-                    <input className="cf-input" placeholder="Your full name" value={fullName} onChange={(e) => setFullName(e.target.value)} required />
+                    <input
+                      className="cf-input"
+                      placeholder="Your full name"
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      required
+                    />
                   </div>
                   <div className="cf-field">
                     <label className="cf-label">Organization *</label>
-                    <input className="cf-input" placeholder="Firm, fund, or company" value={organization} onChange={(e) => setOrganization(e.target.value)} required />
+                    <input
+                      className="cf-input"
+                      placeholder="Firm, fund, or company"
+                      value={organization}
+                      onChange={(e) => setOrganization(e.target.value)}
+                      required
+                    />
                   </div>
                 </div>
                 <div className="cf-row">
                   <div className="cf-field">
                     <label className="cf-label">Email *</label>
-                    <input className="cf-input" type="email" placeholder="Professional email" value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} required />
+                    <input
+                      className="cf-input"
+                      type="email"
+                      placeholder="Professional email"
+                      value={contactEmail}
+                      onChange={(e) => setContactEmail(e.target.value)}
+                      required
+                    />
                   </div>
                   <div className="cf-field">
                     <label className="cf-label">Phone</label>
-                    <input className="cf-input" type="tel" placeholder="Direct line (optional)" value={phone} onChange={(e) => setPhone(e.target.value)} />
+                    <input
+                      className="cf-input"
+                      type="tel"
+                      placeholder="Direct line (optional)"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                    />
                   </div>
                 </div>
                 <div className="cf-field">
                   <label className="cf-label">Nature of Situation *</label>
-                  <select className="cf-input" value={category} onChange={(e) => setCategory(e.target.value)} required>
+                  <select
+                    className="cf-input"
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                    required
+                  >
                     <option value="" disabled>
                       Select category
                     </option>
@@ -132,7 +171,10 @@ export default function ContactPage() {
                     <option>Growth-Stage CPG Brand Seeking a Partner</option>
                     <option>Creditor / Trustee / Receiver Situation</option>
                     <option>Co-Investment / Co-Underwriting Opportunity</option>
-                    <option>Operating Consulting Inquiry</option>
+                    <option>Velocity OS Workshop / Operating Session</option>
+                    <option>
+                      Turnaround Consulting / Operational Intervention
+                    </option>
                     <option>Other / General</option>
                   </select>
                 </div>
@@ -145,15 +187,24 @@ export default function ContactPage() {
                     onChange={(e) => setDescription(e.target.value)}
                   />
                 </div>
-                {validationError && <p className="form-error">{validationError}</p>}
-                {mutation.isError && <p className="form-error">Something went wrong. Please try again.</p>}
-                <button type="submit" className="cf-submit" disabled={mutation.isPending}>
+                {validationError && (
+                  <p className="form-error">{validationError}</p>
+                )}
+                {mutation.isError && (
+                  <p className="form-error">
+                    Something went wrong. Please try again.
+                  </p>
+                )}
+                <button
+                  type="submit"
+                  className="cf-submit"
+                  disabled={mutation.isPending}
+                >
                   {mutation.isPending ? "Submitting..." : "Submit Inquiry"}
                 </button>
                 <p className="cf-alt">
                   Prefer a direct line?{" "}
-                  <a href="tel:+12174861588">(217) 486-1588</a>
-                  {" "}or{" "}
+                  <a href="tel:+12174861588">(217) 486-1588</a> or{" "}
                   <a href="mailto:deals@vdacq.com">deals@vdacq.com</a>
                 </p>
               </form>

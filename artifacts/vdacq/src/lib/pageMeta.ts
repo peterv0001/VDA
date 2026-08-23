@@ -17,7 +17,7 @@ export const PAGE_META: Record<string, PageMeta> = {
   "/": {
     title: SITE_NAME,
     description:
-      "Van Dyke Acquisitions is a family office deploying permanent capital in control positions across the consumer packaged goods industry. Established 2014.",
+      "Van Dyke Acquisitions acquires and operates CPG companies with permanent capital, majority or full ownership, and operating authority. Explore distressed and growth-stage acquisitions, operations help, workshops, and funding options.",
   },
   "/platform": {
     title: "Platform",
@@ -37,7 +37,7 @@ export const PAGE_META: Record<string, PageMeta> = {
   "/funding": {
     title: "Get Funding",
     description:
-      "Growth and operational funding for CPG brands — access growth capital through Cohort Capital or operational financing through Lead Shield Funding.",
+      "Growth financing through Cohort Capital and operational funding through LeaderShield Funding—companies owned by Van Dyke Acquisitions for businesses it does not acquire.",
   },
   "/velocity-os": {
     title: "Velocity OS & Operator's Daily Journal",

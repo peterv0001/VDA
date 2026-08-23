@@ -1,14 +1,14 @@
 # Van Dyke Acquisitions
 
-Van Dyke Acquisitions is a family office deploying permanent capital in control positions across the consumer packaged goods (CPG) industry. Established in 2014, the firm acquires, operates, and grows CPG brands through hands-on ownership rather than passive investment. Van Dyke does not take minority stakes; it acquires controlling interests and operates alongside management for the long term.
+Van Dyke Acquisitions is a CPG control investor. Established in 2014, the firm acquires and operates consumer packaged goods companies using permanent capital, majority or full ownership, and operating authority—not passive positions or outside-only advice. It pursues distressed and growth-stage acquisitions, shares its Velocity Operating System publicly, offers hands-on workshops and turnaround engagements, and provides funding options for businesses it does not acquire.
 
 ## Key Pages
 
-- / — Homepage: firm overview, investment thesis, and core identity as a CPG control investor.
+- / — Homepage: CPG control acquisitions, Velocity Operating System, operating engagements, funding options, and track-record access.
 - /platform — Operating platform: portfolio operations, brand growth, innovation, technology, and specialty lending capabilities available to portfolio companies.
 - /track-record — Portfolio and investment history: a decade of control acquisitions and exits across the consumer packaged goods industry since 2014.
 - /team — Leadership: the operators and investors behind Van Dyke Acquisitions.
-- /funding — Capital access: growth capital through Cohort Capital and operational financing through Lead Shield Funding for CPG brands.
+- /funding — Funding options for CPG businesses VDACQ does not acquire: growth financing through Cohort Capital and operational funding through LeaderShield Funding. Both are owned by Van Dyke Acquisitions.
 - /how-we-operate — Public Velocity Operating System library: the complete illustrated operating model by Peter V. Griscom, plus its open Metrics & Questions, Rule Book, and Checklist Book field references. The book explains the model; Metrics & Questions covers what to measure; the Rule Book covers decision rules; and the Checklist Book supports repeatable practice. No email gate is required for these four materials.
 - /velocity-os — Velocity OS operations help: a practical operating system built around ownership, cadence, driver-tree measures, experimentation, standard work, operating leverage, and a truth-forward culture. Includes a public 20-page preview of The Operator's Daily Journal; the complete workbook is available through a short-lived email unlock.
 - /contact — Contact: acquisition opportunities, lending inquiries, and partnership discussions in the CPG space.

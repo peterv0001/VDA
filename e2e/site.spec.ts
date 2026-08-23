@@ -1,15 +1,13 @@
 import { test, expect, type Page } from "@playwright/test";
 import { createHash, randomBytes } from "node:crypto";
-import {
-  db,
-  pool,
-  velocityOsJournalLeadsTable,
-} from "../lib/db/src/index";
+import { db, pool, velocityOsJournalLeadsTable } from "../lib/db/src/index";
 
 const uniq = () => `${Date.now()}-${Math.floor(Math.random() * 100000)}`;
 
 async function expectHome(page: Page) {
-  await expect(page.locator(".hero h1")).toContainText("deserve better ownership");
+  await expect(page.locator(".hero h1")).toContainText(
+    "We acquire and operate CPG companies.",
+  );
 }
 
 test.afterAll(async () => {
@@ -17,7 +15,9 @@ test.afterAll(async () => {
 });
 
 test.describe("Navigation", () => {
-  test("redirects retired homepage section hashes to their current pages", async ({ page }) => {
+  test("redirects retired homepage section hashes to their current pages", async ({
+    page,
+  }) => {
     const legacyLinks = [
       ["/#portfolio", /\/track-record$/],
       ["/#track", /\/track-record$/],
@@ -36,7 +36,9 @@ test.describe("Navigation", () => {
     }
   });
 
-  test("keeps the operating library first and navigates all pages through the nav bar", async ({ page }) => {
+  test("keeps the operating library first and navigates all pages through the nav bar", async ({
+    page,
+  }) => {
     await page.goto("/");
     await expectHome(page);
 
@@ -50,16 +52,30 @@ test.describe("Navigation", () => {
       "Platform",
       "Contact",
     ];
-    await expect(page.locator(".nav-links .nav-link")).toHaveText(expectedNavOrder);
-    await expect(page.locator("footer .footer-links a")).toHaveText(expectedNavOrder);
+    await expect(page.locator(".nav-links .nav-link")).toHaveText(
+      expectedNavOrder,
+    );
+    await expect(page.locator("footer .footer-links a")).toHaveText(
+      expectedNavOrder,
+    );
 
-    await page.locator(".nav-links").getByText("How We Operate", { exact: true }).click();
+    await page
+      .locator(".nav-links")
+      .getByText("How We Operate", { exact: true })
+      .click();
     await expect(page).toHaveURL(/\/how-we-operate$/);
-    await expect(page.getByRole("heading", { name: "How We Operate" })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "How We Operate" }),
+    ).toBeVisible();
 
-    await page.locator(".nav-links").getByText("Get Funding", { exact: true }).click();
+    await page
+      .locator(".nav-links")
+      .getByText("Get Funding", { exact: true })
+      .click();
     await expect(page).toHaveURL(/\/funding$/);
-    await expect(page.getByText("Get Growth Funding", { exact: true })).toBeVisible();
+    await expect(
+      page.getByText("Get Growth Funding", { exact: true }),
+    ).toBeVisible();
     await expect(
       page.getByRole("link", { name: /Get Growth Funding/ }),
     ).toHaveAttribute("href", "https://cohortfunding.com");
@@ -67,23 +83,43 @@ test.describe("Navigation", () => {
       page.getByRole("link", { name: /Get Operational Funding/ }),
     ).toHaveAttribute("href", "https://leadershieldfunding.com");
 
-    await page.locator(".nav-links").getByText("Operations Help", { exact: true }).click();
+    await page
+      .locator(".nav-links")
+      .getByText("Operations Help", { exact: true })
+      .click();
     await expect(page).toHaveURL(/\/velocity-os$/);
-    await expect(page.getByRole("heading", { name: /Execution is not an accident/ })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: /Execution is not an accident/ }),
+    ).toBeVisible();
 
     await page.locator(".nav-links").getByText("Team", { exact: true }).click();
     await expect(page).toHaveURL(/\/team$/);
-    await expect(page.getByText("The operators behind the office.")).toBeVisible();
+    await expect(
+      page.getByText("The operators behind the office."),
+    ).toBeVisible();
 
-    await page.locator(".nav-links").getByText("Track Record", { exact: true }).click();
+    await page
+      .locator(".nav-links")
+      .getByText("Track Record", { exact: true })
+      .click();
     await expect(page).toHaveURL(/\/track-record$/);
-    await expect(page.locator(".eyebrow").first()).toContainText("Track Record");
+    await expect(page.locator(".eyebrow").first()).toContainText(
+      "Track Record",
+    );
 
-    await page.locator(".nav-links").getByText("Platform", { exact: true }).click();
+    await page
+      .locator(".nav-links")
+      .getByText("Platform", { exact: true })
+      .click();
     await expect(page).toHaveURL(/\/platform$/);
-    await expect(page.locator(".eyebrow").first()).toContainText("Operating Platform");
+    await expect(page.locator(".eyebrow").first()).toContainText(
+      "Operating Platform",
+    );
 
-    await page.locator(".nav-links").getByText("Contact", { exact: true }).click();
+    await page
+      .locator(".nav-links")
+      .getByText("Contact", { exact: true })
+      .click();
     await expect(page).toHaveURL(/\/contact$/);
     await expect(page.getByText("Introduce a situation.")).toBeVisible();
 
@@ -91,11 +127,16 @@ test.describe("Navigation", () => {
     await expectHome(page);
   });
 
-  test("browser back and forward buttons work with client-side routing", async ({ page }) => {
+  test("browser back and forward buttons work with client-side routing", async ({
+    page,
+  }) => {
     await page.goto("/");
     await expectHome(page);
 
-    await page.locator(".nav-links").getByText("Platform", { exact: true }).click();
+    await page
+      .locator(".nav-links")
+      .getByText("Platform", { exact: true })
+      .click();
     await expect(page).toHaveURL(/\/platform$/);
 
     await page.locator(".nav-links").getByText("Team", { exact: true }).click();
@@ -103,14 +144,18 @@ test.describe("Navigation", () => {
 
     await page.goBack();
     await expect(page).toHaveURL(/\/platform$/);
-    await expect(page.locator(".eyebrow").first()).toContainText("Operating Platform");
+    await expect(page.locator(".eyebrow").first()).toContainText(
+      "Operating Platform",
+    );
 
     await page.goBack();
     await expectHome(page);
 
     await page.goForward();
     await expect(page).toHaveURL(/\/platform$/);
-    await expect(page.locator(".eyebrow").first()).toContainText("Operating Platform");
+    await expect(page.locator(".eyebrow").first()).toContainText(
+      "Operating Platform",
+    );
   });
 
   test("unknown routes show the 404 page", async ({ page }) => {
@@ -122,13 +167,17 @@ test.describe("Navigation", () => {
 test.describe("Mobile navigation", () => {
   test.use({ viewport: { width: 375, height: 812 } });
 
-  test("navigates via the hamburger menu at a phone viewport without horizontal overflow", async ({ page }) => {
+  test("navigates via the hamburger menu at a phone viewport without horizontal overflow", async ({
+    page,
+  }) => {
     await page.goto("/");
     await expectHome(page);
 
     // No horizontal scrolling on the homepage
     const overflow = await page.evaluate(
-      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      () =>
+        document.documentElement.scrollWidth -
+        document.documentElement.clientWidth,
     );
     expect(overflow).toBeLessThanOrEqual(0);
 
@@ -147,7 +196,9 @@ test.describe("Mobile navigation", () => {
     const menu = page.locator("#mobile-menu");
 
     const overflowWithMenu = await page.evaluate(
-      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      () =>
+        document.documentElement.scrollWidth -
+        document.documentElement.clientWidth,
     );
     expect(overflowWithMenu).toBeLessThanOrEqual(0);
     await expect(menu).toBeVisible();
@@ -163,24 +214,36 @@ test.describe("Mobile navigation", () => {
     ]);
     await menu.locator(".mobile-menu-link", { hasText: "Platform" }).click();
     await expect(page).toHaveURL(/\/platform$/);
-    await expect(page.locator(".eyebrow").first()).toContainText("Operating Platform");
+    await expect(page.locator(".eyebrow").first()).toContainText(
+      "Operating Platform",
+    );
 
     // Menu closes after navigating
     await expect(menu).toBeHidden();
 
     // Navigate to the public operating library through the menu
     await page.getByRole("button", { name: "Open menu" }).click();
-    await menu.locator(".mobile-menu-link", { hasText: "How We Operate" }).click();
+    await menu
+      .locator(".mobile-menu-link", { hasText: "How We Operate" })
+      .click();
     await expect(page).toHaveURL(/\/how-we-operate$/);
-    await expect(page.getByRole("heading", { name: "How We Operate" })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "How We Operate" }),
+    ).toBeVisible();
 
     // Navigate to Operations Help through the menu and check the page fits
     await page.getByRole("button", { name: "Open menu" }).click();
-    await menu.locator(".mobile-menu-link", { hasText: "Operations Help" }).click();
+    await menu
+      .locator(".mobile-menu-link", { hasText: "Operations Help" })
+      .click();
     await expect(page).toHaveURL(/\/velocity-os$/);
-    await expect(page.getByRole("heading", { name: /Execution is not an accident/ })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: /Execution is not an accident/ }),
+    ).toBeVisible();
     const overflowVelocity = await page.evaluate(
-      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      () =>
+        document.documentElement.scrollWidth -
+        document.documentElement.clientWidth,
     );
     expect(overflowVelocity).toBeLessThanOrEqual(0);
 
@@ -380,7 +443,9 @@ test.describe("How We Operate public library", () => {
     const guessedPdf = await request.get(
       "/operating-library/the-velocity-operating-system-v3-1-illustrated.pdf",
     );
-    expect(guessedPdf.headers()["content-type"]).not.toContain("application/pdf");
+    expect(guessedPdf.headers()["content-type"]).not.toContain(
+      "application/pdf",
+    );
 
     const emailInput = page.getByTestId("illustrated-book-email");
     await emailInput.scrollIntoViewIfNeeded();
@@ -394,9 +459,10 @@ test.describe("How We Operate public library", () => {
     const [unlockResponse] = await Promise.all([
       page.waitForResponse(
         (response) =>
-          response.url().includes(
-            "/api/velocity-os/illustrated-book-unlocks",
-          ) && response.request().method() === "POST",
+          response
+            .url()
+            .includes("/api/velocity-os/illustrated-book-unlocks") &&
+          response.request().method() === "POST",
       ),
       page.getByTestId("illustrated-book-unlock").click(),
     ]);
@@ -486,9 +552,14 @@ test.describe("How We Operate public library", () => {
     request,
   }) => {
     await page.goto("/");
-    await page.locator(".nav-links").getByText("How We Operate", { exact: true }).click();
+    await page
+      .locator(".nav-links")
+      .getByText("How We Operate", { exact: true })
+      .click();
     await expect(page).toHaveURL(/\/how-we-operate$/);
-    await expect(page.getByRole("heading", { name: "How We Operate" })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "How We Operate" }),
+    ).toBeVisible();
     await expect(page.getByText(/Five parts and 16 chapters/)).toBeVisible();
     await expect(
       page.locator("footer").getByRole("link", { name: "How We Operate" }),
@@ -514,11 +585,15 @@ test.describe("How We Operate public library", () => {
       ),
     ).not.toBe("none");
     await contentsControl.click();
-    await page.getByRole("link", { name: /1\. The Physics of the Firm/ }).click();
+    await page
+      .getByRole("link", { name: /1\. The Physics of the Firm/ })
+      .click();
     await expect(page).toHaveURL(/\/how-we-operate\/book#ch1$/);
     await expect(bookFrame).toHaveAttribute("src", /#ch1$/);
     await expect(
-      page.getByRole("button", { name: /Next.*Lean as the Survivorship Engine/ }),
+      page.getByRole("button", {
+        name: /Next.*Lean as the Survivorship Engine/,
+      }),
     ).toBeVisible();
     await page
       .frameLocator('[data-testid="book-reader"] iframe')
@@ -527,14 +602,18 @@ test.describe("How We Operate public library", () => {
     await expect(page).toHaveURL(/\/how-we-operate\/book#ch2$/);
     await expect(bookFrame).toHaveAttribute("src", /#ch2$/);
 
-    const bookDocument = page.frameLocator('[data-testid="book-reader"] iframe');
+    const bookDocument = page.frameLocator(
+      '[data-testid="book-reader"] iframe',
+    );
     await expect(bookDocument.locator('svg[role="img"]')).toHaveCount(26);
     await expect(bookDocument.locator("svg[aria-labelledby]")).toHaveCount(26);
     expect(
       await bookDocument.locator("svg").evaluateAll((graphics) =>
         graphics.every((graphic) => {
           const labelId = graphic.getAttribute("aria-labelledby");
-          return Boolean(labelId && graphic.ownerDocument.getElementById(labelId));
+          return Boolean(
+            labelId && graphic.ownerDocument.getElementById(labelId),
+          );
         }),
       ),
     ).toBe(true);
@@ -543,7 +622,9 @@ test.describe("How We Operate public library", () => {
       "/operating-library/velocity-operating-system/index.html",
     );
     expect(book.status()).toBe(200);
-    await expect(book.text()).resolves.toContain("The 90-Day Installation Plan");
+    await expect(book.text()).resolves.toContain(
+      "The 90-Day Installation Plan",
+    );
 
     for (const resource of [
       {
@@ -569,19 +650,22 @@ test.describe("How We Operate public library", () => {
       },
     ]) {
       await page.goto("/how-we-operate");
-      await page.getByRole("link", { name: resource.card, exact: true }).click();
+      await page
+        .getByRole("link", { name: resource.card, exact: true })
+        .click();
       await expect(page).toHaveURL(resource.route);
       await expect(page.getByTestId(resource.reader)).toBeVisible();
       const pageNumber = page.getByRole("spinbutton", { name: /Page/ });
       await expect(pageNumber).toHaveValue("1");
       await page.getByRole("button", { name: "Next page" }).click();
       await expect(pageNumber).toHaveValue("2");
-      await expect(page.getByRole("link", { name: "Download PDF" })).toHaveAttribute(
-        "href",
+      await expect(
+        page.getByRole("link", { name: "Download PDF" }),
+      ).toHaveAttribute("href", `/operating-library/${resource.filename}`);
+
+      const document = await request.get(
         `/operating-library/${resource.filename}`,
       );
-
-      const document = await request.get(`/operating-library/${resource.filename}`);
       expect(document.status()).toBe(200);
       expect(document.headers()["content-type"]).toContain("application/pdf");
       expect((await document.body()).toString("latin1")).toMatch(
@@ -598,16 +682,24 @@ test.describe("How We Operate public library", () => {
 test.describe("How We Operate on mobile", () => {
   test.use({ viewport: { width: 375, height: 812 } });
 
-  test("keeps the library and reference fallback usable on a phone", async ({ page }) => {
+  test("keeps the library and reference fallback usable on a phone", async ({
+    page,
+  }) => {
     await page.goto("/how-we-operate");
     expect(
       await page.evaluate(
-        () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+        () =>
+          document.documentElement.scrollWidth -
+          document.documentElement.clientWidth,
       ),
     ).toBeLessThanOrEqual(0);
-    await page.getByRole("link", { name: "Metrics & Questions", exact: true }).click();
+    await page
+      .getByRole("link", { name: "Metrics & Questions", exact: true })
+      .click();
     await expect(page.getByText(/Your device may open PDFs/)).toBeVisible();
-    await expect(page.getByRole("link", { name: "Open Metrics & Questions" })).toHaveAttribute(
+    await expect(
+      page.getByRole("link", { name: "Open Metrics & Questions" }),
+    ).toHaveAttribute(
       "href",
       "/operating-library/velocity-os-metrics-and-questions.pdf",
     );
@@ -648,7 +740,9 @@ test.describe("Velocity OS journal on mobile", () => {
 });
 
 test.describe("Velocity OS operations intake", () => {
-  test("opens directly and shows a clear validation error", async ({ page }) => {
+  test("opens directly and shows a clear validation error", async ({
+    page,
+  }) => {
     await page.goto("/velocity-os");
 
     await expect(
@@ -660,7 +754,9 @@ test.describe("Velocity OS operations intake", () => {
     );
   });
 
-  test("submits a dedicated intake and confirms review expectations", async ({ page }) => {
+  test("submits a dedicated intake and confirms review expectations", async ({
+    page,
+  }) => {
     const id = uniq();
     await page.goto("/velocity-os");
 
@@ -695,7 +791,9 @@ test.describe("Velocity OS operations intake", () => {
       page.getByRole("heading", { name: "Your request is under review." }),
     ).toBeVisible();
     await expect(
-      page.getByText(/follow up about a Velocity OS call or waitlist placement/),
+      page.getByText(
+        /follow up about a Velocity OS call or waitlist placement/,
+      ),
     ).toBeVisible();
   });
 
@@ -707,7 +805,8 @@ test.describe("Velocity OS operations intake", () => {
       workEmail: "velocity-api@example.com",
       titleRole: "Operator",
       companyName: "E2E Operations Co",
-      companyContext: "A company with a growing operating team and real complexity.",
+      companyContext:
+        "A company with a growing operating team and real complexity.",
       primaryChallenge:
         "Leadership decisions are delayed and ownership is inconsistent.",
       desiredOutcome:
@@ -744,22 +843,91 @@ test.describe("Velocity OS operations intake", () => {
   });
 });
 
-test.describe("Homepage funding banner", () => {
-  test("renders the Need Capital band and its link navigates to /funding", async ({ page }) => {
+test.describe("Homepage offerings", () => {
+  test("makes acquisition, operating help, and funding paths explicit", async ({
+    page,
+  }) => {
     await page.goto("/");
     await expectHome(page);
 
-    const band = page.locator(".fund-band");
-    await band.scrollIntoViewIfNeeded();
-    await expect(band).toBeVisible();
-    await expect(band.getByText("Need Capital?")).toBeVisible();
-    await expect(band.getByText("Funding for brands we don't acquire.")).toBeVisible();
+    await expect(
+      page.getByRole("heading", {
+        name: "Ownership that can make the change.",
+      }),
+    ).toBeVisible();
 
-    const cta = band.getByRole("link", { name: /Explore Funding Options/ });
-    await expect(cta).toBeVisible();
-    await cta.click();
+    const acquisitions = page.locator(".acquisition-paths");
+    await acquisitions.scrollIntoViewIfNeeded();
+    await expect(
+      acquisitions.getByText("Distressed CPG Acquisitions", { exact: true }),
+    ).toBeVisible();
+    await expect(
+      acquisitions.getByText("Growth-Stage CPG Acquisitions", { exact: true }),
+    ).toBeVisible();
+    await expect(
+      acquisitions
+        .locator(".acquisition-card")
+        .first()
+        .getByRole("link", { name: /Introduce an acquisition opportunity/ }),
+    ).toHaveAttribute("href", "/contact");
+
+    const operations = page.locator(".operations-offerings");
+    await operations.scrollIntoViewIfNeeded();
+    await expect(
+      operations.getByRole("heading", { name: "Velocity OS Workshops" }),
+    ).toBeVisible();
+    await expect(
+      operations.getByRole("heading", { name: "Turnaround Consulting" }),
+    ).toBeVisible();
+    await expect(
+      operations.getByRole("link", { name: "Request a workshop →" }),
+    ).toHaveAttribute("href", "/velocity-os#intake-form");
+    await expect(
+      operations.getByRole("link", {
+        name: "Begin an operations conversation →",
+      }),
+    ).toHaveAttribute("href", "/velocity-os#intake-form");
+    await operations
+      .getByRole("link", { name: "Request a workshop →" })
+      .click();
+    await expect(page).toHaveURL(/\/velocity-os#intake-form$/);
+    await expect(page.locator("#intake-form")).toBeVisible();
+
+    await page.goto("/");
+    const funding = page.locator(".funding-options");
+    await funding.scrollIntoViewIfNeeded();
+    await expect(
+      funding.getByRole("heading", {
+        name: /Funding when an acquisition is not the answer/,
+      }),
+    ).toBeVisible();
+    await expect(funding.getByText("Companies We Own")).toHaveCount(0);
+    await expect(
+      funding.getByRole("heading", { name: "Cohort Capital" }),
+    ).toBeVisible();
+    await expect(
+      funding.getByRole("heading", { name: "LeaderShield Funding" }),
+    ).toBeVisible();
+    await expect(
+      funding.getByRole("link", { name: "Explore Cohort Capital" }),
+    ).toHaveAttribute("href", "https://cohortfunding.com");
+    await expect(
+      funding.getByRole("link", { name: "Explore LeaderShield Funding" }),
+    ).toHaveAttribute("href", "https://leadershieldfunding.com");
+
+    await funding
+      .getByRole("link", { name: /Compare funding options/ })
+      .click();
     await expect(page).toHaveURL(/\/funding$/);
-    await expect(page.getByText("Get Growth Funding", { exact: true })).toBeVisible();
+    await expect(
+      page.getByText("Get Growth Funding", { exact: true }),
+    ).toBeVisible();
+    await expect(
+      page.getByText(/LeaderShield Funding · leadershieldfunding\.com/),
+    ).toBeVisible();
+    await expect(page.getByText(/A Van Dyke Acquisitions company/)).toHaveCount(
+      2,
+    );
   });
 });
 
@@ -774,10 +942,10 @@ test.describe("Homepage operating-system callout", () => {
     await callout.scrollIntoViewIfNeeded();
     await expect(callout).toBeVisible();
     await expect(
-      callout.getByText("Our practical system, shared in public."),
+      callout.getByText("Our operating method, shared in public."),
     ).toBeVisible();
     await expect(
-      callout.getByText(/practical framework behind how we run companies/),
+      callout.getByText(/practical method we use to create operating change/),
     ).toBeVisible();
 
     await callout.getByRole("link", { name: "Read the book" }).click();
@@ -786,7 +954,7 @@ test.describe("Homepage operating-system callout", () => {
     await page.goto("/");
     const libraryCallout = page.locator(".operating-callout");
     await libraryCallout
-      .getByRole("link", { name: /Explore How We Operate/ })
+      .getByRole("link", { name: /Explore the library/ })
       .click();
     await expect(page).toHaveURL(/\/how-we-operate$/);
   });
@@ -805,7 +973,7 @@ test.describe("Homepage operating-system callout on mobile", () => {
       callout.getByRole("link", { name: "Read the book" }),
     ).toBeVisible();
     await expect(
-      callout.getByRole("link", { name: /Explore How We Operate/ }),
+      callout.getByRole("link", { name: /Explore the library/ }),
     ).toBeVisible();
     expect(
       await page.evaluate(
@@ -818,12 +986,16 @@ test.describe("Homepage operating-system callout on mobile", () => {
 });
 
 test.describe("Contact form", () => {
-  test("shows a validation error when required fields are missing", async ({ page }) => {
+  test("shows a validation error when required fields are missing", async ({
+    page,
+  }) => {
     await page.goto("/contact");
     await page.locator("form.cf input.cf-input").first().fill("E2E Only Name");
     await page.locator("form.cf button.cf-submit").click();
     await expect(page.locator("form.cf")).toBeVisible();
-    await expect(page.getByText("Your inquiry has been received")).not.toBeVisible();
+    await expect(
+      page.getByText("Your inquiry has been received"),
+    ).not.toBeVisible();
   });
 
   test("submits an inquiry and shows the success message", async ({ page }) => {
@@ -832,11 +1004,17 @@ test.describe("Contact form", () => {
 
     await page.getByPlaceholder("Your full name").fill(`E2E Test ${id}`);
     await page.getByPlaceholder("Firm, fund, or company").fill("E2E Test Org");
-    await page.getByPlaceholder("Professional email").fill(`e2e-${id}@example.com`);
-    await page.getByPlaceholder("Direct line (optional)").fill("555-000-0000");
-    await page.locator("form.cf select.cf-input").selectOption({ label: "Other / General" });
     await page
-      .getByPlaceholder("Briefly describe the opportunity, situation, or reason for reaching out...")
+      .getByPlaceholder("Professional email")
+      .fill(`e2e-${id}@example.com`);
+    await page.getByPlaceholder("Direct line (optional)").fill("555-000-0000");
+    await page
+      .locator("form.cf select.cf-input")
+      .selectOption({ label: "Other / General" });
+    await page
+      .getByPlaceholder(
+        "Briefly describe the opportunity, situation, or reason for reaching out...",
+      )
       .fill(`Automated e2e test submission ${id}. Safe to ignore.`);
 
     const [response] = await Promise.all([
@@ -849,19 +1027,27 @@ test.describe("Contact form", () => {
     ]);
     expect(response.status()).toBe(201);
 
-    await expect(page.getByText("Your inquiry has been received")).toBeVisible();
+    await expect(
+      page.getByText("Your inquiry has been received"),
+    ).toBeVisible();
   });
 });
 
 test.describe("Portfolio access modal", () => {
-  test("opens from the home hero, submits a request, and shows success", async ({ page }) => {
+  test("opens from the home hero, submits a request, and shows success", async ({
+    page,
+  }) => {
     const id = uniq();
     await page.goto("/");
 
-    await page.getByRole("button", { name: "Request Portfolio Access" }).click();
+    await page
+      .getByRole("button", { name: "Request Portfolio Access" })
+      .click();
     const dialog = page.getByRole("dialog");
     await expect(dialog).toBeVisible();
-    await expect(dialog.getByText("Qualified Counterparties Only")).toBeVisible();
+    await expect(
+      dialog.getByText("Qualified Counterparties Only"),
+    ).toBeVisible();
 
     await dialog.locator("#modal-name").fill(`E2E Modal Test ${id}`);
     await dialog.locator("#modal-org").fill("E2E Test Fund");
@@ -870,20 +1056,30 @@ test.describe("Portfolio access modal", () => {
     await dialog.locator("#modal-reason").selectOption({ label: "Other" });
 
     const [response] = await Promise.all([
-      page.waitForResponse((r) => r.url().includes("/api/access-requests") && r.request().method() === "POST"),
+      page.waitForResponse(
+        (r) =>
+          r.url().includes("/api/access-requests") &&
+          r.request().method() === "POST",
+      ),
       dialog.getByRole("button", { name: "Submit Access Request" }).click(),
     ]);
     expect(response.status()).toBe(201);
 
-    await expect(dialog.getByText("Your access request has been received")).toBeVisible();
+    await expect(
+      dialog.getByText("Your access request has been received"),
+    ).toBeVisible();
 
     // Modal auto-closes ~2s after a successful submission
     await expect(page.getByRole("dialog")).not.toBeVisible({ timeout: 10_000 });
   });
 
-  test("can be dismissed with the close button without submitting", async ({ page }) => {
+  test("can be dismissed with the close button without submitting", async ({
+    page,
+  }) => {
     await page.goto("/");
-    await page.getByRole("button", { name: "Request Portfolio Access" }).click();
+    await page
+      .getByRole("button", { name: "Request Portfolio Access" })
+      .click();
     await expect(page.getByRole("dialog")).toBeVisible();
     await page.getByRole("button", { name: "Close dialog" }).click();
     await expect(page.getByRole("dialog")).not.toBeVisible();
