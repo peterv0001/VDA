@@ -94,8 +94,8 @@ export default function ContactPage() {
               <a href="mailto:deals@vdacq.com" className="contact-book-link">
                 Or email directly &rarr; deals@vdacq.com
               </a>
-              <a href="tel:+12174861588" className="contact-book-link">
-                Or call directly &rarr; (217) 486-1588
+              <a href="tel:+14787957393" className="contact-book-link">
+                Or call directly &rarr; (478) 795-7393
               </a>
             </div>
             {mutation.isSuccess ? (
@@ -204,7 +204,7 @@ export default function ContactPage() {
                 </button>
                 <p className="cf-alt">
                   Prefer a direct line?{" "}
-                  <a href="tel:+12174861588">(217) 486-1588</a> or{" "}
+                  <a href="tel:+14787957393">(478) 795-7393</a> or{" "}
                   <a href="mailto:deals@vdacq.com">deals@vdacq.com</a>
                 </p>
               </form>

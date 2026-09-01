@@ -21,7 +21,7 @@ export default function Introduce() {
         <p className="border-t border-accent/30 pt-[1.6vh] font-body text-[1.6vw] leading-[1.5] text-text/70">PE firms and family offices seeking co-investment, co-underwriting, or a permanent-capital exit partner</p>
       </div>
       <div className="absolute bottom-[8vh] left-[7vw] right-[7vw] flex items-end justify-between border-t border-accent pt-[3vh]">
-        <p className="font-display text-[2.4vw] text-accent">deals@vdacq.com | (217) 486-1588</p>
+        <p className="font-display text-[2.4vw] text-accent">deals@vdacq.com | (478) 795-7393</p>
         <p className="font-body text-[1.45vw] tracking-[0.08em] text-text/55">We respond within one business day.</p>
       </div>
     </div>
