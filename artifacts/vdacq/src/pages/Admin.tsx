@@ -19,6 +19,9 @@ import {
   AlertCircle,
   Inbox,
   ArrowLeft,
+  Activity,
+  BookOpen,
+  Globe,
 } from "lucide-react";
 import { format } from "date-fns";
 import { Link } from "wouter";
@@ -128,23 +131,135 @@ export default function AdminPage() {
     queryClient.removeQueries({ queryKey: getListAdminSubmissionsQueryKey() });
   };
 
-  const unifiedList = useMemo(() => {
+  type Field = { label: string; value: string | null; icon: "user" | "building" | "mail" | "phone" | "briefcase" | "globe" | "tag" };
+  type Entry = {
+    key: string;
+    type: "inquiry" | "access" | "intake" | "lead";
+    id: number;
+    date: number;
+    fields: Field[];
+    sections: Array<{ label: string; value: string | null }>;
+  };
+
+  const unifiedList = useMemo<Entry[]>(() => {
     if (!data) return [];
 
-    const inquiries = (data.inquiries || []).map((i) => ({
-      ...i,
-      _type: "inquiry" as const,
-      _date: new Date(i.createdAt).getTime(),
+    const inquiries: Entry[] = (data.inquiries || []).map((i) => ({
+      key: `inquiry-${i.id}`,
+      type: "inquiry",
+      id: i.id,
+      date: new Date(i.createdAt).getTime(),
+      fields: [
+        { label: "Full Name", value: i.fullName, icon: "user" },
+        { label: "Organization", value: i.organization, icon: "building" },
+        { label: "Email", value: i.email, icon: "mail" },
+        { label: "Phone", value: i.phone, icon: "phone" },
+        { label: "Category", value: i.category, icon: "tag" },
+      ],
+      sections: [{ label: "Description", value: i.description }],
     }));
 
-    const requests = (data.accessRequests || []).map((r) => ({
-      ...r,
-      _type: "access" as const,
-      _date: new Date(r.createdAt).getTime(),
+    const requests: Entry[] = (data.accessRequests || []).map((r) => ({
+      key: `access-${r.id}`,
+      type: "access",
+      id: r.id,
+      date: new Date(r.createdAt).getTime(),
+      fields: [
+        { label: "Full Name", value: r.fullName, icon: "user" },
+        { label: "Organization", value: r.organization, icon: "building" },
+        { label: "Email", value: r.email, icon: "mail" },
+        { label: "Title / Role", value: r.titleRole, icon: "briefcase" },
+      ],
+      sections: [{ label: "Reason for Access", value: r.reason }],
     }));
 
-    return [...inquiries, ...requests].sort((a, b) => b._date - a._date);
+    const intakes: Entry[] = (data.velocityOsIntakes || []).map((v) => ({
+      key: `intake-${v.id}`,
+      type: "intake",
+      id: v.id,
+      date: new Date(v.createdAt).getTime(),
+      fields: [
+        { label: "Full Name", value: v.fullName, icon: "user" },
+        { label: "Company", value: v.companyName, icon: "building" },
+        { label: "Work Email", value: v.workEmail, icon: "mail" },
+        { label: "Phone", value: v.phone, icon: "phone" },
+        { label: "Title / Role", value: v.titleRole, icon: "briefcase" },
+        { label: "Website", value: v.companyWebsite, icon: "globe" },
+        { label: "Urgency", value: v.urgency, icon: "tag" },
+      ],
+      sections: [
+        { label: "Company Context", value: v.companyContext },
+        { label: "Primary Challenge", value: v.primaryChallenge },
+        { label: "Desired Outcome", value: v.desiredOutcome },
+      ],
+    }));
+
+    const leads: Entry[] = (data.documentLeads || []).map((l) => ({
+      key: `lead-${l.id}`,
+      type: "lead",
+      id: l.id,
+      date: new Date(l.submittedAt).getTime(),
+      fields: [
+        { label: "Email", value: l.email, icon: "mail" },
+        { label: "Document", value: l.documentId, icon: "tag" },
+        { label: "Version", value: l.documentVersion, icon: "tag" },
+      ],
+      sections: [
+        {
+          label: "Download",
+          value: l.downloadedAt
+            ? `Downloaded ${format(new Date(l.downloadedAt), "MMM d, yyyy 'at' h:mm a")}`
+            : "Link issued, not yet downloaded",
+        },
+      ],
+    }));
+
+    return [...inquiries, ...requests, ...intakes, ...leads].sort(
+      (a, b) => b.date - a.date,
+    );
   }, [data]);
+
+  const typeMeta = {
+    inquiry: { label: "Contact Inquiry", className: "inquiry" },
+    access: { label: "Access Request", className: "access" },
+    intake: { label: "Velocity OS Intake", className: "intake" },
+    lead: { label: "Document Unlock", className: "lead" },
+  } as const;
+
+  const typeIcon = (type: Entry["type"]) =>
+    type === "inquiry" ? (
+      <Mail size={12} />
+    ) : type === "access" ? (
+      <Lock size={12} />
+    ) : type === "intake" ? (
+      <Activity size={12} />
+    ) : (
+      <BookOpen size={12} />
+    );
+
+  const fieldIcon = (icon: Field["icon"]) =>
+    icon === "user" ? (
+      <User />
+    ) : icon === "building" ? (
+      <Building />
+    ) : icon === "mail" ? (
+      <Mail />
+    ) : icon === "phone" ? (
+      <Phone />
+    ) : icon === "briefcase" ? (
+      <Briefcase />
+    ) : icon === "globe" ? (
+      <Globe />
+    ) : (
+      <Tag />
+    );
+
+  const counts = {
+    inquiry: unifiedList.filter((e) => e.type === "inquiry").length,
+    access: unifiedList.filter((e) => e.type === "access").length,
+    intake: unifiedList.filter((e) => e.type === "intake").length,
+    lead: unifiedList.filter((e) => e.type === "lead").length,
+  };
 
   const isEmpty = unifiedList.length === 0;
 
@@ -253,10 +368,17 @@ export default function AdminPage() {
           <div>
             <h1 className="admin-page-title">Submissions Review</h1>
             <p className="admin-page-subtitle">
-              Review incoming contact inquiries and portfolio access requests.
+              Contact inquiries, portfolio access requests, Velocity OS
+              intakes, and document unlocks, newest first.
             </p>
           </div>
-          <div className="admin-count">{unifiedList.length} Total Entries</div>
+          <div className="admin-count" aria-label="Entry counts">
+            <strong>{unifiedList.length}</strong> total
+            <span>{counts.inquiry} inquiries</span>
+            <span>{counts.access} access</span>
+            <span>{counts.intake} intakes</span>
+            <span>{counts.lead} unlocks</span>
+          </div>
         </div>
 
         {isLoading ? (
@@ -275,26 +397,22 @@ export default function AdminPage() {
         ) : (
           <div className="admin-timeline">
             {unifiedList.map((item) => (
-              <div key={`${item._type}-${item.id}`} className="admin-card">
+              <div key={item.key} className="admin-card">
                 <div className="admin-card-meta">
                   <div>
-                    {item._type === "inquiry" ? (
-                      <span className="admin-card-type inquiry">
-                        <Mail size={12} /> Contact Inquiry
-                      </span>
-                    ) : (
-                      <span className="admin-card-type access">
-                        <Lock size={12} /> Access Request
-                      </span>
-                    )}
+                    <span
+                      className={`admin-card-type ${typeMeta[item.type].className}`}
+                    >
+                      {typeIcon(item.type)} {typeMeta[item.type].label}
+                    </span>
                   </div>
 
                   <div className="admin-card-date">
                     <Clock size={12} />
                     <span>
-                      {format(new Date(item.createdAt), "MMM d, yyyy")} <br />{" "}
+                      {format(new Date(item.date), "MMM d, yyyy")} <br />{" "}
                       <span className="admin-card-time">
-                        {format(new Date(item.createdAt), "h:mm a")}
+                        {format(new Date(item.date), "h:mm a")}
                       </span>
                     </span>
                   </div>
@@ -304,94 +422,57 @@ export default function AdminPage() {
 
                 <div className="admin-card-main">
                   <div className="admin-grid-details">
-                    <div className="admin-field">
-                      <span className="admin-field-label">
-                        <User /> Full Name
-                      </span>
-                      <span className="admin-field-value">{item.fullName}</span>
-                    </div>
-
-                    <div className="admin-field">
-                      <span className="admin-field-label">
-                        <Building /> Organization
-                      </span>
-                      <span className="admin-field-value">
-                        {item.organization}
-                      </span>
-                    </div>
-
-                    <div className="admin-field">
-                      <span className="admin-field-label">
-                        <Mail /> Email
-                      </span>
-                      <span className="admin-field-value">
-                        <a
-                          href={`mailto:${item.email}`}
-                          className="admin-email"
-                        >
-                          {item.email}
-                        </a>
-                      </span>
-                    </div>
-
-                    {"phone" in item && (
-                      <div className="admin-field">
+                    {item.fields.map((field) => (
+                      <div className="admin-field" key={field.label}>
                         <span className="admin-field-label">
-                          <Phone /> Phone
+                          {fieldIcon(field.icon)} {field.label}
                         </span>
                         <span className="admin-field-value">
-                          {item.phone || (
+                          {field.value ? (
+                            field.icon === "mail" ? (
+                              <a
+                                href={`mailto:${field.value}`}
+                                className="admin-email"
+                              >
+                                {field.value}
+                              </a>
+                            ) : field.icon === "globe" ? (
+                              <a
+                                href={field.value}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="admin-email"
+                              >
+                                {field.value}
+                              </a>
+                            ) : (
+                              field.value
+                            )
+                          ) : (
                             <span className="admin-field-value muted">
                               Not provided
                             </span>
                           )}
                         </span>
                       </div>
-                    )}
-
-                    {"titleRole" in item && (
-                      <div className="admin-field">
-                        <span className="admin-field-label">
-                          <Briefcase /> Title / Role
-                        </span>
-                        <span className="admin-field-value">
-                          {item.titleRole || (
-                            <span className="admin-field-value muted">
-                              Not provided
-                            </span>
-                          )}
-                        </span>
-                      </div>
-                    )}
+                    ))}
                   </div>
 
                   <div className="admin-card-detail-section">
-                    {"category" in item && (
-                      <div className="admin-category-field">
+                    {item.sections.map((section) => (
+                      <div className="admin-field" key={section.label}>
                         <span className="admin-field-label admin-field-label-spaced">
-                          <Tag /> Category
+                          <AlignLeft /> {section.label}
                         </span>
-                        <span className="admin-category">{item.category}</span>
+                        <div className="admin-desc-box">
+                          {section.value || (
+                            <span className="admin-empty-value">
+                              Not provided.
+                            </span>
+                          )}
+                        </div>
                       </div>
-                    )}
-
-                    <div className="admin-field">
-                      <span className="admin-field-label admin-field-label-spaced">
-                        <AlignLeft />{" "}
-                        {item._type === "inquiry"
-                          ? "Description"
-                          : "Reason for Access"}
-                      </span>
-                      <div className="admin-desc-box">
-                        {"description" in item
-                          ? item.description || (
-                              <span className="admin-empty-value">
-                                No description provided.
-                              </span>
-                            )
-                          : item.reason}
-                      </div>
-                    </div>
+                    ))}
                   </div>
                 </div>
               </div>

@@ -376,7 +376,7 @@ export const useCreateVelocityOsIntake = <
 };
 
 /**
- * Returns contact inquiries and portfolio access requests, newest first
+ * Returns contact inquiries, portfolio access requests, Velocity OS intakes, and document unlock leads, newest first
  * @summary Review website submissions
  */
 export const getListAdminSubmissionsUrl = () => {

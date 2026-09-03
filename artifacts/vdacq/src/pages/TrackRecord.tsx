@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useReveal } from "../lib/useReveal";
 import { usePageMeta } from "../lib/usePageMeta";
 import { PAGE_META } from "../lib/pageMeta";
@@ -68,6 +69,14 @@ function TrackRecordSection({ onModalOpen }: { onModalOpen: () => void }) {
     result: string;
     clickable?: boolean;
   }>;
+  const [filter, setFilter] = useState<"all" | "d" | "h">("all");
+  const filters: Array<{ id: "all" | "d" | "h"; label: string; dot?: string }> = [
+    { id: "all", label: "All situations" },
+    { id: "d", label: "Distressed", dot: "d" },
+    { id: "h", label: "Growth-stage", dot: "h" },
+  ];
+  const visible = (type: string) =>
+    filter === "all" || type === "e" || type === filter;
   return (
     <section className="track" id="track">
       <div className="s-in">
@@ -78,16 +87,32 @@ function TrackRecordSection({ onModalOpen }: { onModalOpen: () => void }) {
             <br />
             Proven across the full CPG spectrum.
           </h1>
-          <p className="s-sub" style={{ color: "rgba(244,239,228,.4)" }}>
+          <p className="s-sub" style={{ color: "var(--on-dark-2)" }}>
             Representative situations from a 10-year operating history. Full
             portfolio details available to qualified counterparties upon
             verified request.
           </p>
         </div>
+        <div className="track-filters rv" role="group" aria-label="Filter situations">
+          <span className="track-filters-label">Show</span>
+          {filters.map((f) => (
+            <button
+              key={f.id}
+              type="button"
+              className="track-filter"
+              aria-pressed={filter === f.id}
+              onClick={() => setFilter(f.id)}
+            >
+              {f.dot && <span className={`tc-dot ${f.dot}`} aria-hidden="true" />}
+              {f.label}
+            </button>
+          ))}
+        </div>
         <div className="tr-grid rv">
           {cards.map((c, i) => (
             <div
               key={i}
+              hidden={!visible(c.type)}
               className={`tcard${c.clickable ? " clickable" : ""}`}
               onClick={c.clickable ? onModalOpen : undefined}
               onKeyDown={c.clickable ? (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onModalOpen(); } } : undefined}
@@ -98,38 +123,11 @@ function TrackRecordSection({ onModalOpen }: { onModalOpen: () => void }) {
                 <span className={`tc-dot ${c.type}`} />
                 <span className="tc-type-label">{c.typeLabel}</span>
               </div>
-              <div
-                className="tc-rev"
-                style={
-                  c.clickable
-                    ? { fontSize: "18px", color: "rgba(244,239,228,.35)" }
-                    : {}
-                }
-              >
-                {c.rev}
-              </div>
+              <div className="tc-rev">{c.rev}</div>
               {c.company && <div className="tc-co">{c.company}</div>}
-              <div
-                className="tc-cat"
-                style={
-                  c.clickable
-                    ? { color: "rgba(244,239,228,.35)" }
-                    : {}
-                }
-              >
-                {c.cat}
-              </div>
+              <div className="tc-cat">{c.cat}</div>
               <p className="tc-desc">{c.desc}</p>
-              <div
-                className="tc-result"
-                style={
-                  c.clickable
-                    ? { color: "var(--gold2)", cursor: "pointer" }
-                    : {}
-                }
-              >
-                {c.result}
-              </div>
+              <div className="tc-result">{c.result}</div>
             </div>
           ))}
         </div>
@@ -225,7 +223,12 @@ function Portfolio({ onModalOpen }: { onModalOpen: () => void }) {
               tabIndex={0}
             >
               <div className="lock-overlay">
-                <div className="lock-icon">&#x1F512;</div>
+                <div className="lock-icon" aria-hidden="true">
+                  <svg width="12" height="14" viewBox="0 0 12 14" fill="none">
+                    <rect x="1" y="6" width="10" height="7" rx="1" stroke="currentColor" strokeWidth="1.2" />
+                    <path d="M3.5 6V4a2.5 2.5 0 0 1 5 0v2" stroke="currentColor" strokeWidth="1.2" />
+                  </svg>
+                </div>
                 <div className="lock-lbl">Confidential Holding</div>
                 <button className="lock-btn">Request Access</button>
               </div>

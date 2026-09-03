@@ -12,6 +12,8 @@ import {
   contactInquiriesTable,
   db,
   portfolioAccessRequestsTable,
+  velocityOsIntakesTable,
+  velocityOsJournalLeadsTable,
 } from "@workspace/db";
 
 const router: IRouter = Router();
@@ -75,20 +77,39 @@ router.get(
   requireOwner,
   async (_req, res): Promise<void> => {
     try {
-      const [inquiries, accessRequests] = await Promise.all([
-        db
-          .select()
-          .from(contactInquiriesTable)
-          .orderBy(desc(contactInquiriesTable.createdAt)),
-        db
-          .select()
-          .from(portfolioAccessRequestsTable)
-          .orderBy(desc(portfolioAccessRequestsTable.createdAt)),
-      ]);
+      const [inquiries, accessRequests, velocityOsIntakes, documentLeads] =
+        await Promise.all([
+          db
+            .select()
+            .from(contactInquiriesTable)
+            .orderBy(desc(contactInquiriesTable.createdAt)),
+          db
+            .select()
+            .from(portfolioAccessRequestsTable)
+            .orderBy(desc(portfolioAccessRequestsTable.createdAt)),
+          db
+            .select()
+            .from(velocityOsIntakesTable)
+            .orderBy(desc(velocityOsIntakesTable.createdAt)),
+          db
+            .select({
+              id: velocityOsJournalLeadsTable.id,
+              email: velocityOsJournalLeadsTable.email,
+              documentId: velocityOsJournalLeadsTable.documentId,
+              documentVersion: velocityOsJournalLeadsTable.documentVersion,
+              submittedAt: velocityOsJournalLeadsTable.submittedAt,
+              downloadedAt: velocityOsJournalLeadsTable.downloadedAt,
+              createdAt: velocityOsJournalLeadsTable.createdAt,
+            })
+            .from(velocityOsJournalLeadsTable)
+            .orderBy(desc(velocityOsJournalLeadsTable.submittedAt)),
+        ]);
 
       const data = ListAdminSubmissionsResponse.parse({
         inquiries,
         accessRequests,
+        velocityOsIntakes,
+        documentLeads,
       });
       res.json(data);
     } catch {

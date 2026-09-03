@@ -2,59 +2,83 @@ import { Link } from "wouter";
 import { useReveal } from "../lib/useReveal";
 import { usePageMeta } from "../lib/usePageMeta";
 import { PAGE_META } from "../lib/pageMeta";
+import { Counter } from "../components/Counter";
 
 function Hero({ onModalOpen }: { onModalOpen: () => void }) {
   return (
     <header className="hero">
-      <div className="hero-tex" />
-      <div className="hero-vline" style={{ left: "25%" }} />
-      <div className="hero-vline" style={{ left: "50%" }} />
-      <div className="hero-vline" style={{ left: "75%" }} />
-      <div className="hero-content">
-        <div className="hero-kicker">
-          <div className="hero-pill">CPG Control Investor</div>
-          <div className="hero-sep" />
-          <div className="hero-est">Permanent Capital · Established 2014</div>
-        </div>
-        <h1>
-          We acquire and operate <span className="accent">CPG companies.</span>
-          <span className="sub-h">
+      <div className="hero-tex" aria-hidden="true" />
+      <div className="hero-vline" style={{ left: "25%" }} aria-hidden="true" />
+      <div className="hero-vline" style={{ left: "50%" }} aria-hidden="true" />
+      <div className="hero-vline" style={{ left: "75%" }} aria-hidden="true" />
+      <div className="s-in hero-grid">
+        <div className="hero-content">
+          <p className="hero-kicker">
+            <span className="hero-pill">CPG control investor</span>
+            <span className="hero-sep" aria-hidden="true" />
+            <span className="hero-est">Permanent capital, established 2014</span>
+          </p>
+          <h1>
+            We acquire and operate{" "}
+            <span className="accent">CPG companies.</span>
+          </h1>
+          <p className="sub-h">
             Van Dyke Acquisitions takes majority or full ownership of consumer
             packaged goods businesses. We do not advise from the sidelines or
-            take passive positions—we own the work and hold the operating
+            take passive positions. We own the work and hold the operating
             authority to do it.
-          </span>
-        </h1>
-        <div className="hero-rule" />
-        <p className="hero-body">
-          We pursue two situations with the same standard:{" "}
-          <strong>distressed CPG businesses that need stabilization</strong> and{" "}
-          <strong>
-            growth-stage CPG businesses ready for better ownership.
-          </strong>
-        </p>
-        <div className="hero-btns">
-          <Link href="/contact" className="btn-gold">
-            Introduce a Situation
-          </Link>
-          <button className="btn-outline" onClick={onModalOpen}>
-            Request Portfolio Access
-          </button>
-        </div>
-      </div>
-      <div className="proof-bar">
-        {[
-          ["20+", "Control Acquisitions"],
-          ["10+", "Years Operating"],
-          ["$300M", "Largest Company Managed"],
-          ["CPG", "Exclusive Focus"],
-          ["∞", "Holding Period"],
-        ].map(([n, l]) => (
-          <div key={l} className="pb-item">
-            <div className="pb-n">{n}</div>
-            <div className="pb-l">{l}</div>
+          </p>
+          <div className="hero-rule" aria-hidden="true" />
+          <p className="hero-body">
+            We pursue two situations with the same standard:{" "}
+            <strong>distressed CPG businesses that need stabilization</strong>{" "}
+            and{" "}
+            <strong>
+              growth-stage CPG businesses ready for better ownership.
+            </strong>
+          </p>
+          <div className="hero-btns">
+            <Link href="/contact" className="btn-gold">
+              Introduce a Situation
+            </Link>
+            <button className="btn-outline" onClick={onModalOpen}>
+              Request Portfolio Access
+            </button>
           </div>
-        ))}
+        </div>
+        <aside className="hero-ledger" aria-labelledby="ledger-title">
+          <div className="ledger-head" id="ledger-title">
+            The office at a glance
+          </div>
+          <dl>
+            <div className="ledger-row">
+              <dt>Control acquisitions</dt>
+              <dd>
+                <Counter value={20} suffix="+" />
+              </dd>
+            </div>
+            <div className="ledger-row">
+              <dt>Years operating</dt>
+              <dd>
+                <Counter value={10} suffix="+" />
+              </dd>
+            </div>
+            <div className="ledger-row">
+              <dt>Largest company managed</dt>
+              <dd>
+                <Counter value={300} prefix="$" suffix="M" />
+              </dd>
+            </div>
+            <div className="ledger-row">
+              <dt>Exclusive focus</dt>
+              <dd className="is-word">CPG</dd>
+            </div>
+            <div className="ledger-row">
+              <dt>Holding period</dt>
+              <dd aria-label="Indefinite">∞</dd>
+            </div>
+          </dl>
+        </aside>
       </div>
     </header>
   );
@@ -214,7 +238,7 @@ function OperationsOfferings() {
           <div>
             <div className="eyebrow">Operating Engagements</div>
             <h2 id="operations-offerings-title" className="s-h">
-              Hands-on help when an acquisition is not the answer.
+              Hands-on help without a change of ownership.
             </h2>
           </div>
           <p>

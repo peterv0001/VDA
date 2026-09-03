@@ -557,6 +557,26 @@ export default function VelocityOSPage() {
                 &rarr;
               </button>
             </div>
+            <div className="vjv-thumbs" aria-label="Preview pages">
+              {PREVIEW_PAGES.map((page, index) => (
+                <button
+                  key={page.title}
+                  type="button"
+                  className="vjv-thumb"
+                  aria-current={currentPage === index + 1 ? "true" : undefined}
+                  aria-label={`Go to page ${index + 1}: ${page.title}`}
+                  onClick={() => setCurrentPage(index + 1)}
+                >
+                  <img
+                    src={`/velocity-os-journal/thumbs/page-${String(index + 1).padStart(2, "0")}.jpg`}
+                    alt=""
+                    width="160"
+                    height="207"
+                    decoding="async"
+                  />
+                </button>
+              ))}
+            </div>
             <p className="vjv-page-summary" id="preview-page-summary">
               <strong>{currentPreviewPage.title}.</strong>{" "}
               {currentPreviewPage.description}

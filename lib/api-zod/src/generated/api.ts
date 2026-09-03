@@ -106,7 +106,7 @@ export const CreateVelocityOsIntakeBody = zod.object({
 });
 
 /**
- * Returns contact inquiries and portfolio access requests, newest first
+ * Returns contact inquiries, portfolio access requests, Velocity OS intakes, and document unlock leads, newest first
  * @summary Review website submissions
  */
 export const ListAdminSubmissionsResponse = zod.object({
@@ -132,6 +132,37 @@ export const ListAdminSubmissionsResponse = zod.object({
       reason: zod.string(),
       createdAt: zod.date(),
     }),
+  ),
+  velocityOsIntakes: zod.array(
+    zod.object({
+      id: zod.number(),
+      fullName: zod.string(),
+      workEmail: zod.string().email(),
+      phone: zod.string().nullable(),
+      titleRole: zod.string(),
+      companyName: zod.string(),
+      companyWebsite: zod.string().nullable(),
+      companyContext: zod.string(),
+      primaryChallenge: zod.string(),
+      desiredOutcome: zod.string(),
+      urgency: zod.string(),
+      createdAt: zod.date(),
+    }),
+  ),
+  documentLeads: zod.array(
+    zod
+      .object({
+        id: zod.number(),
+        email: zod.string().email(),
+        documentId: zod.string(),
+        documentVersion: zod.string(),
+        submittedAt: zod.date(),
+        downloadedAt: zod.date().nullable(),
+        createdAt: zod.date(),
+      })
+      .describe(
+        "An email captured when a visitor unlocked a gated Velocity OS document",
+      ),
   ),
 });
 

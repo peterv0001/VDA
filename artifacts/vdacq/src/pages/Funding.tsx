@@ -46,7 +46,7 @@ export default function FundingPage() {
               <br />
               of the journey.
             </h1>
-            <p className="s-sub" style={{ color: "rgba(244,239,228,.4)" }}>
+            <p className="s-sub" style={{ color: "var(--on-dark-2)" }}>
               For businesses Van Dyke does not acquire, our owned companies
               provide growth financing or operational funding for the situation
               at hand.

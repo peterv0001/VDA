@@ -3,7 +3,7 @@
   color: var(--cream);
   display: flex;
   flex-direction: column;
-  font-family: "Inter", sans-serif;
+  font-family: var(--font-sans);
   min-height: 100vh;
 }
 
@@ -48,7 +48,7 @@
 .admin-page-title,
 .admin-empty-title {
   color: var(--cream);
-  font-family: "Libre Baskerville", serif;
+  font-family: var(--font-serif);
 }
 
 .admin-title {
@@ -203,7 +203,7 @@
 
 .admin-logo-text {
   color: var(--cream);
-  font-family: "Libre Baskerville", serif;
+  font-family: var(--font-serif);
   font-size: 18px;
   font-weight: 700;
 }
@@ -214,7 +214,6 @@
 }
 
 .admin-logo-badge,
-.admin-count,
 .admin-category {
   background: rgba(168, 123, 46, 0.12);
   border: 1px solid rgba(168, 123, 46, 0.3);
@@ -282,12 +281,6 @@
   font-size: 13px;
 }
 
-.admin-count {
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  padding: 8px 16px;
-}
-
 .admin-timeline,
 .admin-card-main,
 .admin-card-meta {
@@ -333,6 +326,14 @@
 
 .admin-card-type.access {
   color: var(--gold3);
+}
+
+.admin-card-type.intake {
+  color: #9fc4ff;
+}
+
+.admin-card-type.lead {
+  color: var(--cream);
 }
 
 .admin-card-date {
@@ -536,4 +537,28 @@
   .admin-header {
     padding: 20px;
   }
+}
+
+.admin-count {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 14px;
+  padding: 10px 16px;
+  border: 1px solid rgba(168, 123, 46, 0.3);
+  background: rgba(168, 123, 46, 0.08);
+  font-size: 13px;
+  color: rgba(243, 238, 227, 0.55);
+  text-transform: none;
+  letter-spacing: 0;
+}
+.admin-count strong {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--cream);
+}
+.admin-count span {
+  padding-left: 14px;
+  border-left: 1px solid rgba(243, 238, 227, 0.14);
 }

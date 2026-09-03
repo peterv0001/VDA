@@ -6,9 +6,13 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { ContactInquiry } from "./contactInquiry";
+import type { DocumentLead } from "./documentLead";
 import type { PortfolioAccessRequest } from "./portfolioAccessRequest";
+import type { VelocityOsIntake } from "./velocityOsIntake";
 
 export interface AdminSubmissions {
   inquiries: ContactInquiry[];
   accessRequests: PortfolioAccessRequest[];
+  velocityOsIntakes: VelocityOsIntake[];
+  documentLeads: DocumentLead[];
 }

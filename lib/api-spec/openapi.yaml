@@ -132,7 +132,7 @@ paths:
       operationId: listAdminSubmissions
       tags: [admin]
       summary: Review website submissions
-      description: Returns contact inquiries and portfolio access requests, newest first
+      description: Returns contact inquiries, portfolio access requests, Velocity OS intakes, and document unlock leads, newest first
       security:
         - basicAuth: []
       responses:
@@ -495,6 +495,78 @@ components:
         - titleRole
         - reason
         - createdAt
+    VelocityOsIntake:
+      type: object
+      properties:
+        id:
+          type: integer
+        fullName:
+          type: string
+        workEmail:
+          type: string
+          format: email
+        phone:
+          type: ["string", "null"]
+        titleRole:
+          type: string
+        companyName:
+          type: string
+        companyWebsite:
+          type: ["string", "null"]
+        companyContext:
+          type: string
+        primaryChallenge:
+          type: string
+        desiredOutcome:
+          type: string
+        urgency:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - fullName
+        - workEmail
+        - phone
+        - titleRole
+        - companyName
+        - companyWebsite
+        - companyContext
+        - primaryChallenge
+        - desiredOutcome
+        - urgency
+        - createdAt
+    DocumentLead:
+      type: object
+      description: An email captured when a visitor unlocked a gated Velocity OS document
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+          format: email
+        documentId:
+          type: string
+        documentVersion:
+          type: string
+        submittedAt:
+          type: string
+          format: date-time
+        downloadedAt:
+          type: ["string", "null"]
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - email
+        - documentId
+        - documentVersion
+        - submittedAt
+        - downloadedAt
+        - createdAt
     AdminSubmissions:
       type: object
       properties:
@@ -506,9 +578,19 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/PortfolioAccessRequest"
+        velocityOsIntakes:
+          type: array
+          items:
+            $ref: "#/components/schemas/VelocityOsIntake"
+        documentLeads:
+          type: array
+          items:
+            $ref: "#/components/schemas/DocumentLead"
       required:
         - inquiries
         - accessRequests
+        - velocityOsIntakes
+        - documentLeads
     VelocityOsJournalUnlockInput:
       type: object
       properties:

@@ -109,9 +109,42 @@ export interface PortfolioAccessRequest {
   createdAt: string;
 }
 
+export interface VelocityOsIntake {
+  id: number;
+  fullName: string;
+  workEmail: string;
+  /** @nullable */
+  phone: string | null;
+  titleRole: string;
+  companyName: string;
+  /** @nullable */
+  companyWebsite: string | null;
+  companyContext: string;
+  primaryChallenge: string;
+  desiredOutcome: string;
+  urgency: string;
+  createdAt: string;
+}
+
+/**
+ * An email captured when a visitor unlocked a gated Velocity OS document
+ */
+export interface DocumentLead {
+  id: number;
+  email: string;
+  documentId: string;
+  documentVersion: string;
+  submittedAt: string;
+  /** @nullable */
+  downloadedAt: string | null;
+  createdAt: string;
+}
+
 export interface AdminSubmissions {
   inquiries: ContactInquiry[];
   accessRequests: PortfolioAccessRequest[];
+  velocityOsIntakes: VelocityOsIntake[];
+  documentLeads: DocumentLead[];
 }
 
 export interface VelocityOsJournalUnlockInput {
