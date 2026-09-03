@@ -14,6 +14,109 @@ test.afterAll(async () => {
   await pool.end();
 });
 
+test.describe("Admin submissions security", () => {
+  test("protects submissions across authentication and browser-origin changes", async ({
+    request,
+  }) => {
+    const adminPassword = process.env.ADMIN_PASSWORD;
+    const adminUsername = process.env.ADMIN_USERNAME ?? "owner";
+    expect(
+      adminPassword,
+      "ADMIN_PASSWORD must be configured for e2e",
+    ).toBeTruthy();
+
+    const authorization = (username: string, password: string) =>
+      `Basic ${Buffer.from(`${username}:${password}`).toString("base64")}`;
+
+    const missingCredentials = await request.get("/api/admin/submissions");
+    expect(missingCredentials.status()).toBe(401);
+    expect(missingCredentials.headers()["www-authenticate"]).toContain("Basic");
+    await expect(missingCredentials.json()).resolves.toEqual({
+      error: "Owner authentication required",
+    });
+
+    const invalidCredentials = await request.get("/api/admin/submissions", {
+      headers: {
+        Authorization: authorization(adminUsername, "incorrect-password"),
+      },
+    });
+    expect(invalidCredentials.status()).toBe(401);
+    expect(invalidCredentials.headers()["www-authenticate"]).toBeUndefined();
+    await expect(invalidCredentials.json()).resolves.toEqual({
+      error: "Invalid owner credentials",
+    });
+
+    const crossOrigin = await request.get("/api/admin/submissions", {
+      headers: {
+        Authorization: authorization(adminUsername, adminPassword!),
+        Origin: "https://attacker.example",
+      },
+    });
+    expect(crossOrigin.status()).toBe(403);
+    await expect(crossOrigin.json()).resolves.toEqual({
+      error: "Cross-origin admin access is not allowed",
+    });
+
+    const authenticated = await request.get("/api/admin/submissions", {
+      headers: {
+        Authorization: authorization(adminUsername, adminPassword!),
+      },
+    });
+    expect(authenticated.status()).toBe(200);
+    await expect(authenticated.json()).resolves.toMatchObject({
+      inquiries: expect.any(Array),
+      accessRequests: expect.any(Array),
+      velocityOsIntakes: expect.any(Array),
+      documentLeads: expect.any(Array),
+    });
+
+    for (let attempt = 0; attempt < 5; attempt += 1) {
+      const failedLogin = await request.get("/api/admin/submissions", {
+        headers: {
+          Authorization: authorization(adminUsername, "incorrect-password"),
+        },
+      });
+      expect(failedLogin.status()).toBe(401);
+      expect(failedLogin.headers()["www-authenticate"]).toBeUndefined();
+    }
+
+    const rateLimited = await request.get("/api/admin/submissions", {
+      headers: {
+        Authorization: authorization(adminUsername, "incorrect-password"),
+      },
+    });
+    expect(rateLimited.status()).toBe(429);
+    expect(Number(rateLimited.headers()["retry-after"])).toBeGreaterThan(0);
+    await expect(rateLimited.json()).resolves.toEqual({
+      error: "Too many authentication attempts",
+    });
+
+    const authenticatedAfterLockout = await request.get(
+      "/api/admin/submissions",
+      {
+        headers: {
+          Authorization: authorization(adminUsername, adminPassword!),
+        },
+      },
+    );
+    expect(authenticatedAfterLockout.status()).toBe(200);
+
+    const freshFailure = await request.get("/api/admin/submissions", {
+      headers: {
+        Authorization: authorization(adminUsername, "incorrect-password"),
+      },
+    });
+    expect(freshFailure.status()).toBe(401);
+
+    const cleanup = await request.get("/api/admin/submissions", {
+      headers: {
+        Authorization: authorization(adminUsername, adminPassword!),
+      },
+    });
+    expect(cleanup.status()).toBe(200);
+  });
+});
+
 test.describe("Navigation", () => {
   test("redirects retired homepage section hashes to their current pages", async ({
     page,

@@ -77,6 +77,30 @@ function requireOwner(req: Request, res: Response, next: NextFunction): void {
     return;
   }
 
+  const authorization = req.get("authorization");
+  if (authorization?.startsWith("Basic ")) {
+    const credentials = Buffer.from(
+      authorization.slice("Basic ".length),
+      "base64",
+    ).toString("utf8");
+    const separatorIndex = credentials.indexOf(":");
+    const username =
+      separatorIndex === -1
+        ? credentials
+        : credentials.slice(0, separatorIndex);
+    const password =
+      separatorIndex === -1 ? "" : credentials.slice(separatorIndex + 1);
+
+    if (
+      stringsMatch(username, expectedUsername) &&
+      stringsMatch(password, expectedPassword)
+    ) {
+      failedAuthByClient.delete(clientKey);
+      next();
+      return;
+    }
+  }
+
   const activeFailure = getActiveAuthFailure(clientKey, now);
   if (activeFailure && activeFailure.failures >= MAX_AUTH_FAILURES) {
     const retryAfterSeconds = Math.max(
@@ -88,7 +112,6 @@ function requireOwner(req: Request, res: Response, next: NextFunction): void {
     return;
   }
 
-  const authorization = req.get("authorization");
   if (!authorization?.startsWith("Basic ")) {
     recordAuthFailure(clientKey, now);
     res.set("WWW-Authenticate", 'Basic realm="VDACQ Intake", charset="UTF-8"');
@@ -96,27 +119,8 @@ function requireOwner(req: Request, res: Response, next: NextFunction): void {
     return;
   }
 
-  const credentials = Buffer.from(
-    authorization.slice("Basic ".length),
-    "base64",
-  ).toString("utf8");
-  const separatorIndex = credentials.indexOf(":");
-  const username =
-    separatorIndex === -1 ? credentials : credentials.slice(0, separatorIndex);
-  const password =
-    separatorIndex === -1 ? "" : credentials.slice(separatorIndex + 1);
-
-  if (
-    !stringsMatch(username, expectedUsername) ||
-    !stringsMatch(password, expectedPassword)
-  ) {
-    recordAuthFailure(clientKey, now);
-    res.status(401).json({ error: "Invalid owner credentials" });
-    return;
-  }
-
-  failedAuthByClient.delete(clientKey);
-  next();
+  recordAuthFailure(clientKey, now);
+  res.status(401).json({ error: "Invalid owner credentials" });
 }
 
 router.get(
