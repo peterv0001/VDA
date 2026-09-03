@@ -8,3 +8,4 @@
 - [Animated overlay focus](animated-overlay-focus.md) — make visibility immediate on open and delay focus until after the trigger click, or browser focus calls can silently fail.
 - [Iframe reader keyboard navigation](iframe-reader-keyboard.md) — use a focusable iframe document plus postMessage; browser-reserved shortcuts may never reach embedded content.
 - [VDACQ funding portfolio language](vdacq-funding-portfolio-language.md) — present Cohort and LeaderShield as funding options, never as the complete list of companies VDACQ owns.
+- [Pinned pnpm versions on Replit](pnpm-version-pins.md) — avoid newer packageManager pins; the Nix-provided pnpm can recursively self-bootstrap and abort.
