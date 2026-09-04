@@ -159,7 +159,7 @@ test.describe("Navigation", () => {
       expectedNavOrder,
     );
     await expect(page.locator("footer .footer-links a")).toHaveText(
-      expectedNavOrder,
+      [...expectedNavOrder, "Admin Login"],
     );
 
     await page
@@ -228,6 +228,14 @@ test.describe("Navigation", () => {
 
     await page.locator(".nav-links").getByText("Home", { exact: true }).click();
     await expectHome(page);
+
+    const adminLogin = page
+      .locator("footer")
+      .getByRole("link", { name: "Admin Login" });
+    await expect(adminLogin).toHaveAttribute("href", "/admin");
+    await adminLogin.click();
+    await expect(page).toHaveURL(/\/admin$/);
+    await expect(page.getByRole("heading", { name: "Owner Access" })).toBeVisible();
   });
 
   test("browser back and forward buttons work with client-side routing", async ({
@@ -356,6 +364,15 @@ test.describe("Mobile navigation", () => {
       .first()
       .evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
     expect(fontSize).toBeGreaterThanOrEqual(16);
+
+    const adminLogin = page
+      .locator("footer")
+      .getByRole("link", { name: "Admin Login" });
+    await adminLogin.scrollIntoViewIfNeeded();
+    await expect(adminLogin).toBeVisible();
+    await adminLogin.click();
+    await expect(page).toHaveURL(/\/admin$/);
+    await expect(page.getByRole("heading", { name: "Owner Access" })).toBeVisible();
   });
 });
 

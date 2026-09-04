@@ -15,6 +15,7 @@ export function Footer({ onModalOpen }: { onModalOpen: () => void }) {
         <Link href="/track-record">Track Record</Link>
         <Link href="/platform">Platform</Link>
         <Link href="/contact">Contact</Link>
+        <Link href="/admin">Admin Login</Link>
         <button className="footer-access-btn" onClick={onModalOpen}>
           Portfolio Access
         </button>
